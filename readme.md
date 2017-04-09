@@ -10,7 +10,7 @@ The tools provide
 - *api Java model*: a simple Java model of pojos that can be used standalone without any dependencies
 - *Eclipse Api Editor*: an eclipse plugin providing an editor for the "api" content-type with suport form UML conversion
 
-The "api" specification is derived from the Eclipse Ecore model. It allows for using the expressive power of the Ecore model in non Eclipse runtime environments.
+The "api" specification is derived from the Ecore model of the [Eclipse Modeling Framework](http://www.eclipse.org/modeling/emf/). It allows for using the expressive power of the Ecore model in non Eclipse runtime environments.
 
 The apitools project has the following sub-projects:
 
