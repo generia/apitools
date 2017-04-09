@@ -6,16 +6,16 @@ The tools focus on reading, editing, converting and writing this "api" specifica
 
 The tools provide
 
-- *api content-type "model/api+xml"*: a simple humanly readable XML format
-- *api Java model*: a simple Java model of pojos that can be used standalone without any dependencies
-- *Eclipse Api Editor*: an eclipse plugin providing an editor for the "api" content-type with suport form UML conversion
+- **api content-type**: a simple humanly readable XML format using MIME type "model/api+xml"
+- **api Java model**: a simple Java model of pojos that can be used standalone without any dependencies
+- **Eclipse Api Editor**: an eclipse plugin providing an editor for the "api" content-type with suport form UML conversion
 
 The "api" specification is derived from the Ecore model of the [Eclipse Modeling Framework](http://www.eclipse.org/modeling/emf/). It allows for using the expressive power of the Ecore model in non Eclipse runtime environments.
 
 The apitools project has the following sub-projects:
 
-1. *model*: standalone Java pojos describing the "api" specifiation
-2. *eclipse*: Eclipse editor for "api" descriptions.
+1. **model**: standalone Java pojos describing the "api" specifiation
+2. **eclipse**: Eclipse editor for "api" descriptions.
 
 ## '[model](model)' sub-project
 
