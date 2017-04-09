@@ -1,6 +1,6 @@
 # apitools - editor
 
-A collections of Eclipse plugins that provide 
+A collection of Eclipse plugins that provide 
 
 - an editor for reading, changing and writing "api" descriptions
 - UML converter to transform "api" descriptions to UML models
