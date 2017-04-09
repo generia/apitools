@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/de.generia.tools.model.api.plugin/src" editDirectory="/de.generia.tools.model.api.plugin/src"
+    editorDirectory="/de.generia.tools.model.api.plugin/src" modelPluginID="de.generia.tools.model.api.plugin"
+    modelName="Api" editPluginClass="de.generia.tools.model.api.util.ApiPlugin" editorPluginClass="de.generia.tools.model.api.util.ApiPlugin"
+    rootExtendsInterface="de.generia.tools.model.xecore.model.ModelNode" rootExtendsClass="de.generia.tools.model.xecore.model.ModelNodeImpl"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="6.0" copyrightFields="false"
+    editPluginID="de.generia.tools.model.api.plugin" editorPluginID="de.generia.tools.model.api.plugin"
+    language="" usedGenPackages="platform:/plugin/org.eclipse.uml2.uml/model/UML.genmodel#//uml platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore platform:/plugin/org.eclipse.uml2.types/model/Types.genmodel#//types">
+  <foreignModel>api.ecore</foreignModel>
+  <genPackages prefix="Api" basePackage="de.generia.tools.model" disposableProviderFactory="true"
+      generateExampleClass="false" multipleEditorPages="false" contentTypeIdentifier="de.generia.tools.model.api.api"
+      fileExtensions="api" ecorePackage="api.ecore#/">
+    <genDataTypes ecoreDataType="api.ecore#//boolean"/>
+    <genDataTypes ecoreDataType="api.ecore#//int"/>
+    <genDataTypes ecoreDataType="api.ecore#//String"/>
+    <genClasses image="false" ecoreClass="api.ecore#//EModelElement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference api.ecore#//EModelElement/annotations"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//EModelElement/documentation"/>
+    </genClasses>
+    <genClasses ecoreClass="api.ecore#//EAnnotation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//EAnnotation/source"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference api.ecore#//EAnnotation/elements"/>
+    </genClasses>
+    <genClasses ecoreClass="api.ecore#//EAnnotationElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//EAnnotationElement/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//EAnnotationElement/value"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="api.ecore#//ENamedElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//ENamedElement/name"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="api.ecore#//EClassifier">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//EClassifier/instanceTypeName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//EClassifier/defaultValue"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference api.ecore#//EClassifier/package"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference api.ecore#//EClassifier/containingClass"/>
+    </genClasses>
+    <genClasses ecoreClass="api.ecore#//EDataType"/>
+    <genClasses ecoreClass="api.ecore#//EEnum">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference api.ecore#//EEnum/literals"/>
+    </genClasses>
+    <genClasses ecoreClass="api.ecore#//EEnumLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//EEnumLiteral/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//EEnumLiteral/literal"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference api.ecore#//EEnumLiteral/enum"/>
+    </genClasses>
+    <genClasses ecoreClass="api.ecore#//EClass">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//EClass/abstract"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//EClass/interface"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference api.ecore#//EClass/superType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference api.ecore#//EClass/structuralFeatures"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference api.ecore#//EClass/operations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference api.ecore#//EClass/nestedClassifiers"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="api.ecore#//ETypedElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//ETypedElement/ordered"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//ETypedElement/unique"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//ETypedElement/many"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//ETypedElement/required"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference api.ecore#//ETypedElement/type"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference api.ecore#//ETypedElement/keyType"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="api.ecore#//EStructuralFeature">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//EStructuralFeature/transient"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//EStructuralFeature/defaultValueLiteral"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference api.ecore#//EStructuralFeature/containingClass"/>
+    </genClasses>
+    <genClasses ecoreClass="api.ecore#//EAttribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//EAttribute/id"/>
+    </genClasses>
+    <genClasses ecoreClass="api.ecore#//EReference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//EReference/containment"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference api.ecore#//EReference/opposite"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference api.ecore#//EReference/keys"/>
+    </genClasses>
+    <genClasses ecoreClass="api.ecore#//EOperation">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference api.ecore#//EOperation/containingClass"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference api.ecore#//EOperation/parameters"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference api.ecore#//EOperation/exceptions"/>
+    </genClasses>
+    <genClasses ecoreClass="api.ecore#//EParameter">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference api.ecore#//EParameter/operation"/>
+    </genClasses>
+    <genClasses ecoreClass="api.ecore#//EPackage">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference api.ecore#//EPackage/classifiers"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference api.ecore#//EPackage/subPackages"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference api.ecore#//EPackage/superPackage"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

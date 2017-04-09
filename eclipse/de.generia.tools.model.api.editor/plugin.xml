@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+  <extension
+        point="org.eclipse.emf.ecore.uri_mapping">
+     <mapping
+           source="pathmap://API_MODEL/"
+           target="model/">
+     </mapping>
+  </extension>
+
+  <extension point="org.eclipse.team.core.fileTypes">
+    <fileTypes extension="api" type="text" />
+  </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated api -->
+      <package
+            uri="http://www.generia.de/tools/model/api"
+            class="de.generia.tools.model.api.ApiPackage"
+            genModel="model/api.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.emf.ecore.xmi"
+            file-extensions="api"
+            id="de.generia.tools.model.api.api"
+            name="%_UI_Api_content_type"
+            priority="normal">
+         <describer class="org.eclipse.emf.ecore.xmi.impl.RootXMLContentHandlerImpl$Describer">
+            <parameter name="namespace" value="http://www.generia.de/tools/model/api"/>
+            <parameter name="kind" value="xmi"/>
+         </describer>
+      </content-type>
+   </extension>
+   
+   <extension point="org.eclipse.emf.ecore.content_parser">
+      <parser
+            contentTypeIdentifier="de.generia.tools.model.api.api"
+            class="de.generia.tools.model.xecore.binding.ModelResourceFactory"/>
+   </extension>
+   
+   
+-->
+   <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
+      <factory
+            uri="de.generia.tools.model.api"
+            class="de.generia.tools.model.api.provider.ApiItemProviderAdapterFactory"
+            supportedTypes=
+              "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
+               org.eclipse.emf.edit.provider.IStructuredItemContentProvider
+               org.eclipse.emf.edit.provider.ITreeItemContentProvider
+               org.eclipse.emf.edit.provider.IItemLabelProvider
+               org.eclipse.emf.edit.provider.IItemPropertySource"/>
+   </extension>
+   
+   
+   <extension point="org.eclipse.ui.newWizards">
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="de.generia.tools.model.api.presentation.ApiModelWizardID"
+            name="%_UI_ApiModelWizard_label"
+            class="de.generia.tools.model.api.presentation.ApiModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/ApiModelFile.gif">
+         <description>%_UI_ApiModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <editor
+            id="de.generia.tools.model.api.presentation.ApiEditorID"
+            name="%_UI_ApiEditor_label"
+            icon="icons/full/obj16/ApiModelFile.gif"
+            extensions="api"
+            class="de.generia.tools.model.api.presentation.ApiEditor"
+            contributorClass="de.generia.tools.model.api.presentation.ApiActionBarContributor">
+        <contentTypeBinding
+            contentTypeId="de.generia.tools.model.api.api">
+        </contentTypeBinding>
+      </editor>
+   </extension>
+
+<!--
+   <extension point="org.eclipse.emf.importer.modelImporterDescriptors">
+    <modelImporterDescriptor 
+    	id="de.generia.tools.model.api.trafo.ecore.apiImporter" name="Api Importer" 
+      icon="icons/api-importer.gif" 
+      description="Imports Api Models to annotated Ecore Models" 
+      extensions="api"
+      wizard="de.generia.tools.model.api.trafo.ecore.importer.ApiImporterWizard" />
+  </extension>
+-->
+<!--
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="api-xmi"
+            class="org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl"/>
+   </extension>
+-->
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="api"
+            class="de.generia.tools.model.xecore.binding.ModelResourceFactory"/>
+   </extension>
+</plugin>
+

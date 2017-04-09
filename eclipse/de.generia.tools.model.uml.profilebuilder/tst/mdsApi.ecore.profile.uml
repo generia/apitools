@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Profile xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_kFrrYJf6Ed-NVMfet5iOhA" name="mdsApi">
+  <eAnnotations xmi:id="_kFrrYZf6Ed-NVMfet5iOhA" source="http://www.eclipse.org/uml2/2.0.0/UML">
+    <contents xmi:type="ecore:EPackage" xmi:id="_kFrrYpf6Ed-NVMfet5iOhA" name="mdsApi" nsURI="http:///schemas/mdsApi/_kFF1gJf6Ed-NVMfet5iOhA/0" nsPrefix="mdsApi">
+      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_kFrrY5f6Ed-NVMfet5iOhA" name="InheritanceType">
+        <eAnnotations xmi:id="_kFrrZJf6Ed-NVMfet5iOhA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_kFrrh5f6Ed-NVMfet5iOhA"/>
+        <eLiterals xmi:id="_kFrrZZf6Ed-NVMfet5iOhA" name="default"/>
+        <eLiterals xmi:id="_kFrrZpf6Ed-NVMfet5iOhA" name="SINGLE_TABLE" value="1"/>
+        <eLiterals xmi:id="_kFrrZ5f6Ed-NVMfet5iOhA" name="JOINED" value="2"/>
+        <eLiterals xmi:id="_kFrraJf6Ed-NVMfet5iOhA" name="TABLE_PER_CLASS" value="3"/>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_kFrraZf6Ed-NVMfet5iOhA" name="Column">
+        <eAnnotations xmi:id="_kFrrapf6Ed-NVMfet5iOhA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_kFrrjJf6Ed-NVMfet5iOhA"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_kFrra5f6Ed-NVMfet5iOhA" name="name" ordered="false">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_kFrrbZf6Ed-NVMfet5iOhA" name="length" ordered="false">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_kFrrb5f6Ed-NVMfet5iOhA" name="precision" ordered="false">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_kFrrcZf6Ed-NVMfet5iOhA" name="scale" ordered="false">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </eStructuralFeatures>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_kFrrc5f6Ed-NVMfet5iOhA" name="Package">
+        <eAnnotations xmi:id="_kFrrdJf6Ed-NVMfet5iOhA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_kFrrnpf6Ed-NVMfet5iOhA"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_kFrrdZf6Ed-NVMfet5iOhA" name="tablePrefix" ordered="false">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </eStructuralFeatures>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_kFrrd5f6Ed-NVMfet5iOhA" name="Entity">
+        <eAnnotations xmi:id="_kFrreJf6Ed-NVMfet5iOhA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_kFrrpJf6Ed-NVMfet5iOhA"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_kFrreZf6Ed-NVMfet5iOhA" name="tableName" ordered="false">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_kFrre5f6Ed-NVMfet5iOhA" name="inheritanceStrategy" ordered="false" eType="_kFrrY5f6Ed-NVMfet5iOhA" defaultValueLiteral="default"/>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_kFrrfZf6Ed-NVMfet5iOhA" name="Embedable">
+        <eAnnotations xmi:id="_kFrrfpf6Ed-NVMfet5iOhA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_kFrrrpf6Ed-NVMfet5iOhA"/>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_kFrrf5f6Ed-NVMfet5iOhA" name="Component" eSuperTypes="_kFrrc5f6Ed-NVMfet5iOhA">
+        <eAnnotations xmi:id="_kFrrgJf6Ed-NVMfet5iOhA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_kFrrsJf6Ed-NVMfet5iOhA"/>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_kFrrgpf6Ed-NVMfet5iOhA" name="EnumLiteral">
+        <eAnnotations xmi:id="_kFrrg5f6Ed-NVMfet5iOhA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_kFrrs5f6Ed-NVMfet5iOhA"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_kFrrhJf6Ed-NVMfet5iOhA" name="dbValue" ordered="false">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </eStructuralFeatures>
+      </eClassifiers>
+    </contents>
+  </eAnnotations>
+  <elementImport xmi:id="_kFrrhpf6Ed-NVMfet5iOhA">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+  </elementImport>
+  <packagedElement xmi:type="uml:Enumeration" xmi:id="_kFrrh5f6Ed-NVMfet5iOhA" name="InheritanceType">
+    <ownedLiteral xmi:id="_kFrriJf6Ed-NVMfet5iOhA" name="default"/>
+    <ownedLiteral xmi:id="_kFrriZf6Ed-NVMfet5iOhA" name="SINGLE_TABLE"/>
+    <ownedLiteral xmi:id="_kFrripf6Ed-NVMfet5iOhA" name="JOINED"/>
+    <ownedLiteral xmi:id="_kFrri5f6Ed-NVMfet5iOhA" name="TABLE_PER_CLASS"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_kFrrjJf6Ed-NVMfet5iOhA" name="Column">
+    <eAnnotations xmi:id="_kFrrjZf6Ed-NVMfet5iOhA" source="http://www.generia.de/uml/profilebuilder-info-aggregation"/>
+    <ownedAttribute xmi:id="_kFrrjpf6Ed-NVMfet5iOhA" name="name">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_kFrrj5f6Ed-NVMfet5iOhA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_kFrrkJf6Ed-NVMfet5iOhA"/>
+      <defaultValue xmi:type="uml:LiteralNull" xmi:id="_kFrrkZf6Ed-NVMfet5iOhA"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_kFrrkpf6Ed-NVMfet5iOhA" name="length">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_kFrrk5f6Ed-NVMfet5iOhA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_kFrrlJf6Ed-NVMfet5iOhA"/>
+      <defaultValue xmi:type="uml:LiteralNull" xmi:id="_kFrrlZf6Ed-NVMfet5iOhA"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_kFrrlpf6Ed-NVMfet5iOhA" name="precision">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_kFrrl5f6Ed-NVMfet5iOhA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_kFrrmJf6Ed-NVMfet5iOhA"/>
+      <defaultValue xmi:type="uml:LiteralNull" xmi:id="_kFrrmZf6Ed-NVMfet5iOhA"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_kFrrmpf6Ed-NVMfet5iOhA" name="scale">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_kFrrm5f6Ed-NVMfet5iOhA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_kFrrnJf6Ed-NVMfet5iOhA"/>
+      <defaultValue xmi:type="uml:LiteralNull" xmi:id="_kFrrnZf6Ed-NVMfet5iOhA"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_kFrrnpf6Ed-NVMfet5iOhA" name="Package">
+    <eAnnotations xmi:id="_kFrrn5f6Ed-NVMfet5iOhA" source="http://www.generia.de/uml/profilebuilder-info-aggregation"/>
+    <ownedAttribute xmi:id="_kFrroJf6Ed-NVMfet5iOhA" name="tablePrefix">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_kFrroZf6Ed-NVMfet5iOhA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_kFrropf6Ed-NVMfet5iOhA"/>
+      <defaultValue xmi:type="uml:LiteralNull" xmi:id="_kFrro5f6Ed-NVMfet5iOhA"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_kFrrpJf6Ed-NVMfet5iOhA" name="Entity">
+    <eAnnotations xmi:id="_kFrrpZf6Ed-NVMfet5iOhA" source="http://www.generia.de/uml/profilebuilder-info-aggregation"/>
+    <ownedAttribute xmi:id="_kFrrppf6Ed-NVMfet5iOhA" name="tableName">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_kFrrp5f6Ed-NVMfet5iOhA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_kFrrqJf6Ed-NVMfet5iOhA"/>
+      <defaultValue xmi:type="uml:LiteralNull" xmi:id="_kFrrqZf6Ed-NVMfet5iOhA"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_kFrrqpf6Ed-NVMfet5iOhA" name="inheritanceStrategy" type="_kFrrh5f6Ed-NVMfet5iOhA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_kFrrq5f6Ed-NVMfet5iOhA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_kFrrrJf6Ed-NVMfet5iOhA"/>
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_kFrrrZf6Ed-NVMfet5iOhA" value="default"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_kFrrrpf6Ed-NVMfet5iOhA" name="Embedable">
+    <eAnnotations xmi:id="_kFrrr5f6Ed-NVMfet5iOhA" source="http://www.generia.de/uml/profilebuilder-info-aggregation"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_kFrrsJf6Ed-NVMfet5iOhA" name="Component">
+    <eAnnotations xmi:id="_kFrrsZf6Ed-NVMfet5iOhA" source="http://www.generia.de/uml/profilebuilder-info-aggregation"/>
+    <generalization xmi:id="_kFrrspf6Ed-NVMfet5iOhA" general="_kFrrnpf6Ed-NVMfet5iOhA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_kFrrs5f6Ed-NVMfet5iOhA" name="EnumLiteral">
+    <eAnnotations xmi:id="_kFrrtJf6Ed-NVMfet5iOhA" source="http://www.generia.de/uml/profilebuilder-info-aggregation"/>
+    <ownedAttribute xmi:id="_kFrrtZf6Ed-NVMfet5iOhA" name="dbValue">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_kFrrtpf6Ed-NVMfet5iOhA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_kFrrt5f6Ed-NVMfet5iOhA"/>
+      <defaultValue xmi:type="uml:LiteralNull" xmi:id="_kFrruJf6Ed-NVMfet5iOhA"/>
+    </ownedAttribute>
+  </packagedElement>
+</uml:Profile>

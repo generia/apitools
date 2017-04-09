@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="mdsApi"
+    nsURI="http://www.hvb.de/m0/tools/mdsApi" nsPrefix="mdsApi">
+  <eClassifiers xsi:type="ecore:EEnum" name="InheritanceType">
+    <eLiterals name="default"/>
+    <eLiterals name="SINGLE_TABLE" value="1"/>
+    <eLiterals name="JOINED" value="2"/>
+    <eLiterals name="TABLE_PER_CLASS" value="3"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Column">
+    <eAnnotations source="http://www.generia.de/uml/profilebuilder-stereotype"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType platform:/plugin/de.generia.tools.model.api/model/api.ecore#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="length" eType="ecore:EDataType platform:/plugin/de.generia.tools.model.api/model/api.ecore#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="precision" eType="ecore:EDataType platform:/plugin/de.generia.tools.model.api/model/api.ecore#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="scale" eType="ecore:EDataType platform:/plugin/de.generia.tools.model.api/model/api.ecore#//int"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Package" eSuperTypes="platform:/plugin/de.generia.tools.model.api/model/api.ecore#//EPackage">
+    <eAnnotations source="http://www.generia.de/uml/profilebuilder-stereotype"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tablePrefix" eType="ecore:EDataType platform:/plugin/de.generia.tools.model.api/model/api.ecore#//String"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Entity" eSuperTypes="platform:/plugin/de.generia.tools.model.api/model/api.ecore#//EClass">
+    <eAnnotations source="http://www.generia.de/uml/profilebuilder-stereotype"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tableName" eType="ecore:EDataType platform:/plugin/de.generia.tools.model.api/model/api.ecore#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="inheritanceStrategy" eType="#//InheritanceType"
+        defaultValueLiteral="default"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Embedable" eSuperTypes="platform:/plugin/de.generia.tools.model.api/model/api.ecore#//EClass">
+    <eAnnotations source="http://www.generia.de/uml/profilebuilder-stereotype"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Attribute" eSuperTypes="platform:/plugin/de.generia.tools.model.api/model/api.ecore#//EAttribute">
+    <eAnnotations source="http://www.generia.de/uml/profilebuilder-stereotype-helper"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="column" eType="#//Column"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DataType" eSuperTypes="platform:/plugin/de.generia.tools.model.api/model/api.ecore#//EDataType">
+    <eAnnotations source="http://www.generia.de/uml/profilebuilder-stereotype-helper"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="column" eType="#//Column"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Component" instanceTypeName="Component"
+      eSuperTypes="#//Package">
+    <eAnnotations source="http://www.generia.de/uml/profilebuilder-stereotype"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EnumLiteral" eSuperTypes="platform:/plugin/de.generia.tools.model.api/model/api.ecore#//EEnumLiteral">
+    <eAnnotations source="http://www.generia.de/uml/profilebuilder-stereotype"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dbValue" eType="ecore:EDataType platform:/plugin/de.generia.tools.model.api/model/api.ecore#//int"/>
+  </eClassifiers>
+</ecore:EPackage>

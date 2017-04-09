@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="uml2api"
+    nsURI="http://www.generia.de/tools/model/uml2api" nsPrefix="uml2api">
+  <eClassifiers xsi:type="ecore:EClass" name="Basetype" eSuperTypes="platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//DataType">
+    <eAnnotations source="http://www.generia.de/uml/profilebuilder-stereotype"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="instanceType" eType="ecore:EDataType platform:/plugin/org.eclipse.uml2.types/model/Types.ecore#//String"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EnumLiteral" eSuperTypes="platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//EnumerationLiteral">
+    <eAnnotations source="http://www.generia.de/uml/profilebuilder-stereotype"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType platform:/plugin/org.eclipse.uml2.types/model/Types.ecore#//Integer"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Map" eSuperTypes="platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//TypedElement">
+    <eAnnotations source="http://www.generia.de/uml/profilebuilder-stereotype"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="keyType" eType="ecore:EClass platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//Classifier"/>
+  </eClassifiers>
+</ecore:EPackage>

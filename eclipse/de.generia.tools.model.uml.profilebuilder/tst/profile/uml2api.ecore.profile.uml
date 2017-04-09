@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Profile xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_sCc7MJfaEd-ivKSn_u8Aqg" name="uml2api" metaclassReference="_qKu74JfrEd-xDdw0nuofWg _sVm4AJfrEd-xDdw0nuofWg">
+  <eAnnotations xmi:id="_zdFJoZfuEd-GRP3CtbJgSg" source="http://www.eclipse.org/uml2/2.0.0/UML">
+    <contents xmi:type="ecore:EPackage" xmi:id="_sCc7MpfaEd-ivKSn_u8Aqg" name="uml2api" nsURI="http:///schemas/uml2api/_sCKAQJfaEd-ivKSn_u8Aqg/0" nsPrefix="uml2api">
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_zdFJo5fuEd-GRP3CtbJgSg" name="Basetype">
+        <eAnnotations xmi:id="_zdFJpJfuEd-GRP3CtbJgSg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_sCc7PZfaEd-ivKSn_u8Aqg"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_zdFJpZfuEd-GRP3CtbJgSg" name="instanceType" ordered="false">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_zdFJp5fuEd-GRP3CtbJgSg" name="base_DataType" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/3.0.0/UML#//DataType"/>
+        </eStructuralFeatures>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_zdFJqZfuEd-GRP3CtbJgSg" name="EnumLiteral">
+        <eAnnotations xmi:id="_zdFJqpfuEd-GRP3CtbJgSg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_sCc7Q5faEd-ivKSn_u8Aqg"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_zdFJq5fuEd-GRP3CtbJgSg" name="value" ordered="false" defaultValueLiteral="-1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_zdFJrZfuEd-GRP3CtbJgSg" name="base_EnumerationLiteral" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/3.0.0/UML#//EnumerationLiteral"/>
+        </eStructuralFeatures>
+      </eClassifiers>
+    </contents>
+  </eAnnotations>
+  <elementImport xmi:id="_sCc7O5faEd-ivKSn_u8Aqg">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+  </elementImport>
+  <elementImport xmi:id="_sCc7PJfaEd-ivKSn_u8Aqg">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+  </elementImport>
+  <elementImport xmi:id="_qKu74JfrEd-xDdw0nuofWg">
+    <importedElement xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#DataType"/>
+  </elementImport>
+  <elementImport xmi:id="_sVm4AJfrEd-xDdw0nuofWg">
+    <importedElement xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#EnumerationLiteral"/>
+  </elementImport>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_sCc7PZfaEd-ivKSn_u8Aqg" name="Basetype">
+    <eAnnotations xmi:id="_sCc7PpfaEd-ivKSn_u8Aqg" source="http://www.generia.de/uml/profilebuilder-info-aggregation"/>
+    <eAnnotations xmi:id="_nrJUAJfrEd-xDdw0nuofWg" source="http://www.generia.de/uml/profilebuilder-info-extension"/>
+    <ownedAttribute xmi:id="_sCc7P5faEd-ivKSn_u8Aqg" name="instanceType">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_sCc7QJfaEd-ivKSn_u8Aqg" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_sCc7QZfaEd-ivKSn_u8Aqg"/>
+      <defaultValue xmi:type="uml:LiteralNull" xmi:id="_sCc7QpfaEd-ivKSn_u8Aqg"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_rRqHsJfrEd-xDdw0nuofWg" name="base_DataType" association="_rRg9wJfrEd-xDdw0nuofWg">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#DataType"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_sCc7Q5faEd-ivKSn_u8Aqg" name="EnumLiteral">
+    <eAnnotations xmi:id="_sCc7RJfaEd-ivKSn_u8Aqg" source="http://www.generia.de/uml/profilebuilder-info-aggregation"/>
+    <eAnnotations xmi:id="_nrSd8JfrEd-xDdw0nuofWg" source="http://www.generia.de/uml/profilebuilder-info-extension"/>
+    <ownedAttribute xmi:id="_sCc7RZfaEd-ivKSn_u8Aqg" name="value">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_sCc7RpfaEd-ivKSn_u8Aqg" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_sCc7R5faEd-ivKSn_u8Aqg"/>
+      <defaultValue xmi:type="uml:LiteralInteger" xmi:id="_sCc7SJfaEd-ivKSn_u8Aqg" value="-1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_ssQdcpfrEd-xDdw0nuofWg" name="base_EnumerationLiteral" association="_ssQdcJfrEd-xDdw0nuofWg">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#EnumerationLiteral"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_rRg9wJfrEd-xDdw0nuofWg" name="DataType_Basetype" memberEnd="_rRg9wZfrEd-xDdw0nuofWg _rRqHsJfrEd-xDdw0nuofWg">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_rRg9wZfrEd-xDdw0nuofWg" name="extension_Basetype" type="_sCc7PZfaEd-ivKSn_u8Aqg" aggregation="composite" association="_rRg9wJfrEd-xDdw0nuofWg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_ssQdcJfrEd-xDdw0nuofWg" name="EnumerationLiteral_EnumLiteral" memberEnd="_ssQdcZfrEd-xDdw0nuofWg _ssQdcpfrEd-xDdw0nuofWg">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_ssQdcZfrEd-xDdw0nuofWg" name="extension_EnumLiteral" type="_sCc7Q5faEd-ivKSn_u8Aqg" aggregation="composite" association="_ssQdcJfrEd-xDdw0nuofWg"/>
+  </packagedElement>
+</uml:Profile>

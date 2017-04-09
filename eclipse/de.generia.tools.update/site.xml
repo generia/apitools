@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description name="Api Tools Update Site" url="http://www.generia.de/tools/model/api/update">
+      This Update Site groups some useful eclipse tools for generic development.
+   </description>
+   <feature url="features/de.generia.tools.model.api.feature_1.0.2.vqualifier.jar" id="de.generia.tools.model.api.feature" version="1.0.2.vqualifier"/>
+</site>

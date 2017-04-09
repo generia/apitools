@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension point="org.eclipse.emf.exporter.modelExporterDescriptors">
+    <modelExporterDescriptor 
+    	id="de.generia.uml.profilebuilder.exporter" name="UML Profile Exporter" 
+      icon="icons/uml-profile-exporter.gif" 
+      description="Exports UML Profiles from annotated Ecore Models" 
+      wizard="de.generia.tools.model.uml.profilebuilder.exporter.UmlProfileExporterWizard" />
+  </extension>
+</plugin>

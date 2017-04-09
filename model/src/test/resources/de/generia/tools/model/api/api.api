@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<EPackage name="api">
+	<classifiers>
+		<EClass name="EModelElement" abstract="true">
+			<structural-features>
+				<EReference name="annotations" ordered="true" many="true" type="/api/EAnnotation" containment="true"/>
+				<EAttribute name="documentation" type="/api/datatypes/String"/>
+			</structural-features>
+		</EClass>
+		<EClass name="EAnnotation" super-type="/api/EModelElement">
+			<structural-features>
+				<EAttribute name="source" type="/api/datatypes/String"/>
+				<EReference name="elements" ordered="true" many="true" type="/api/EAnnotationElement" containment="true"/>
+			</structural-features>
+		</EClass>
+		<EClass name="EAnnotationElement">
+			<structural-features>
+				<EAttribute name="key" type="/api/datatypes/String"/>
+				<EAttribute name="value" type="/api/datatypes/String"/>
+			</structural-features>
+		</EClass>
+		<EClass name="ENamedElement" abstract="true" super-type="/api/EModelElement">
+			<structural-features>
+				<EAttribute name="name" type="/api/datatypes/String"/>
+			</structural-features>
+		</EClass>
+		<EClass name="EClassifier" abstract="true" super-type="/api/ENamedElement">
+			<structural-features>
+				<EAttribute name="instanceTypeName" type="/api/datatypes/String"/>
+				<EAttribute name="defaultValue" type="/api/datatypes/String"/>
+				<EReference name="package" type="/api/EPackage" opposite="/api/EPackage/classifiers"/>
+			</structural-features>
+		</EClass>
+		<EClass name="EDataType" super-type="/api/EClassifier"/>
+		<EClass name="EEnum" super-type="/api/EDataType">
+			<structural-features>
+				<EReference name="literals" ordered="true" many="true" type="/api/EEnumLiteral" containment="true" opposite="/api/EEnumLiteral/enum"/>
+			</structural-features>
+		</EClass>
+		<EClass name="EEnumLiteral" super-type="/api/ENamedElement">
+			<structural-features>
+				<EAttribute name="value" type="/api/datatypes/int"/>
+				<EAttribute name="literal" type="/api/datatypes/String"/>
+				<EReference name="enum" type="/api/EEnum" opposite="/api/EEnum/literals"/>
+			</structural-features>
+		</EClass>
+		<EClass name="EClass" super-type="/api/EClassifier">
+			<structural-features>
+				<EAttribute name="abstract" type="/api/datatypes/boolean"/>
+				<EAttribute name="interface" type="/api/datatypes/boolean"/>
+				<EReference name="superType" type="/api/EClass"/>
+				<EReference name="structuralFeatures" ordered="true" many="true" type="/api/EStructuralFeature" containment="true" opposite="/api/EStructuralFeature/containingClass"/>
+				<EReference name="operations" ordered="true" many="true" type="/api/EOperation" containment="true" opposite="/api/EOperation/containingClass"/>
+				<EReference name="nestedClassifiers" ordered="true" many="true" type="/api/EClassifier" containment="true"/>
+			</structural-features>
+		</EClass>
+		<EClass name="ETypedElement" abstract="true" super-type="/api/ENamedElement">
+			<structural-features>
+				<EAttribute name="ordered" type="/api/datatypes/boolean"/>
+				<EAttribute name="many" type="/api/datatypes/boolean"/>
+				<EAttribute name="required" type="/api/datatypes/boolean"/>
+				<EReference name="type" type="/api/EClassifier"/>
+			</structural-features>
+		</EClass>
+		<EClass name="EStructuralFeature" abstract="true" super-type="/api/ETypedElement">
+			<structural-features>
+				<EAttribute name="transient" type="/api/datatypes/boolean"/>
+				<EAttribute name="defaultValueLiteral" type="/api/datatypes/String"/>
+				<EReference name="containingClass" type="/api/EClass"/>
+			</structural-features>
+		</EClass>
+		<EClass name="EAttribute" super-type="/api/EStructuralFeature">
+			<structural-features>
+				<EAttribute name="id" type="/api/datatypes/boolean"/>
+			</structural-features>
+		</EClass>
+		<EClass name="EReference" super-type="/api/EStructuralFeature">
+			<structural-features>
+				<EAttribute name="containment" type="/api/datatypes/boolean"/>
+				<EReference name="opposite" type="/api/EReference"/>
+			</structural-features>
+		</EClass>
+		<EClass name="EOperation" super-type="/api/ETypedElement">
+			<structural-features>
+				<EReference name="containingClass" type="/api/EClass" opposite="/api/EClass/operations"/>
+				<EReference name="parameters" ordered="true" many="true" type="/api/EParameter" containment="true" opposite="/api/EParameter/operation"/>
+				<EReference name="exceptions" ordered="true" many="true" type="/api/EClassifier"/>
+			</structural-features>
+		</EClass>
+		<EClass name="EParameter" super-type="/api/ETypedElement">
+			<structural-features>
+				<EReference name="operation" type="/api/EOperation" opposite="/api/EOperation/parameters"/>
+			</structural-features>
+		</EClass>
+		<EClass name="EPackage" super-type="/api/ENamedElement">
+			<structural-features>
+				<EReference name="classifiers" ordered="true" many="true" type="/api/EClassifier" containment="true" opposite="/api/EClassifier/package"/>
+				<EReference name="subPackages" ordered="true" many="true" type="/api/EPackage" containment="true" opposite="/api/EPackage/superPackage"/>
+				<EReference name="superPackage" type="/api/EPackage" opposite="/api/EPackage/subPackages"/>
+			</structural-features>
+		</EClass>
+	</classifiers>
+	<sub-packages>
+		<EPackage name="datatypes">
+			<classifiers>
+				<EDataType name="String" instance-type-name="java.lang.String"/>
+				<EDataType name="int" instance-type-name="int"/>
+				<EDataType name="boolean" instance-type-name="boolean"/>
+			</classifiers>
+		</EPackage>
+	</sub-packages>
+</EPackage>

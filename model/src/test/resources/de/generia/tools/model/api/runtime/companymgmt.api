@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<EPackage name="companymgmt">
+	<classifiers>
+		<EClass name="CompanyRepository" interface="true">
+			<operations>
+				<EOperation name="findAll" many="true" type="/companymgmt/model/Company"/>
+				<EOperation name="findByName" type="/companymgmt/model/Company">
+					<parameters>
+						<EParameter name="name" type="/companymgmt/basetypes/String"/>
+					</parameters>
+				</EOperation>
+			</operations>
+		</EClass>
+	</classifiers>
+	<sub-packages>
+		<EPackage name="basetypes">
+			<classifiers>
+				<EDataType name="void" instance-type-name="void"/>
+				<EDataType name="Boolean" instance-type-name="java.lang.Boolean"/>
+				<EDataType name="Date" instance-type-name="java.util.Date"/>
+				<EDataType name="Integer" instance-type-name="java.lang.Integer"/>
+				<EDataType name="Double" instance-type-name="java.lang.Double"/>
+				<EDataType name="String" instance-type-name="java.lang.String"/>
+				<EDataType name="Map" instance-type-name="java.util.Map"/>
+				<EDataType name="Email" instance-type-name="java.lang.String"/>
+				<EDataType name="Link" instance-type-name="java.lang.String"/>
+				<EDataType name="PhoneNumber" instance-type-name="java.lang.String"/>
+			</classifiers>
+		</EPackage>
+		<EPackage name="model">
+			<annotations>
+				<EAnnotation source="Table">
+					<elements>
+						<EAnnotationElement key="tablePrefix" value="CPY_"/>
+					</elements>
+				</EAnnotation>
+			</annotations>
+			<classifiers>
+				<EEnum name="Assessment">
+					<literals>
+						<EEnumLiteral name="poor" value="10"/>
+						<EEnumLiteral name="good" value="20"/>
+						<EEnumLiteral name="excellent" value="30"/>
+					</literals>
+				</EEnum>
+				<EClass name="Workstation">
+					<annotations>
+						<EAnnotation source="Entity"/>
+					</annotations>
+					<structural-features>
+						<EAttribute name="name" required="true" type="/companymgmt/basetypes/String" id="true"/>
+						<EAttribute name="assessment" required="true" type="/companymgmt/model/Assessment"/>
+						<EReference name="company" required="true" type="/companymgmt/model/Company" opposite="/companymgmt/model/Company/workstations"/>
+						<EReference name="employee" type="/companymgmt/model/Employee" opposite="/companymgmt/model/Employee/workstation"/>
+					</structural-features>
+				</EClass>
+				<EClass name="Company">
+					<annotations>
+						<EAnnotation source="Entity"/>
+					</annotations>
+					<structural-features>
+						<EAttribute name="name" required="true" type="/companymgmt/basetypes/String" id="true"/>
+						<EAttribute name="homepage" type="/companymgmt/basetypes/Link"/>
+						<EReference name="workstations" ordered="true" many="true" type="/companymgmt/model/Workstation" containment="true" opposite="/companymgmt/model/Workstation/company"/>
+						<EReference name="employees" many="true" required="true" type="/companymgmt/model/Employee" containment="true" opposite="/companymgmt/model/Employee/company"/>
+						<EReference name="projects" many="true" type="/companymgmt/model/Project" containment="true" opposite="/companymgmt/model/Project/company"/>
+					</structural-features>
+				</EClass>
+				<EClass name="Employee">
+					<annotations>
+						<EAnnotation source="Entity"/>
+					</annotations>
+					<structural-features>
+						<EAttribute name="logins" required="true" type="/companymgmt/basetypes/String"/>
+						<EAttribute name="name" required="true" type="/companymgmt/basetypes/String" id="true"/>
+						<EAttribute name="title" type="/companymgmt/basetypes/String"/>
+						<EReference name="contact" type="/companymgmt/model/Contact" containment="true"/>
+						<EReference name="company" required="true" type="/companymgmt/model/Company" opposite="/companymgmt/model/Project/company"/>
+						<EReference name="workstation" type="/companymgmt/model/Workstation" opposite="/companymgmt/model/Workstation/employee"/>
+						<EReference name="projects" many="true" type="/companymgmt/model/Project" opposite="/companymgmt/model/Project/employees"/>
+					</structural-features>
+				</EClass>
+				<EClass name="Project">
+					<annotations>
+						<EAnnotation source="Entity"/>
+					</annotations>
+					<structural-features>
+						<EAttribute name="name" required="true" type="/companymgmt/basetypes/String" id="true"/>
+						<EAttribute name="description" required="true" type="/companymgmt/basetypes/String"/>
+						<EAttribute name="size" type="/companymgmt/model/Project/Size"/>
+						<EReference name="company" required="true" type="/companymgmt/model/Company" opposite="/companymgmt/model/Company/projects"/>
+						<EReference name="employees" many="true" type="/companymgmt/model/Employee" opposite="/companymgmt/model/Employee/projects"/>
+					</structural-features>
+					<nested-classifiers>
+						<EEnum name="Size">
+							<literals>
+								<EEnumLiteral name="small"/>
+								<EEnumLiteral name="medium" value="1"/>
+								<EEnumLiteral name="big" value="2"/>
+							</literals>
+						</EEnum>
+					</nested-classifiers>
+				</EClass>
+				<EClass name="Manager" super-type="/companymgmt/model/Employee">
+					<annotations>
+						<EAnnotation source="Entity"/>
+					</annotations>
+					<structural-features>
+						<EAttribute name="staffCar" type="/companymgmt/basetypes/Boolean"/>
+					</structural-features>
+				</EClass>
+				<EClass name="Contact">
+					<annotations>
+						<EAnnotation source="Embeddable"/>
+					</annotations>
+					<structural-features>
+						<EAttribute name="email" type="/companymgmt/basetypes/Email"/>
+						<EAttribute name="phoneNumber" type="/companymgmt/basetypes/PhoneNumber"/>
+					</structural-features>
+				</EClass>
+			</classifiers>
+		</EPackage>
+	</sub-packages>
+</EPackage>

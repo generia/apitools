@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: UML Profile-Builder
+Bundle-SymbolicName: de.generia.tools.model.uml.profilebuilder;singleton:=true
+Bundle-Version: 1.0.4.vqualifier
+Bundle-Activator: de.generia.tools.model.uml.profilebuilder.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.emf.ecore.xmi;bundle-version="2.5.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.eclipse.emf.codegen.ecore.genmodel,
+ org.eclipse.emf.common.util,
+ org.eclipse.emf.converter,
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.resource,
+ org.eclipse.emf.ecore.resource.impl,
+ org.eclipse.emf.ecore.util,
+ org.eclipse.emf.exporter,
+ org.eclipse.emf.exporter.ui.contribution.base,
+ org.eclipse.uml2.common.util,
+ org.eclipse.uml2.uml,
+ org.eclipse.uml2.uml.resource,
+ org.eclipse.uml2.uml.util
+Bundle-Vendor: www.generia.de
+Export-Package: de.generia.tools.model.uml.profilebuilder
