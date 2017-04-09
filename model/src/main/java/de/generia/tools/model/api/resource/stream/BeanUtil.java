@@ -7,15 +7,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * The Class BeanUtil.
+ */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class BeanUtil {
 
 
+	/** The Constant SETTER_PREFIX. */
 	private static final String SETTER_PREFIX = "set";
+	
+	/** The Constant GETTER_PREFIX. */
 	private static final String GETTER_PREFIX = "get";
+	
+	/** The Constant BOOL_GETTER_PREFIX. */
 	private static final String BOOL_GETTER_PREFIX = "is";
+	
+	/** The Constant CLASS_PROPERTY. */
 	private static final String CLASS_PROPERTY = "class";
 
+	/**
+	 * Gets the getter.
+	 *
+	 * @param pClass the class
+	 * @param pName the name
+	 * @return the getter
+	 */
 	public static Method getGetter(Class pClass, String pName) {
 		if (pClass == null || pName == null) {
 			return null;
@@ -38,11 +55,12 @@ public class BeanUtil {
 	}
 
 	/**
-	 * Returns the Getter for  pName of class pClass , where pPrefixLength characters are cut off from the attribute name
-	 * @param pClass
-	 * @param pName
-	 * @param pPrefix
-	 * @return
+	 * Returns the Getter for  pName of class pClass , where pPrefixLength characters are cut off from the attribute name.
+	 *
+	 * @param pClass the class
+	 * @param pName the name
+	 * @param pPrefixLength the prefix length
+	 * @return the getter
 	 */
 	public static Method getGetter(Class pClass, String pName, int pPrefixLength) {
 		if (pName.length() <= pPrefixLength) {
@@ -51,6 +69,13 @@ public class BeanUtil {
 		return getGetter(pClass, pName.substring(pPrefixLength));
 	}
 	
+	/**
+	 * Gets the setter.
+	 *
+	 * @param pClass the class
+	 * @param pName the name
+	 * @return the setter
+	 */
 	public static Method getSetter(Class pClass, String pName) {
 		if (pClass == null || pName == null) {
 			return null;
@@ -62,6 +87,14 @@ public class BeanUtil {
 		return getSetter(pClass, pName, lGetter.getReturnType());
 	}
 	
+	/**
+	 * Gets the setter.
+	 *
+	 * @param pClass the class
+	 * @param pName the name
+	 * @param pParamType the param type
+	 * @return the setter
+	 */
 	public static Method getSetter(Class pClass, String pName, Class pParamType) {
 		if (pClass == null || pName == null) {
 			return null;
@@ -76,12 +109,13 @@ public class BeanUtil {
 	}
 
 	/**
-	 * Returns the Setter for  pName of class pClass , where pPrefixLength characters are cut off from the attribute name
-	 * @param pClass
-	 * @param pName
-	 * @param pParamType
-	 * @param pPrefix
-	 * @return
+	 * Returns the Setter for  pName of class pClass , where pPrefixLength characters are cut off from the attribute name.
+	 *
+	 * @param pClass the class
+	 * @param pName the name
+	 * @param pParamType the param type
+	 * @param pPrefixLength the prefix length
+	 * @return the setter
 	 */
 	public static Method getSetter(Class pClass, String pName, Class pParamType, int pPrefixLength) {
 		if (pName.length() <= pPrefixLength) {
@@ -90,6 +124,12 @@ public class BeanUtil {
 		return getSetter(pClass, pName.substring(pPrefixLength), pParamType);
 	}
 	
+	/**
+	 * First down.
+	 *
+	 * @param pName the name
+	 * @return the string
+	 */
 	public static String firstDown ( String pName ) {
 		if (pName.equals("")) {
 			return "";
@@ -98,6 +138,12 @@ public class BeanUtil {
 		return lName;
 	}
 
+	/**
+	 * First up.
+	 *
+	 * @param pName the name
+	 * @return the string
+	 */
 	public static String firstUp ( String pName ) {
 		if (pName.equals("")) {
 			return "";
@@ -106,6 +152,12 @@ public class BeanUtil {
 		return lName;
 	}
 	
+	/**
+	 * Gets the reserved properties.
+	 *
+	 * @param pClass the class
+	 * @param pProperties the properties
+	 */
 	public static void getReservedProperties(Class pClass, List<String> pProperties) {
 		if (pClass == null) {
 			return;
@@ -120,21 +172,44 @@ public class BeanUtil {
 		}
 	}
 
+	/**
+	 * The Class View.
+	 */
 	public static class View extends PropertyNode {
+		
+		/** The m class. */
 		private Class mClass;
 		
+		/**
+		 * Instantiates a new view.
+		 *
+		 * @param pClass the class
+		 */
 		public View(Class pClass) {
 			mClass = pClass;
 		}
 
+		/**
+		 * Gets the bean class.
+		 *
+		 * @return the bean class
+		 */
 		public Class getBeanClass() {
 			return mClass;
 		}
 		
+		/* (non-Javadoc)
+		 * @see de.generia.tools.model.api.resource.stream.BeanUtil.PropertyNode#getName()
+		 */
 		public String getName() {
 			return mClass.getSimpleName();
 		}
 		
+		/**
+		 * Copy.
+		 *
+		 * @return the view
+		 */
 		public View copy() {
 			try {
 				View lView = (View) clone();
@@ -144,16 +219,37 @@ public class BeanUtil {
 			}
 		}
 
+		/**
+		 * Sets the class.
+		 *
+		 * @param pClass the new class
+		 */
 		public void setClass(Class pClass) {
 			mClass = pClass;
 		}
 	}
 
+	/**
+	 * The Class PropertyNode.
+	 */
 	public static abstract class PropertyNode implements Cloneable {
+		
+		/** The m children. */
 		private List<Property> mChildren = new ArrayList<Property>();
 		
+		/**
+		 * Gets the name.
+		 *
+		 * @return the name
+		 */
 		public abstract String getName();
 	
+		/**
+		 * Adds the.
+		 *
+		 * @param pName the name
+		 * @return the property
+		 */
 		public Property add(String pName) {
 			Property lProperty = get(pName);
 			if (lProperty != null) {
@@ -165,6 +261,13 @@ public class BeanUtil {
 		}
 		
 	
+		/**
+		 * Adds the.
+		 *
+		 * @param pName the name
+		 * @param pView the view
+		 * @return the property
+		 */
 		public Property add(String pName, View pView) {
 			Property lProperty = add(pName);
 			if (pView != null) {
@@ -174,6 +277,12 @@ public class BeanUtil {
 			return lProperty;
 		}
 	
+		/**
+		 * Gets the.
+		 *
+		 * @param pName the name
+		 * @return the property
+		 */
 		private Property get(String pName) {
 			for (Property lProperty : mChildren) {
 				if (lProperty.getName().equals(pName)) {
@@ -183,6 +292,12 @@ public class BeanUtil {
 			return null;
 		}
 		
+		/**
+		 * Collect properties.
+		 *
+		 * @param pBuffer the buffer
+		 * @param pContext the context
+		 */
 		protected void collectProperties(StringBuffer pBuffer, String pContext) {
 			String lProperty = (pContext == null) ? getName() : pContext + "." + getName();
 			pBuffer.append(lProperty).append("\n");
@@ -191,6 +306,9 @@ public class BeanUtil {
 			}
 		}
 		
+		/* (non-Javadoc)
+		 * @see java.lang.Object#clone()
+		 */
 		@Override
 		protected Object clone() throws CloneNotSupportedException {
 			PropertyNode lNode = (PropertyNode) super.clone();
@@ -201,6 +319,13 @@ public class BeanUtil {
 			return lNode;
 		}
 		
+		/**
+		 * Apply.
+		 *
+		 * @param pObject the object
+		 * @param pProcessor the processor
+		 * @return the object
+		 */
 		public Object apply(Object pObject, Processor pProcessor) {
 			if (pObject == null) {
 				return null;
@@ -216,6 +341,13 @@ public class BeanUtil {
 			}
 			return lResult;
 		}
+		
+		/**
+		 * Apply children.
+		 *
+		 * @param pObject the object
+		 * @param pProcessor the processor
+		 */
 		private void applyChildren(Object pObject, Processor pProcessor) {
 			Object lPrevContext  = pProcessor.getContext();
 			pProcessor.setContext(pObject);
@@ -235,10 +367,18 @@ public class BeanUtil {
 			pProcessor.setContext(lPrevContext);
 		}
 		
+		/**
+		 * Gets the children.
+		 *
+		 * @return the children
+		 */
 		public List<Property> getChildren() {
 			return mChildren;
 		}
 		
+		/* (non-Javadoc)
+		 * @see java.lang.Object#toString()
+		 */
 		@Override
 		public String toString() {
 			StringBuffer lBuffer = new StringBuffer();
@@ -247,53 +387,136 @@ public class BeanUtil {
 		}
 	}
 
+	/**
+	 * The Class Property.
+	 */
 	public static class Property extends PropertyNode {
+		
+		/** The m name. */
 		private String mName;
+		
+		/**
+		 * Instantiates a new property.
+		 *
+		 * @param pName the name
+		 */
 		public Property(String pName) {
 			mName = pName;
 		}
+		
+		/* (non-Javadoc)
+		 * @see de.generia.tools.model.api.resource.stream.BeanUtil.PropertyNode#getName()
+		 */
 		public String getName() {
 			return mName;
 		}
 	}
 
+	/**
+	 * The Class Processor.
+	 */
 	public static abstract class Processor {
+		
+		/**
+		 * Process.
+		 *
+		 * @param pObject the object
+		 * @param pPropertyNode the property node
+		 * @return the object
+		 */
 		public abstract Object process(Object pObject, PropertyNode pPropertyNode);
+		
+		/** The m context. */
 		private Object mContext = null;
+		
+		/**
+		 * Gets the context.
+		 *
+		 * @return the context
+		 */
 		public Object getContext() {
 			return mContext;
 		}
+		
+		/**
+		 * Sets the context.
+		 *
+		 * @param pContext the new context
+		 */
 		public void setContext(Object pContext) {
 			mContext = pContext;
 		} 
 	}
 	
+	/**
+	 * The Class PropertyRef.
+	 */
 	public static class PropertyRef {
+		
+		/** The m bean. */
 		private Object mBean = null;
+		
+		/** The m property. */
 		private String mProperty = null;
+		
+		/** The m getter. */
 		private Method mGetter = null;
+		
+		/** The m setter. */
 		private Method mSetter = null;
 
+		/**
+		 * Instantiates a new property ref.
+		 *
+		 * @param pBean the bean
+		 * @param pProperty the property
+		 */
 		public PropertyRef(Object pBean, String pProperty) {
 			mBean = pBean;
 			mProperty = pProperty;
 		}
 		
+		/**
+		 * Gets the bean.
+		 *
+		 * @return the bean
+		 */
 		public Object getBean() {
 			return mBean;
 		}
 		
+		/**
+		 * Sets the bean.
+		 *
+		 * @param pBean the new bean
+		 */
 		public void setBean(Object pBean) {
 			mBean = pBean;
 		}
 		
+		/**
+		 * Gets the property.
+		 *
+		 * @return the property
+		 */
 		public String getProperty() {
 			return mProperty;
 		}
+		
+		/**
+		 * Sets the property.
+		 *
+		 * @param pProperty the new property
+		 */
 		public void setProperty(String pProperty) {
 			mProperty = pProperty;
 		}
 
+		/**
+		 * Gets the getter.
+		 *
+		 * @return the getter
+		 */
 		public Method getGetter() {
 			if (mGetter == null) {
 				mGetter = BeanUtil.getGetter(mBean.getClass(), mProperty);
@@ -301,6 +524,11 @@ public class BeanUtil {
 			return mGetter;
 		}
 		
+		/**
+		 * Gets the setter.
+		 *
+		 * @return the setter
+		 */
 		public Method getSetter() {
 			if (mSetter == null) {
 				Method lGetter = getGetter();
@@ -309,6 +537,11 @@ public class BeanUtil {
 			return mSetter;
 		}
 		
+		/**
+		 * Gets the.
+		 *
+		 * @return the object
+		 */
 		public Object get() {
 			Method lGetter = getGetter();
 			if (lGetter == null) {
@@ -321,6 +554,12 @@ public class BeanUtil {
 			}
 		}
 		
+		/**
+		 * Sets the.
+		 *
+		 * @param pObject the object
+		 * @return the object
+		 */
 		public Object set(Object pObject) {
 			Method lSetter = getSetter();
 			if (lSetter == null) {
@@ -333,11 +572,17 @@ public class BeanUtil {
 			}
 		}
 		
+		/* (non-Javadoc)
+		 * @see java.lang.Object#toString()
+		 */
 		@Override
 		public String toString() {
 			return mBean + "." + mProperty;
 		}
 		
+		/* (non-Javadoc)
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
 		@Override
 		public boolean equals(Object pObject) {
 			if (!(pObject instanceof PropertyRef)) {
@@ -350,6 +595,9 @@ public class BeanUtil {
 			return mProperty.equals(lPropertyRef.mProperty);
 		}
 		
+		/* (non-Javadoc)
+		 * @see java.lang.Object#hashCode()
+		 */
 		@Override
 		public int hashCode() {
 			// we don't use toString().hashCode() here
@@ -358,6 +606,14 @@ public class BeanUtil {
 		}
 	}
 
+	/**
+	 * Gets the annotation.
+	 *
+	 * @param pClass the class
+	 * @param pProperty the property
+	 * @param pAnnotation the annotation
+	 * @return the annotation
+	 */
 	public static Annotation getAnnotation(Class pClass, String pProperty, Class<? extends Annotation> pAnnotation) {
 		Method lGetter = getGetter(pClass, pProperty);
 		if (lGetter != null) {
@@ -384,14 +640,38 @@ public class BeanUtil {
 		}
 	}
 
+	/**
+	 * The Interface PropertyFilter.
+	 */
 	public interface PropertyFilter {
+		
+		/**
+		 * Accept.
+		 *
+		 * @param pProperty the property
+		 * @param pGetter the getter
+		 * @return true, if successful
+		 */
 		public boolean accept(String pProperty, Method pGetter);
 	}
 	
+	/**
+	 * Gets the properties.
+	 *
+	 * @param pClass the class
+	 * @return the properties
+	 */
 	public static List<String> getProperties(Class pClass) {
 		return getProperties(pClass, null);
 	}
 	
+	/**
+	 * Gets the properties.
+	 *
+	 * @param pClass the class
+	 * @param pFilter the filter
+	 * @return the properties
+	 */
 	public static List<String> getProperties(Class pClass, PropertyFilter pFilter) {
 		List<String> lProperties = new ArrayList<String>();
 		for (Method lMethod : pClass.getMethods()) {
