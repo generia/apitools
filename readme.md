@@ -17,11 +17,11 @@ The apitools project has the following sub-projects:
 1. *model*: standalone Java pojos describing the "api" specifiation
 2. *eclipse*: Eclipse editor for "api" descriptions.
 
-## 'model' sub-project
+## '[model](model/readme.md)' sub-project
 
 A standalone Java pojos describing the "api" specifiation.
 
-## 'editor' sub-project
+## '[editor](editor/readme.md)' sub-project
 
 A collections of Eclipse plugins that provide 
 
