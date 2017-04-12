@@ -24,7 +24,7 @@
 	  <link href="http://visjs.org/dist/vis.css" rel="stylesheet" type="text/css" />
 
 	<script id="svg" type="text/svg">
-		<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="top: 10%; left: 10%; width: 80%; height: 80%; position: absolute;" preserveAspectRatio="xMidyMid meet" viewBox="0 0 100 100">
+		<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidyMid meet" viewBox="0 0 100 100">
             <style type="text/css">
                 text {
                     font-family: ArialMT,Arial;
@@ -48,12 +48,14 @@
                     x: 180px;
                 }
             </style>
-			<rect x="0" y="0" width="100%" height="100%" fill="#7890A7" stroke-width="20" stroke="#ffffff" ></rect>
-			<text class="imprint" y="0">Cloudev Softwareentwicklung GmbH</text>
-			<text class="imprint" y="15">Schmied-Kochel-Straße 20, 81371 München</text>
-			<text class="imprint" y="30">HRB 216582, Amtsgericht München</text>
-			<text class="imprint" y="45">USt-IdNr. gem. § 27a UStG: DE298361435</text>
-			<text class="imprint" y="60">Geschäftsführer: Alexander Knecht</text>
+			<rect x="0" y="0" width="100%" height="100%" fill="#ffff00" stroke-width="1" stroke="#ff0000" ></rect>
+            <g transform="translate(15, 15)" onload="console.log('svg', this)" onclick="alert('toll')">
+				<text class="imprint" y="0">Cloudev Softwareentwicklung GmbH</text>
+				<text class="imprint" y="15">Schmied-Kochel-Straße 20, 81371 München</text>
+				<text class="imprint" y="30">HRB 216582, Amtsgericht München</text>
+				<text class="imprint" y="45">USt-IdNr. gem. § 27a UStG: DE298361435</text>
+				<text class="imprint" y="60">Geschäftsführer: Alexander Knecht</text>
+			</g>
 		</svg>
 	</script>
     <script type="text/javascript">
@@ -93,7 +95,9 @@
 
             nodes.push({id: 1, label: 'Get HTML', image: url, shape: 'image'});
             nodes.push({id: 2, label: 'Using SVG', image: url, shape: 'image'});
+            nodes.push({id: 3, label: 'class Toll\ngetName(): String;\nsetName();', shape: 'box'});
             edges.push({from: 1, to: 2, length: 300});
+            edges.push({from: 2, to: 3, length: 200});
 
             // create a network
             var container = document.getElementById('mynetwork');
