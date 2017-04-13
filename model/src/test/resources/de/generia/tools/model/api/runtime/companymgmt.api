@@ -75,7 +75,7 @@
 						<EAttribute name="name" required="true" type="/companymgmt/basetypes/String" id="true"/>
 						<EAttribute name="title" type="/companymgmt/basetypes/String"/>
 						<EReference name="contact" type="/companymgmt/model/Contact" containment="true"/>
-						<EReference name="company" required="true" type="/companymgmt/model/Company" opposite="/companymgmt/model/Project/company"/>
+						<EReference name="company" required="true" type="/companymgmt/model/Company" opposite="/companymgmt/model/Company/employees"/>
 						<EReference name="workstation" type="/companymgmt/model/Workstation" opposite="/companymgmt/model/Workstation/employee"/>
 						<EReference name="projects" many="true" type="/companymgmt/model/Project" opposite="/companymgmt/model/Project/employees"/>
 					</structural-features>

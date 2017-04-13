@@ -1,10 +1,8 @@
 package de.generia.tools.model.api.trafo.dot;
 
 import java.io.PrintWriter;
-import java.io.Writer;
-import java.sql.Ref;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -21,7 +19,7 @@ import de.generia.tools.model.api.ETypedElement;
 
 public class Api2DotTrafo {
 	private Map<EClassifier, Node> nodes;
-	private Map<EReference, Edge> edges;
+	private Map<ETypedElement, Edge> edges;
 	private int nodeCount;
 	private Stack<String> packageStack = new Stack<>();
 	
@@ -38,8 +36,8 @@ public class Api2DotTrafo {
 		for (Node node : nodes.values()) {
 			writeNode(writer, node, "\t");
 		}
-		for (Edge edge : edges.values()) {
-			writeEdge(writer, edge, "\t");
+		for (Map.Entry<ETypedElement, Edge> entry : edges.entrySet()) {
+			writeEdge(writer, entry.getKey(), entry.getValue(), "\t");
 		}
 		writeGraphEnd(writer);
 		writer.flush();
@@ -69,11 +67,11 @@ public class Api2DotTrafo {
 		writer.println();
 		writer.println(ind + "// " + node.getQName());
 
-		writer.println(ind + node.id + " [label=<<table title=\"" + title + "\" border=\"0\" cellborder=\"1\" cellspacing=\"0\" cellpadding=\"2\" port=\"p\">");
+		writer.println(ind + node.id + " [label=<<table title=\"" + title + "\" border=\"0\" cellborder=\"1\" cellspacing=\"0\" cellpadding=\"2\" port=\"p\" color=\"#FFD000\" gradientangle=\"90\" bgcolor=\"#FFFF00;0:#FFFFA0\">");
 		
 		// class title
 		writer.println(ind + "<tr><td><table border=\"0\" cellspacing=\"0\" cellpadding=\"1\">");
-		writer.println(ind + "<tr><td align=\"center\" balign=\"center\"><font face=\"arialbd\"> " + className + " </font></td></tr>");
+		writer.println(ind + "<tr><td align=\"center\" balign=\"center\"><font face=\"arial\"> " + className + " </font></td></tr>");
 		if (packageName != null && !packageName.isEmpty()) {
 			writer.println(ind + "<tr><td align=\"center\" balign=\"center\"><font point-size=\"8.0\"> " + packageName + " </font></td></tr>");
 		}
@@ -105,10 +103,10 @@ public class Api2DotTrafo {
 			}		
 			writer.println(ind + "</table></td></tr>");
 		}
-		writer.println(ind + "</table>>, fontname=\"arial\", fontcolor=\"black\", fontsize=9.0];");
+		writer.println(ind + "</table>>, fontname=\"arial\", fontcolor=\"#404040\", fontsize=9.0];");
 	}
 
-	private void writeEdge(PrintWriter writer, Edge edge, String ind) {
+	private void writeEdge(PrintWriter writer, ETypedElement typedElement, Edge edge, String ind) {
 		Node source = nodes.get(edge.sourceType);
 		Node target = nodes.get(edge.targetType);
 		if (source == null || target == null) {
@@ -118,10 +116,32 @@ public class Api2DotTrafo {
 		
 		writer.println(ind + "// " + edgeType + ": " + source.getQName() + " " + edgeType + " " + target.getQName());
 		writer.print(ind + source.id + ":p -> " + target.id + ":p");
-		if (edgeType == Edge.Type.inheritance) {
-			writer.println(" [dir=back,arrowtail=empty];");
-		} else {
-			writer.println(" [taillabel=\"\", label=\"\", headlabel=\"\", fontname=\"arialbd\", fontcolor=\"blue\", fontsize=10.0, color=\"black\", arrowhead=open];");
+		switch (edgeType) {
+		case inheritance:
+			writer.println(" [weight=\"1000\" arrowhead=\"onormal\"];");
+			break;
+		case usage:
+			writer.println(" [weight=\"0\" style=\"dotted\" arrowhead=\"open\"];");
+			break;
+		case association:
+			EReference reference = (EReference) typedElement;
+			System.out.println("edge: " + source.getQName() + " -> " + target.getQName());
+			String label = typedElement.getName();
+			String taillabel = "";
+			String headlabel = typedElement.isMany() ? "*" : "";
+			if (!reference.isContainment() && reference.getOpposite() != null) {
+				label = "";
+				taillabel = reference.getOpposite().getName() + (reference.getOpposite().isMany() ? "*" : "");
+				headlabel = reference.getName() + headlabel;
+			}
+			String arrowhead = "none";
+			String arrowtail = reference.isContainment() ? "odiamond" : reference.getOpposite() != null ? "none" : "none";
+			String dir = reference.isContainment() ? "both" : reference.getOpposite() != null ? "both" : "forward";
+			String weight = reference.isContainment() ? "100" : reference.getOpposite() != null ? "0" : "0";
+			writer.println(" [label=\"" + label + "\" taillabel=\"" + taillabel + "\" headlabel=\"" + headlabel + "\" arrowtail=\"" + arrowtail + "\" arrowhead=\""+ arrowhead + "\" dir=\"" + dir + "\" weight=\"" + weight + "\" fontname=\"arial\" fontcolor=\"blue\" fontsize=10.0 color=\"black\"];");
+
+		default:
+			break;
 		}
 	}
 
@@ -169,16 +189,30 @@ public class Api2DotTrafo {
 			if (feature instanceof EReference) {
 				EReference reference = (EReference) feature;
 				if (reference.getOpposite() != null) {
+					System.out.println("ref: " + reference.getContainingClass().getName() + "." + reference.getName() + "<->" + reference.getOpposite().getContainingClass().getName() + "." + reference.getOpposite().getName());
 					if (edges.containsKey(reference.getOpposite())) {
+						System.out.println("- skipped");
 						continue;
 					}
+					// make sure containment-side is used as edge source
 					if (!reference.isContainment() && reference.getOpposite().isContainment()) {
 						continue;
 					}
+					
+				} else {
+					System.out.println("ref: " + reference.getContainingClass().getName() + "." + reference.getName());					
 				}
+				System.out.println("add: " + element.getName() + " -> " + reference.getType().getName());					
 				Edge edge = new Edge(Edge.Type.association, element, feature.getType());
 				edge.reference = (EReference) feature;
 				edges.put(edge.reference, edge);
+			}
+		}
+		Set<EClass> usageTargets = new HashSet<>();
+		for (EOperation operation : element.getOperations()) {
+			addUsageEdge(element, operation, usageTargets);
+			for (EParameter parameter : operation.getParameters()) {
+				addUsageEdge(element, parameter, usageTargets);
 			}
 		}
 		for (EClassifier classifier : element.getNestedClassifiers()) {
@@ -186,6 +220,19 @@ public class Api2DotTrafo {
 		}
 	}
 	
+	private void addUsageEdge(EClass element, ETypedElement typedElement, Set<EClass> usageTargets) {
+		EClassifier classifier = typedElement.getType();
+		if (!(classifier instanceof EClass)) {
+			return;
+		}
+		EClass type = (EClass) classifier;
+		if (usageTargets.contains(type)) {
+			return;
+		}
+		Edge edge = new Edge(Edge.Type.usage, element, type);
+		edges.put(edge.reference, edge);
+	}
+
 	private String getPackageName() {
 		String sep = "";
 		StringBuilder packageName = new StringBuilder();
@@ -222,6 +269,6 @@ public class Api2DotTrafo {
 			this.sourceType = sourceType;
 			this.targetType = targetType;
 		}
-		public enum Type { inheritance, association };
+		public enum Type { inheritance, association, usage };
 	}
  }
