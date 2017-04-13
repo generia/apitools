@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+import de.generia.tools.model.api.EAttribute;
 import de.generia.tools.model.api.EClass;
 import de.generia.tools.model.api.EClassifier;
 import de.generia.tools.model.api.EModelElement;
@@ -82,6 +83,9 @@ public class Api2DotTrafo {
 			writer.println(ind + "<tr><td><table border=\"0\" cellspacing=\"0\" cellpadding=\"1\">");
 			for (EStructuralFeature feature : clazz.getStructuralFeatures()) {
 				String spec = getTypedElement(feature);
+				if (feature instanceof EAttribute && ((EAttribute)feature).isId()) {
+					spec += " [id]";
+				}
 				writer.println(ind + "<tr><td align=\"left\" balign=\"left\"> " + spec + " </td></tr>");
 			}
 			writer.println(ind + "</table></td></tr>");
@@ -135,8 +139,8 @@ public class Api2DotTrafo {
 				headlabel = reference.getName() + headlabel;
 			}
 			String arrowhead = "none";
-			String arrowtail = reference.isContainment() ? "odiamond" : reference.getOpposite() != null ? "none" : "none";
-			String dir = reference.isContainment() ? "both" : reference.getOpposite() != null ? "both" : "forward";
+			String arrowtail = reference.isContainment() ? "diamond" : reference.getOpposite() != null ? "odiamond" : "odiamond";
+			String dir = reference.isContainment() ? "both" : reference.getOpposite() != null ? "both" : "both";
 			String weight = reference.isContainment() ? "100" : reference.getOpposite() != null ? "0" : "0";
 			writer.println(" [label=\"" + label + "\" taillabel=\"" + taillabel + "\" headlabel=\"" + headlabel + "\" arrowtail=\"" + arrowtail + "\" arrowhead=\""+ arrowhead + "\" dir=\"" + dir + "\" weight=\"" + weight + "\" fontname=\"arial\" fontcolor=\"blue\" fontsize=10.0 color=\"black\"];");
 
