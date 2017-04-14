@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.generia.tools</groupId>
 	<artifactId>apitools</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<name>apitools</name>
 	<description>Tools for handling api data</description>
 
