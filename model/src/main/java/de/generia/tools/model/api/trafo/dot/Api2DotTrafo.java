@@ -129,7 +129,6 @@ public class Api2DotTrafo {
 			break;
 		case association:
 			EReference reference = (EReference) typedElement;
-			System.out.println("edge: " + source.getQName() + " -> " + target.getQName());
 			String label = typedElement.getName();
 			String taillabel = "";
 			String headlabel = typedElement.isMany() ? "*" : "";
@@ -193,18 +192,13 @@ public class Api2DotTrafo {
 			if (feature instanceof EReference) {
 				EReference reference = (EReference) feature;
 				if (reference.getOpposite() != null) {
-					System.out.println("ref: " + reference.getContainingClass().getName() + "." + reference.getName() + "<->" + reference.getOpposite().getContainingClass().getName() + "." + reference.getOpposite().getName());
 					if (edges.containsKey(reference.getOpposite())) {
-						System.out.println("- skipped");
 						continue;
 					}
 					// make sure containment-side is used as edge source
 					if (!reference.isContainment() && reference.getOpposite().isContainment()) {
 						continue;
 					}
-					
-				} else {
-					System.out.println("ref: " + reference.getContainingClass().getName() + "." + reference.getName());					
 				}
 				System.out.println("add: " + element.getName() + " -> " + reference.getType().getName());					
 				Edge edge = new Edge(Edge.Type.association, element, feature.getType());
