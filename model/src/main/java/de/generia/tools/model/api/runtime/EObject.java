@@ -1,9 +1,11 @@
 package de.generia.tools.model.api.runtime;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,7 +17,7 @@ import de.generia.tools.model.api.EDataType;
 import de.generia.tools.model.api.EReference;
 import de.generia.tools.model.api.EStructuralFeature;
 
-public class EObject {
+public class EObject implements Map<String, Object> {
 	protected EClass type;
 	protected String id;
 	private Map<String, EStructuralFeature> structuralFeatureMap;
@@ -163,5 +165,121 @@ public class EObject {
 			return false;
 		}
 		return id.equals(other.id);
+	}
+
+	@Override
+	public int size() {
+		return valueMap.size();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return valueMap.isEmpty();
+	}
+
+	@Override
+	public boolean containsKey(Object key) {
+		return valueMap.containsKey(key);
+	}
+
+	@Override
+	public boolean containsValue(Object value) {
+		return valueMap.containsValue(value);
+	}
+
+	@Override
+	public Object get(Object key) {
+		return this.get((String)key);
+	}
+
+	@Override
+	public Object put(String key, Object value) {
+		Object oldValue = get(key);
+		set(key, value);
+		return oldValue; 
+	}
+
+	@Override
+	public Object remove(Object key) {
+		return put((String)key, null);
+	}
+
+	@Override
+	public void putAll(Map<? extends String, ? extends Object> m) {
+		for (Map.Entry<? extends String, ? extends Object> entry : m.entrySet()) {
+			put(entry.getKey(), entry.getValue());
+		}
+	}
+
+	@Override
+	public void clear() {
+		valueMap.clear();
+	}
+
+	@Override
+	public Set<String> keySet() {
+		if (type == null) {
+			return valueMap.keySet();
+		}
+		return structuralFeatureMap.keySet();
+	}
+
+	@Override
+	public Collection<Object> values() {
+		if (type == null) {
+			return valueMap.values();
+		}
+		Collection<Object> values = new ArrayList<>();
+		for (String feature : structuralFeatureMap.keySet()) {
+			Object value = get(feature);
+			if (value != null) {
+				values.add(value);
+			}
+		}
+		return values;
+	}
+
+	@Override
+	public Set<Entry<String, Object>> entrySet() {
+		if (type == null) {
+			return valueMap.entrySet();
+		}
+		Set<Entry<String,Object>> entrySet = new LinkedHashSet<>();
+		for (String feature : structuralFeatureMap.keySet()) {
+			Object value = get(feature);
+			if (value != null) {
+				Entry<String, Object> entry = new MapEntry(feature, value);
+				entrySet.add(entry);
+			}
+		}
+		return entrySet;
+	}
+	
+	private static class MapEntry implements Entry<String, Object> {
+		
+		private String key;
+		private Object value;
+		
+		public MapEntry(String key, Object value) {
+			this.key = key;
+			this.value = value;
+		}
+		
+		@Override
+		public String getKey() {
+			return key;
+		}
+
+		@Override
+		public Object getValue() {
+			return value;
+		}
+
+		@Override
+		public Object setValue(Object value) {
+			Object oldValue = value;
+			this.value = value;
+			return oldValue;
+		}
 	}
 }
