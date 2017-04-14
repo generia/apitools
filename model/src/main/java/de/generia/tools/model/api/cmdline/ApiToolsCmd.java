@@ -37,6 +37,7 @@ public class ApiToolsCmd {
 				outputStream.close();
 			} catch (Exception e) {
 				System.err.println("error: " + e.getMessage());
+				e.printStackTrace();
 			}
 		} else {
 			usage();

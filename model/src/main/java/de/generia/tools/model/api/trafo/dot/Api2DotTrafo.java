@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+import de.generia.tools.model.api.EAnnotation;
 import de.generia.tools.model.api.EAttribute;
 import de.generia.tools.model.api.EClass;
 import de.generia.tools.model.api.EClassifier;
@@ -64,6 +65,7 @@ public class Api2DotTrafo {
 		String title = node.classifier.getName();
 		String className = node.classifier.getName();
 		String packageName = node.packageName;
+		String stereotypes = toHtml(getStereotypes(node.classifier));
 		
 		writer.println();
 		writer.println(ind + "// " + node.getQName());
@@ -72,7 +74,10 @@ public class Api2DotTrafo {
 		
 		// class title
 		writer.println(ind + "<tr><td><table border=\"0\" cellspacing=\"0\" cellpadding=\"1\">");
-		writer.println(ind + "<tr><td align=\"center\" balign=\"center\"><font face=\"arial\"> " + className + " </font></td></tr>");
+		if (stereotypes != null && !stereotypes.isEmpty()) {
+			writer.println(ind + "<tr><td align=\"center\" balign=\"center\"><font point-size=\"8.0\"> " + stereotypes + " </font></td></tr>");
+		}
+		writer.println(ind + "<tr><td align=\"center\" balign=\"center\"><font face=\"arial\"><b> " + className + " </b></font></td></tr>");
 		if (packageName != null && !packageName.isEmpty()) {
 			writer.println(ind + "<tr><td align=\"center\" balign=\"center\"><font point-size=\"8.0\"> " + packageName + " </font></td></tr>");
 		}
@@ -84,7 +89,7 @@ public class Api2DotTrafo {
 			for (EStructuralFeature feature : clazz.getStructuralFeatures()) {
 				String spec = getTypedElement(feature);
 				if (feature instanceof EAttribute && ((EAttribute)feature).isId()) {
-					spec += " [id]";
+					spec = "<b>&lt;&lt;id&gt;&gt; " + spec + "</b>";
 				}
 				writer.println(ind + "<tr><td align=\"left\" balign=\"left\"> " + spec + " </td></tr>");
 			}
@@ -107,7 +112,7 @@ public class Api2DotTrafo {
 			}		
 			writer.println(ind + "</table></td></tr>");
 		}
-		writer.println(ind + "</table>>, fontname=\"arial\", fontcolor=\"#404040\", fontsize=9.0];");
+		writer.println(ind + "</table>> fontname=\"arial\" fontcolor=\"#404040\" fontsize=9.0];");
 	}
 
 	private void writeEdge(PrintWriter writer, ETypedElement typedElement, Edge edge, String ind) {
@@ -141,11 +146,29 @@ public class Api2DotTrafo {
 			String arrowtail = reference.isContainment() ? "diamond" : reference.getOpposite() != null ? "odiamond" : "odiamond";
 			String dir = reference.isContainment() ? "both" : reference.getOpposite() != null ? "both" : "both";
 			String weight = reference.isContainment() ? "100" : reference.getOpposite() != null ? "0" : "0";
-			writer.println(" [label=\"" + label + "\" taillabel=\"" + taillabel + "\" headlabel=\"" + headlabel + "\" arrowtail=\"" + arrowtail + "\" arrowhead=\""+ arrowhead + "\" dir=\"" + dir + "\" weight=\"" + weight + "\" fontname=\"arial\" fontcolor=\"blue\" fontsize=10.0 color=\"black\"];");
+			writer.println(" [label=\"" + label + "\" taillabel=\"" + taillabel + "\" headlabel=\"" + headlabel + "\" arrowtail=\"" + arrowtail + "\" arrowhead=\""+ arrowhead + "\" dir=\"" + dir + "\" weight=\"" + weight + "\" fontname=\"arial\" fontcolor=\"blue\" fontsize=10.0 color=\"#4040A0\"];");
 
 		default:
 			break;
 		}
+	}
+
+	private String toHtml(String string) {
+		String html = string.replace("&", "&amp;");
+		html = html.replace("\"", "&quot;");
+		html = html.replace("<", "&lt;");
+		html = html.replace(">", "&gt;");
+		return html;
+	}
+
+	private String getStereotypes(EModelElement element) {
+		StringBuilder stereotypes = new StringBuilder();
+		String sep = "";
+		for (EAnnotation annotation : element.getAnnotations()) {
+			stereotypes.append(sep).append("<<").append(annotation.getSource()).append(">>");
+			sep = " ";
+		}
+		return stereotypes.toString();
 	}
 
 	private String getTypedElement(ETypedElement element) {
@@ -200,7 +223,6 @@ public class Api2DotTrafo {
 						continue;
 					}
 				}
-				System.out.println("add: " + element.getName() + " -> " + reference.getType().getName());					
 				Edge edge = new Edge(Edge.Type.association, element, feature.getType());
 				edge.reference = (EReference) feature;
 				edges.put(edge.reference, edge);
