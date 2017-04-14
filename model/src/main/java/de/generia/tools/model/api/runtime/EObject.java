@@ -1,6 +1,7 @@
 package de.generia.tools.model.api.runtime;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,11 +22,19 @@ public class EObject {
 	
 	private Map<String, Object> valueMap = new HashMap<>();
 	
+	public EObject() {
+		this(null);
+	}
+	
 	public EObject(EClass type) {
-		if (type.isAbstract() || type.isInterface()) {
-			throw new IllegalArgumentException("can't instantiate type '" + typeName() + "'");
+		if (type != null) {
+			if (type.isAbstract() || type.isInterface()) {
+				throw new IllegalArgumentException("can't instantiate type '" + typeName() + "'");
+			}
+			setType(type);
+		} else {
+			structuralFeatureMap = Collections.emptyMap();
 		}
-		setType(type);
 	}
 
 	public EClass getType() {
@@ -89,6 +98,9 @@ public class EObject {
 		if (property == null) {
 			throw new IllegalArgumentException("property can't be null");
 		}
+		if (type == null) {
+			return null;
+		}
 		EStructuralFeature feature = structuralFeatureMap.get(property);
 		if (feature == null) {
 			throw new IllegalArgumentException("property '" + property + "' does not exisit for type '" + typeName() + "'");
@@ -97,6 +109,9 @@ public class EObject {
 	}
 
 	private void checkType(String property, EStructuralFeature feature, Object value) {
+		if (type == null) {
+			return;
+		}
 		if (feature.isMany()) {
 			if (feature.isOrdered()) {
 				checkType(property, value, List.class);
