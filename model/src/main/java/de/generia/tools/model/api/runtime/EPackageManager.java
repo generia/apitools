@@ -50,6 +50,18 @@ public class EPackageManager {
 		return element;
 	}
 	
+	public EObject create(String type) {
+		EModelElement element = lookupElement(type);
+		if (element == null) {
+			throw new IllegalArgumentException("can't find type for given name '" + type + "'");
+		}
+		if (!(element instanceof EClass)) {
+			throw new IllegalArgumentException("type mismatch, expected '" + EClass.class.getName() + "' model-element for given type '" + type + "', but got '" + element.getClass().getName() + "'");
+		}
+		EClass clazz = (EClass) element;
+		return new EObject(clazz);
+	}
+	
 	private void init(EModelElement element, String path) {
 		if (element instanceof EPackage) {
 			initPackage((EPackage)element, path);
