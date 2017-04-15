@@ -20,6 +20,7 @@ public class EPackageManager {
 
 	private String schemaId;
 	private EPackage pkg;
+	private EObjectFactory objectFactory;
 	private Map<String, EModelElement> nameElementMap = new HashMap<>();
 	private Map<String, EModelElement> aliasElementMap = new HashMap<>();
 	private Map<EModelElement, String> elementNameMap = new HashMap<>();
@@ -28,8 +29,13 @@ public class EPackageManager {
 
 
 	public EPackageManager(String schemaId, EPackage pkg) {
+		this(schemaId, pkg, null);
+	}
+
+	public EPackageManager(String schemaId, EPackage pkg, EObjectFactory objectFactory) {
 		this.schemaId = schemaId;
 		this.pkg = pkg;
+		this.objectFactory = objectFactory;
 		init(pkg, "");
 	}
 
@@ -39,6 +45,14 @@ public class EPackageManager {
 	
 	public EPackage getPackage() {
 		return pkg;
+	}
+	
+	public EObjectFactory getObjectFactory() {
+		return objectFactory;
+	}
+	
+	public void setObjectFactory(EObjectFactory objectFactory) {
+		this.objectFactory = objectFactory;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -59,6 +73,9 @@ public class EPackageManager {
 			throw new IllegalArgumentException("type mismatch, expected '" + EClass.class.getName() + "' model-element for given type '" + type + "', but got '" + element.getClass().getName() + "'");
 		}
 		EClass clazz = (EClass) element;
+		if (objectFactory != null) {
+			return objectFactory.createObject(clazz);
+		}
 		return new EObject(clazz);
 	}
 	

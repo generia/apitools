@@ -84,7 +84,11 @@ public class EObject implements Map<String, Object> {
 	}
 	
 	private String typeName() {
-		return type.getPackage().getName() + "." + type.getName();
+		String name = type.getName();
+		if (type.getPackage() != null) {
+			name = type.getPackage().getName() + "." + name;
+		}
+		return name;
 	}
 
 	private void buildFeatureMap(EClass type) {
@@ -194,7 +198,7 @@ public class EObject implements Map<String, Object> {
 
 	@Override
 	public Object put(String key, Object value) {
-		Object oldValue = get(key);
+		Object oldValue = valueMap.get(key);
 		set(key, value);
 		return oldValue; 
 	}

@@ -91,7 +91,7 @@ public class EObjectJsonWriter implements EObjectWriter {
 		Collection<EStructuralFeature> filteredFeatures = context.getFilteredFeatures(value, featureStack);
 		for (EStructuralFeature feature : filteredFeatures) {
 			Object featureValue = value.get(feature.getName());
-			if (featureValue != null) {
+			if (hasFeatureValue(featureValue)) {
 				featureStack.push(feature);
 				jg.writeFieldName(feature.getName());
 				writeElement(featureValue);
@@ -99,6 +99,17 @@ public class EObjectJsonWriter implements EObjectWriter {
 			}
 		}
 		jg.writeEndObject();
+	}
+
+	@SuppressWarnings("unchecked")
+	private boolean hasFeatureValue(Object featureValue) {
+		if (featureValue == null) {
+			return false;
+		}
+		if (!(featureValue instanceof Collection)) {
+			return true;
+		}
+		return !((Collection<Object>) featureValue).isEmpty();
 	}
 
 	private boolean needsTypeHint(EStructuralFeature activeFeature, EObject object) {
