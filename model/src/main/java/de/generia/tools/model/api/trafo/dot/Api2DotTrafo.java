@@ -176,7 +176,7 @@ public class Api2DotTrafo {
 	}
 
 	private String getType(ETypedElement typedElement) {
-		String type = typedElement.getType().getName();
+		String type = typedElement.getType() != null ? typedElement.getType().getName() : "?";
 		if (typedElement.isMany()) {
 			String collectionType = typedElement.isOrdered() ? "List" : "Set";
 			type = collectionType + "&lt;" + type + "&gt;";
