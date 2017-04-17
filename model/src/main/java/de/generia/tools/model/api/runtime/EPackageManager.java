@@ -65,18 +65,45 @@ public class EPackageManager {
 	}
 	
 	public EObject create(String type) {
-		EModelElement element = lookupElement(type);
-		if (element == null) {
-			throw new IllegalArgumentException("can't find type for given name '" + type + "'");
-		}
-		if (!(element instanceof EClass)) {
-			throw new IllegalArgumentException("type mismatch, expected '" + EClass.class.getName() + "' model-element for given type '" + type + "', but got '" + element.getClass().getName() + "'");
-		}
+		EModelElement element = getTypeChecked(type, EClass.class);
 		EClass clazz = (EClass) element;
 		if (objectFactory != null) {
 			return objectFactory.createObject(clazz);
 		}
 		return new EObject(clazz);
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T> T getTypeChecked(String type, Class<T> expectedType) {
+		EModelElement element = lookupElement(type);
+		if (element == null) {
+			throw new IllegalArgumentException("can't find type for given name '" + type + "'");
+		}
+		if (!expectedType.isAssignableFrom(element.getClass())) {
+			throw new IllegalArgumentException("type mismatch, expected '" + expectedType.getName() + "' model-element for given type '" + type + "', but got '" + element.getClass().getName() + "'");
+		}
+		return (T) element;
+	}
+	
+	public boolean isInstance(EObject object, String type) {
+		if (object.getType() == null) {
+			return false;
+		}
+		EClass objectType = object.getType();
+		EClass expectedType = object.getType();
+		try {
+			expectedType = getTypeChecked(type, EClass.class);
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
+		
+		while (objectType != null) {
+			if (objectType.equals(expectedType)) {
+				return true;
+			}
+			objectType = objectType.getSuperType();
+		}
+		return false;
 	}
 	
 	private void init(EModelElement element, String path) {
