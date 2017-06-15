@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.generia.tools.apitools.generator</groupId>
+	<artifactId>apitools-java-generator-maven-plugin</artifactId>
+	<version>1.0.0</version>
+	<name>apitools-java-generator-maven-plugin</name>
+	<description>Java generator for api data</description>
+	<packaging>maven-plugin</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>de.generia.tools.model.api</groupId>
+			<artifactId>apitools-model</artifactId>
+			<version>1.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.5</version>
+		</dependency>
+		<dependency>
+  		    <groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.25</version>
+		</dependency>
+		<dependency>
+		    <groupId>ant</groupId>
+		    <artifactId>ant</artifactId>
+		    <version>1.7.0</version>
+		</dependency>
+	</dependencies>
+</project>

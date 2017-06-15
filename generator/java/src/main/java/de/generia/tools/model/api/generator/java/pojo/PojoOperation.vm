@@ -1,0 +1,8 @@
+
+/**
+ * The '${this.nodeSimpleName}' operation of the '${this.context.nodeSimpleName}' ${this.context.nodeType}.
+ * ${this.umlDoc}
+ */
+${this.annotations}public $this.type ${this.name}(${this.signature}) {
+	// TODO: extends with *Util.${this.name}(this, ...)
+}

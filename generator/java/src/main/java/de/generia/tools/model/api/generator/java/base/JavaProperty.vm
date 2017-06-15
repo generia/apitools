@@ -1,0 +1,22 @@
+
+/**
+ * Holds the '$this.nodeSimpleName' property-constant.
+ * ${this.umlDoc}
+ */
+public final static String ${this.constName} = "${this.nodeSimpleName}";
+
+/**
+ * Gets the '${this.nodeSimpleName}' property of the '${this.context.nodeSimpleName}' ${this.context.nodeType}.
+ * ${this.umlDoc}
+ * @return '${this.nodeSimpleName}' property of '${this.context.nodeSimpleName}' ${this.context.nodeType}
+ */
+${this.modelAnnotation}public $this.type get${this.name}();
+
+#if (${this.needSetter})
+/**
+ * Sets the '${this.nodeSimpleName}' property of the '${this.context.nodeSimpleName}' ${this.context.nodeType}.
+ * ${this.umlDoc}
+ * @param p${this.name} new value for the '${this.nodeSimpleName}' property
+ */
+public void set${this.name}($this.type p$this.name);
+#end

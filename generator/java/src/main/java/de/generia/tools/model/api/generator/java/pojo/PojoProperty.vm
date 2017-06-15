@@ -1,0 +1,24 @@
+
+/**
+ * Holds the '$this.nodeSimpleName' property-value.
+ * ${this.umlDoc}
+ */
+${this.annotations}private$this.transient $this.fieldType ${this.fieldName}${this.defaultClause};
+
+/**
+ * Gets the '${this.nodeSimpleName}' property of the '${this.context.nodeSimpleName}' ${this.context.nodeType}.
+ * ${this.umlDoc}
+ * @return '${this.nodeSimpleName}' property of '${this.context.nodeSimpleName}' ${this.context.nodeType}
+ */
+public $this.type ${this.getterName}() {
+	return ${this.fieldName};
+}
+
+/**
+ * Sets the '${this.nodeSimpleName}' property of the '${this.context.nodeSimpleName}' ${this.context.nodeType}.
+ * ${this.umlDoc}
+ * @param ${this.fieldName} new value for the '${this.nodeSimpleName}' property
+ */
+public void set${this.name}($this.type $this.fieldName) {
+	this.${this.fieldName} = ${this.fieldName};
+}

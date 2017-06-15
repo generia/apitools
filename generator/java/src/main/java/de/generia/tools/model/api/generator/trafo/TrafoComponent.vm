@@ -1,0 +1,3 @@
+#macro( render $component $args )
+#set( $dummy=$component.render($context, $args) )
+#end

@@ -1,0 +1,9 @@
+#foreach ($class in $this.classes)
+#render ($class [])
+#end
+#foreach ($enum in $this.enums)
+#render ($enum [])
+#end
+#foreach ($package in $this.packages)
+#render ($package [])
+#end

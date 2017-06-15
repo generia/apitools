@@ -7,6 +7,10 @@
 	<name>apitools</name>
 	<description>Tools for handling api data</description>
 
+	<modules>
+		<module>model</module>
+		<module>generator</module>
+	</modules>
 	<dependencies>
 	</dependencies>
 	<reporting>

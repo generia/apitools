@@ -1,0 +1,38 @@
+#if (!$this.isNestedClassifier())
+package $this.package;
+#end
+
+/**
+ * The '${this.classSimpleName}' enum was generated from '${this.nodeName}' ${this.nodeType} api element.
+ * ${this.umlDoc}
+ */
+public enum ${this.classSimpleName} {
+#foreach ($literal in $this.literals)
+
+    /**
+     * The '${literal.simpleName}' literal with value '${literal.value}'. 
+     */
+    ${literal.simpleName}(${literal.value}), 
+#end
+    ;
+    
+    /**
+     * Holds the value associated with this literal. 
+     */
+    private final int VALUE;
+
+    /**
+     * Creates a '${this.classSimpleName}' literal with the given value. 
+     * @param pValue
+     */
+    ${this.classSimpleName}(int pValue) {
+        VALUE = pValue;
+    }
+
+    /**
+     * Gets the value associated with this literal. 
+     */
+    public int getValue() {
+        return VALUE;
+    }
+}
