@@ -23,6 +23,12 @@ public abstract class EModelElement  {
      */
     private List<EAnnotation> annotations = new ArrayList<EAnnotation>();
     
+	
+    /**
+     * Holds the 'documenation' property-value.
+     * 
+     */
+    private String documentation;
     
 	/**
      * Gets the 'parent' property of the 'EModelElement' EClass.
@@ -59,4 +65,22 @@ public abstract class EModelElement  {
     public void setAnnotations(List<EAnnotation> annotations) {
     	this.annotations = annotations;
     }
+
+	/**
+     * Gets the 'documentation' property of the 'EModelElement' EClass.
+     * 
+     * @return 'documentation' property of 'EModelElement' EClass
+     */
+    public String getDocumentation() {
+    	return documentation;
+    }
+    
+    /**
+     * Sets the 'documentation' property of the 'EModelElement' EClass.
+     * 
+     * @param documentation new value for the 'documentation' property
+     */
+	public void setDocumentation(String documentation) {
+		this.documentation = documentation;
+	}
 }
