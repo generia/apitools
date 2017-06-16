@@ -45,7 +45,7 @@ public class SimpleIoContext implements EObjectWriter.Context, EObjectReader.Con
 	
 	@Override
 	public String getObjectId(EObject object) {
-		EAttribute idAttribute = getIdAttribute(object.getType());
+		EAttribute idAttribute = getIdAttribute(object.eGetType());
 		if (idAttribute == null) {
 			return null;
 		}
@@ -110,6 +110,6 @@ public class SimpleIoContext implements EObjectWriter.Context, EObjectReader.Con
 			}
 			return Collections.emptyList();
 		}
-		throw new IllegalArgumentException("can't filter features for object '" + object.getId() + "' of type '" + object.getType().getName() + "' due to inconsistent feature-stack '" + featureStack + "', expected reference feature, but got attribute '" + activeFeature.getName() + "'");
+		throw new IllegalArgumentException("can't filter features for object '" + object.eGetId() + "' of type '" + object.eGetType().getName() + "' due to inconsistent feature-stack '" + featureStack + "', expected reference feature, but got attribute '" + activeFeature.getName() + "'");
 	}
 }

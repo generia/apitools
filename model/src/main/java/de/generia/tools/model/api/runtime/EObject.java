@@ -33,23 +33,23 @@ public class EObject implements Map<String, Object> {
 			if (type.isAbstract() || type.isInterface()) {
 				throw new IllegalArgumentException("can't instantiate type '" + typeName() + "'");
 			}
-			setType(type);
+			eSetType(type);
 		} else {
 			structuralFeatureMap = Collections.emptyMap();
 		}
 	}
 
-	public EClass getType() {
+	public EClass eGetType() {
 		return type;
 	}
 
-	protected void setType(EClass type) {
+	protected void eSetType(EClass type) {
 		this.type = type;
 		structuralFeatureMap = new LinkedHashMap<>();
 		buildFeatureMap(type);
 	}
 	
-	public String getId() {
+	public String eGetId() {
 		return id;
 	}
 

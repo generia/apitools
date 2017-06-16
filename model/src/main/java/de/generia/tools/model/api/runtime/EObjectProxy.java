@@ -20,18 +20,18 @@ public class EObjectProxy extends EObject {
 	}
 	
 	@Override
-	public EClass getType() {
+	public EClass eGetType() {
 		// get the type from the delegate.
 		// in case of a polymorphic proxy the type 
 		// might change with the specific delegate 
 		EObject d = getDelegate();
 		if (d == null) {
-			return super.getType();
+			return super.eGetType();
 		}
-		EClass delegateType = d.getType();
+		EClass delegateType = d.eGetType();
 		// check for polymorphic type change and update the proxy for consistency
 		if (!type.equals(delegateType)) {
-			setType(delegateType);
+			eSetType(delegateType);
 		}
 		return type;
 	}

@@ -86,7 +86,7 @@ public class EObjectJsonWriter implements EObjectWriter {
 		writtenObjects.add(value);
 		jg.writeStartObject();
 		if (needsTypeHint(activeFeature, value)) {
-			jg.writeStringField(context.getTypeHintProperty(), context.getTypeHint(value.getType()));
+			jg.writeStringField(context.getTypeHintProperty(), context.getTypeHint(value.eGetType()));
 		}
 		Collection<EStructuralFeature> filteredFeatures = context.getFilteredFeatures(value, featureStack);
 		for (EStructuralFeature feature : filteredFeatures) {
@@ -116,7 +116,7 @@ public class EObjectJsonWriter implements EObjectWriter {
 		if (activeFeature == null) {
 			return false;
 		}
-		return !activeFeature.getType().equals(object.getType()) && context.needsTypeHint(activeFeature);
+		return !activeFeature.getType().equals(object.eGetType()) && context.needsTypeHint(activeFeature);
 	}
 
 	private void writeObjectRef(EObject value) throws IOException {

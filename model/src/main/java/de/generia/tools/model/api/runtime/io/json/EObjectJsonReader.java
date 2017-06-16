@@ -54,7 +54,7 @@ public class EObjectJsonReader implements EObjectReader {
 			Object source = link.object.get(link.feature.getName());
 			if (source instanceof EObjectProxy) {
 				EObjectProxy proxy = (EObjectProxy) source;
-				Object resolved = idObjectMap.get(proxy.getId());
+				Object resolved = idObjectMap.get(proxy.eGetId());
 				if (resolved != null) {
 					link.object.set(link.feature.getName(), resolved);
 				}
@@ -73,7 +73,7 @@ public class EObjectJsonReader implements EObjectReader {
 			Object target = source;
 			if (source instanceof EObjectProxy) {
 				EObjectProxy proxy = (EObjectProxy) source;
-				Object resolved = idObjectMap.get(proxy.getId());
+				Object resolved = idObjectMap.get(proxy.eGetId());
 				if (resolved != null) {
 					target = resolved;
 				}

@@ -86,11 +86,11 @@ public class EPackageManager {
 	}
 	
 	public boolean isInstance(EObject object, String type) {
-		if (object.getType() == null) {
+		if (object.eGetType() == null) {
 			return false;
 		}
-		EClass objectType = object.getType();
-		EClass expectedType = object.getType();
+		EClass objectType = object.eGetType();
+		EClass expectedType = object.eGetType();
 		try {
 			expectedType = getTypeChecked(type, EClass.class);
 		} catch (IllegalArgumentException e) {
