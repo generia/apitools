@@ -10,6 +10,18 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-plugin-api</artifactId>
+			<version>3.0</version>
+		</dependency>
+		<!-- dependencies to annotations -->
+		<dependency>
+			<groupId>org.apache.maven.plugin-tools</groupId>
+			<artifactId>maven-plugin-annotations</artifactId>
+			<version>3.4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>de.generia.tools.model.api</groupId>
 			<artifactId>apitools-model</artifactId>
 			<version>1.0.4</version>
@@ -20,14 +32,14 @@
 			<version>1.5</version>
 		</dependency>
 		<dependency>
-  		    <groupId>org.slf4j</groupId>
+			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.25</version>
 		</dependency>
 		<dependency>
-		    <groupId>ant</groupId>
-		    <artifactId>ant</artifactId>
-		    <version>1.7.0</version>
+			<groupId>ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>1.7.0</version>
 		</dependency>
 	</dependencies>
 </project>

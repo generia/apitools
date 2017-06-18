@@ -1,14 +1,12 @@
 package de.generia.tools.model.api.generator.java;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.tools.ant.BuildEvent;
@@ -38,7 +36,8 @@ public class ApiGenerator extends Task implements TrafoGenerator {
 	private String mEntityBaseClass;
 	private String mDaoBaseInterface;
 	private String mOppositeSupportCollection;
-	
+	private boolean renderAnnotations;
+
 	public static class ApiBuildListener implements BuildListener {
 		private PrintStream mPrintStream;
 		private String mPrefix;
@@ -191,6 +190,14 @@ public class ApiGenerator extends Task implements TrafoGenerator {
 		mJavaOutputDir = pJavaOutputDir;
 	}
 
+	public boolean isRenderAnnotations() {
+		return renderAnnotations;
+	}
+
+	public void setRenderAnnotations(boolean renderAnnotations) {
+		this.renderAnnotations = renderAnnotations;
+	}
+	
 	public File getHbmOutputDir() {
 		return mHbmOutputDir;
 	}

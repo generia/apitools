@@ -25,7 +25,7 @@ public class JavaProperty extends AbstractJavaComponent {
 	}
 	
 	public String getName() {
-		return mFeature.getName();
+		return Name.firstUp(mFeature.getName());
 	}
 	
 	public String getFieldName() {

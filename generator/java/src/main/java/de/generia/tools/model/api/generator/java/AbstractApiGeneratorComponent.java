@@ -2,6 +2,7 @@ package de.generia.tools.model.api.generator.java;
 
 import java.util.List;
 
+import de.generia.tools.model.api.EClassifier;
 import de.generia.tools.model.api.EModelElement;
 import de.generia.tools.model.api.ENamedElement;
 import de.generia.tools.model.api.generator.trafo.TrafoComponent;
@@ -54,8 +55,31 @@ public abstract class AbstractApiGeneratorComponent extends TrafoComponent {
 		}
 		return lNode.getClass().getSimpleName();
 	}	
-
 	
+	public String getNodeType() {
+		EModelElement lNode = getModelNode();
+		return getNodeType(lNode);
+	}
+
+	public static String getNodeType(EModelElement pNode) {
+		if (pNode == null) {
+			return null;
+		}
+		return pNode.getClass().getSimpleName();
+	}
+
+	public String getUmlDoc() {
+		EModelElement lNode = getModelNode();
+		if (lNode == null) {
+			return "";
+		}
+		String lDocumentation = lNode.getDocumentation();
+		if (lDocumentation == null || lDocumentation.trim().equals("")) {
+			return "";
+		}
+		return "Documentation: " + lDocumentation;
+	}
+
 	@SuppressWarnings("unchecked")
 	public List wrapFilterList(final Class pContentClass, Class pWrapperClass, List<? extends Object> pList) {
 		List lFilteredList = generator().filterList(pList, new ContentFilter() {

@@ -9,7 +9,7 @@ import de.generia.tools.model.api.EModelElement;
 import de.generia.tools.model.api.generator.trafo.TrafoGenerator;
 
 public class JavaEnum extends AbstractJavaComponent {
-	private EEnum mEnum;
+	protected EEnum mEnum;
 	
 	public static class JavaEnumLiteral extends AbstractJavaComponent {
 		EEnumLiteral mEnumLiteral;
@@ -24,6 +24,11 @@ public class JavaEnum extends AbstractJavaComponent {
 		
 		public int getValue() {
 			return mEnumLiteral.getValue();
+		}
+		
+		@Override
+		public EModelElement getModelNode() {
+			return mEnumLiteral;
 		}
 	}
 	

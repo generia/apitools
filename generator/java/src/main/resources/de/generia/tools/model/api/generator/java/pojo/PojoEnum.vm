@@ -11,6 +11,7 @@ public enum ${this.classSimpleName} {
 
     /**
      * The '${literal.simpleName}' literal with value '${literal.value}'. 
+	 * ${literal.umlDoc}
      */
     ${literal.simpleName}(${literal.value}), 
 #end
@@ -25,8 +26,8 @@ public enum ${this.classSimpleName} {
      * Creates a '${this.classSimpleName}' literal with the given value. 
      * @param pValue
      */
-    ${this.classSimpleName}(int pValue) {
-        VALUE = pValue;
+    ${this.classSimpleName}(int value) {
+        VALUE = value;
     }
 
     /**

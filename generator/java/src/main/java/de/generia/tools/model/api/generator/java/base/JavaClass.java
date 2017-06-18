@@ -94,6 +94,11 @@ public class JavaClass extends AbstractJavaComponent {
 			if (lType.getParent() == mClass) {
 				return;
 			}
+
+			// check, if the property-type is the class
+			if (lType == mClass) {
+				return;
+			}
 		}
 		String lClassName = getClassName(lType);
 		if (lClassName.startsWith("java.lang.")) {

@@ -6,6 +6,7 @@
 	<version>1.0.3</version>
 	<name>apitools</name>
 	<description>Tools for handling api data</description>
+	<packaging>pom</packaging>
 
 	<modules>
 		<module>model</module>

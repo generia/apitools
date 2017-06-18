@@ -181,4 +181,11 @@ public class Name implements Comparable<Name> {
 		}
 		return lJavaConst.toString();
 	}
+
+	public static String firstUp(String pName) {
+		if (pName == null) {
+			return null;
+		}
+		return Character.toUpperCase(pName.charAt(0)) + pName.substring(1);
+	}
 }

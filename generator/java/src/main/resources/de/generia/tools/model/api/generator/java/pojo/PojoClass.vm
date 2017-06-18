@@ -11,16 +11,16 @@ import $import;
  * ${this.umlDoc}
  */
 ${this.annotations}public ${this.modifiers}class $this.classSimpleName ${this.extendsClause} {
-#foreach ($enum in $this.enums)
-#render ($enum [])
-#end
-#foreach ($class in $this.classes)
-#render ($class [])
-#end
 #foreach ($property in $this.properties)
 #render ($property [])
 #end
 #foreach ($operation in $this.operations)
 #render ($operation [])
+#end
+#foreach ($enum in $this.enums)
+#render ($enum [])
+#end
+#foreach ($class in $this.classes)
+#render ($class [])
 #end
 }

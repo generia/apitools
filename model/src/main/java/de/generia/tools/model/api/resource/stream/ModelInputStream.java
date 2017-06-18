@@ -133,8 +133,12 @@ public class ModelInputStream extends AbstractModelStream {
 
 		private void setParent(EModelElement parent, EModelElement child) {
 			child.setParent(parent);
-			if (child instanceof EClassifier && parent instanceof EPackage) {
-				((EClassifier)child).setPackage((EPackage) parent);
+			if (child instanceof EClassifier) {
+				if (parent instanceof EPackage) {
+					((EClassifier)child).setPackage((EPackage) parent);
+				} else if (parent instanceof EClassifier) {
+					((EClassifier)child).setPackage(((EClassifier) parent).getPackage());
+				}
 			} else if (child instanceof EStructuralFeature) {
 				((EStructuralFeature)child).setContainingClass((EClass) parent);
 			} else if (child instanceof EEnumLiteral) {

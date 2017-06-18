@@ -64,8 +64,7 @@ public class PojoClass extends JavaClass {
 			EClass lClass = (EClass)pClassifier;
 			EClass lSuperType = lClass.getSuperType();
 			if (lSuperType != null) {
-				String lClassName = getClassName((EClass) getTopLevelClassifier(lSuperType));
-				lImports.add(lClassName);
+				addImport(lImports, lSuperType);
 			}
 			
 			for (EStructuralFeature lFeature : lClass.getStructuralFeatures()) {
@@ -81,11 +80,7 @@ public class PojoClass extends JavaClass {
 				collectImports(lNestedClassifier, lImports);
 			}
 		}
-		EClassifier lTopLevelClassifier = getTopLevelClassifier(pClassifier);
-		String lClassName = getClassName(lTopLevelClassifier);
-		if (!lClassName.equals(getClassName(mClass))) {
-			lImports.add(lClassName);
-		}
+		addImport(lImports, pClassifier);
 	}
 
 	protected void addImport(Set<String> pImports, ETypedElement pElement) {
@@ -117,17 +112,7 @@ public class PojoClass extends JavaClass {
 		}
 		if (isDataType(lType)) {
 			String lInstanceTypeName = lType.getInstanceTypeName();
-			if (lInstanceTypeName.equals("void")) {
-				return;
-			}
-			Class<?> lClass;
-			try {
-				lClass = Class.forName(lInstanceTypeName);
-				if (lClass.isPrimitive()) {
-					return;
-				}
-			} catch (ClassNotFoundException e) {
-				// skip this, since we only wanted to check primitives
+			if (lInstanceTypeName.equals("void") || isPrimitive(lInstanceTypeName)) {
 				return;
 			}
 		} else {
@@ -137,14 +122,20 @@ public class PojoClass extends JavaClass {
 				return;
 			}
 		}
-		EClassifier lTopLevelClassifier = getTopLevelClassifier(lType);
+		addImport(pImports, lType);
+	}
+	
+	protected void addImport(Set<String> pImports, EClassifier pType) {
+		EClassifier lTopLevelClassifier = getTopLevelClassifier(pType);
 		String lClassName = getClassName(lTopLevelClassifier);
 		if (lClassName.startsWith("java.lang.")) {
 			return;
 		}
-		pImports.add(lClassName);
+		if (!lClassName.equals(getClassName(mClass))) {
+			pImports.add(lClassName);
+		}
 	}
-
+	
 	public File getFile(EClassifier pClassifier) {
 		// inner classifiers wont need a file
 		if (isNestedClassifier()) {

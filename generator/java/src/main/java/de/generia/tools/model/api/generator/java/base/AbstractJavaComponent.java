@@ -9,6 +9,7 @@ import de.generia.tools.model.api.EAnnotation;
 import de.generia.tools.model.api.EClass;
 import de.generia.tools.model.api.EClassifier;
 import de.generia.tools.model.api.EDataType;
+import de.generia.tools.model.api.EEnum;
 import de.generia.tools.model.api.EModelElement;
 import de.generia.tools.model.api.EPackage;
 import de.generia.tools.model.api.EStructuralFeature;
@@ -46,12 +47,7 @@ public abstract class AbstractJavaComponent extends AbstractApiGeneratorComponen
 			return false;
 		}
 		EClassifier classifier = (EClassifier) lModelNode;
-		for (EClassifier pkgClassifier : classifier.getPackage().getClassifiers()) {
-			if (pkgClassifier.equals(classifier)) {
-				return false;
-			}
-		}
-		return true;
+		return !(classifier.getParent() instanceof EPackage);
 	}
 
 	public boolean isPrimitive(String pInstanceTypeName) {
@@ -164,7 +160,7 @@ public abstract class AbstractJavaComponent extends AbstractApiGeneratorComponen
 		if (pNode == null) {
 			return false;
 		}
-		return pNode instanceof EDataType;
+		return pNode instanceof EDataType && !(pNode instanceof EEnum);
 	}
 
 	public String getCollectionType(ETypedElement pElement) {
@@ -224,13 +220,19 @@ public abstract class AbstractJavaComponent extends AbstractApiGeneratorComponen
 	}
 	
 	public String getAnnotations() {
+		if (!generator().isRenderAnnotations()) {
+			return "";
+		}
 		StringBuffer lBuffer = new StringBuffer();
 		EModelElement lNode = (EModelElement) getModelNode();
 		List<EAnnotation> lDeclaredAnnotations = lNode.getAnnotations();
 		List<EAnnotation> lDefaultAnnotations = getDefaultAnnotations();
 		Collection<EAnnotation> lAnnotations = AnnotationUtil.mergeAnnotations(lDefaultAnnotations, lDeclaredAnnotations); 
 		for (EAnnotation lAnnotation : lAnnotations) {
-			lBuffer.append(getAnnotation(lAnnotation)).append("\n");
+			String annotation = getAnnotation(lAnnotation);
+			if (annotation != null) {
+				lBuffer.append(annotation).append("\n");
+			}
 		}
 		return lBuffer.toString();
 	}
@@ -240,15 +242,22 @@ public abstract class AbstractJavaComponent extends AbstractApiGeneratorComponen
 	}
 
 	private String getAnnotation(EAnnotation pAnnotation) {
-		String lAnnotation = "@" + pAnnotation.getSource();
+		if (pAnnotation.getInstanceTypeName() == null) {
+			return null;
+		}
+		String lAnnotation = "@" + pAnnotation.getInstanceTypeName();
 		String lSep = "(";
 		boolean lHasContent = false;
 		for (EAnnotation lSubAnnotation : pAnnotation.getAnnotations()) {
+			String content = getAnnotation(lSubAnnotation);
+			if (content == null) {
+				continue;
+			}
 			if (!lHasContent) {
 				lAnnotation += lSep;
 				lSep = "{\n\t";
 			}
-			lAnnotation += lSep + getAnnotation(lSubAnnotation);
+			lAnnotation += lSep + content;;
 			lSep = ",\n\t";
 			lHasContent = true;
 		}

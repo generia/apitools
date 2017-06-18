@@ -19,11 +19,11 @@ public class PojoGenerator extends ApiGenerator {
     	log.info("starting model generator via main.");
 		PojoGenerator lGenerator = new PojoGenerator();
 		//File lRoot = new File("/Users/qxn7720/home/prj/bmw/ds2/ws-ms/api-tools-generator");
-		File lRoot = new File("/Users/alex/home/dev/ws-dev/api-tools-generator");
-		URL lInputFile = new URL("file:///" + lRoot + "/tst/ext-api/api.api");
+		File lRoot = new File("/Users/alex/home/dev/ws-api/apitools/generator/java");
+		URL lInputFile = new URL("file:///" + lRoot + "/tst/productdata.v0.9.api");
 		
 		File lWorkspaceRoot = lRoot;
-		File lOutputDir = new File(lWorkspaceRoot, "/tst/ext-api/gen");
+		File lOutputDir = new File(lWorkspaceRoot, "/tst/gen");
 		//File lOutputDir = new File(lRoot, "src-gen");
 		lGenerator.setInputUrl(lInputFile);
 
@@ -32,6 +32,7 @@ public class PojoGenerator extends ApiGenerator {
 		lGenerator.getProject().addBuildListener(new ApiBuildListener(System.out, "Pojo-Generator"));
 		lGenerator.execute();
    }
+
     
     public PojoGenerator() {
     	super();
@@ -42,5 +43,4 @@ public class PojoGenerator extends ApiGenerator {
 		PojoPackage lPojoPackage = new PojoPackage(this, pPackage);
 		lPojoPackage.render();
 	}
-
 }
