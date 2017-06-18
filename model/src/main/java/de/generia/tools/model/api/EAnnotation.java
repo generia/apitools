@@ -36,6 +36,30 @@ public class EAnnotation extends EModelElement  {
     }
     
     /**
+     * Holds the 'instanceTypeName' property-value.
+     * 
+     */
+    private String instanceTypeName;
+    
+    /**
+     * Gets the 'instanceTypeName' property of the 'EClassifier' EClass.
+     * 
+     * @return 'instanceTypeName' property of 'EClassifier' EClass
+     */
+    public String getInstanceTypeName() {
+    	return instanceTypeName;
+    }
+    
+    /**
+     * Sets the 'instanceTypeName' property of the 'EClassifier' EClass.
+     * 
+     * @param instanceTypeName new value for the 'instanceTypeName' property
+     */
+    public void setInstanceTypeName(String instanceTypeName) {
+    	this.instanceTypeName = instanceTypeName;
+    }
+    
+    /**
      * Holds the 'elements' property-value.
      * 
      */

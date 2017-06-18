@@ -10,6 +10,7 @@
 		<EClass name="EAnnotation" super-type="/api/EModelElement">
 			<structural-features>
 				<EAttribute name="source" type="/api/datatypes/String"/>
+				<EAttribute name="instanceTypeName" type="/api/datatypes/String"/>
 				<EReference name="elements" ordered="true" many="true" type="/api/EAnnotationElement" containment="true"/>
 			</structural-features>
 		</EClass>
