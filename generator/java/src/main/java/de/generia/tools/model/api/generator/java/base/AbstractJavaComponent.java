@@ -61,10 +61,10 @@ public abstract class AbstractJavaComponent extends AbstractApiGeneratorComponen
 		}
 	}
 	
-	public static String getPackage(EModelElement pNode) {
+	public String getPackage(EModelElement pNode) {
 		if (isDataType(pNode)) {
 			EDataType lDataType = (EDataType)pNode;
-			String lType = lDataType.getInstanceTypeName();
+			String lType = getInstanceTypeName(lDataType);
 			int i = lType.lastIndexOf(".");
 			String lPackage = null;
 			if (i != -1) {
@@ -79,9 +79,12 @@ public abstract class AbstractJavaComponent extends AbstractApiGeneratorComponen
 		return getPackageName(pkg);
 	}
 	
-	private static String getPackageName(EPackage pkg) {
+	private String getPackageName(EPackage pkg) {
 		if (pkg == null) {
 			return null;
+		}
+		if (pkg.getSuperPackage() == null && generator().getModelPackageRoot() != null) {
+			return generator().getModelPackageRoot();
 		}
 		String pkgName = pkg.getName();
 		if (pkg.getSuperPackage() != null) {
@@ -93,13 +96,10 @@ public abstract class AbstractJavaComponent extends AbstractApiGeneratorComponen
 		return pkgName;
 	}
 
-	public static String getClassName(EClassifier pClassifier) {
+	public String getClassName(EClassifier pClassifier) {
 		if (isDataType(pClassifier)) {
 			EDataType lDataType = (EDataType)pClassifier;
-			String instanceType = lDataType.getInstanceTypeName();
-			if (instanceType == null || instanceType.isEmpty()) {
-				throw new IllegalArgumentException("can't get instance-type from data-type '" + pClassifier + "'");
-			}
+			String instanceType = getInstanceTypeName(lDataType);
 			return instanceType;
 		}
 		EModelElement lContainer = pClassifier.getParent();
@@ -114,6 +114,30 @@ public abstract class AbstractJavaComponent extends AbstractApiGeneratorComponen
 		return lPrefix + "." + pClassifier.getName();
 	}
 	
+	protected String getInstanceTypeName(EClassifier pClassifier) {
+		String instanceType = pClassifier.getInstanceTypeName();
+		if (instanceType == null || instanceType.isEmpty()) {
+			instanceType = mapDefaultInstanceType(pClassifier.getName());
+		}
+		if (instanceType == null || instanceType.isEmpty()) {
+			throw new IllegalArgumentException("can't get instance-type from classifier '" + pClassifier + "'");
+		}
+		return instanceType;
+	}
+	
+	private String mapDefaultInstanceType(String name) {
+		if (isPrimitive(name)) {
+			return name;
+		}
+		if (name.toLowerCase().equals("string")) {
+			return String.class.getName();
+		}
+		if (name.toLowerCase().equals("integer")) {
+			return "int";
+		}
+		return null;
+	}
+
 	public static String getImplPackage(EClass pNode) {
 		EModelElement lContainer = pNode.getParent();
 		while (!(lContainer instanceof EPackage)) {

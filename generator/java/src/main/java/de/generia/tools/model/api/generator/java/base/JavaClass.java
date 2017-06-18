@@ -79,7 +79,7 @@ public class JavaClass extends AbstractJavaComponent {
 			}
 		}
 		if (isDataType(lType)) {
-			String lInstanceTypeName = lType.getInstanceTypeName();
+			String lInstanceTypeName = getInstanceTypeName(lType);
 			if (lInstanceTypeName.equals("void")) {
 				return;
 			}

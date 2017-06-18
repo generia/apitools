@@ -29,6 +29,9 @@ public class ApiJavaGeneratorMojo extends AbstractMojo {
     @Parameter
     private boolean renderAnnotations = false;
 
+    @Parameter
+    private String modelPackageRoot;
+
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		
 		URL inputUrl;
@@ -42,6 +45,7 @@ public class ApiJavaGeneratorMojo extends AbstractMojo {
 		generator.setInputUrl(inputUrl);
 		generator.setJavaOutputDir(javaOutputDir);
 		generator.setRenderAnnotations(renderAnnotations);
+		generator.setModelPackageRoot(modelPackageRoot);
 		generator.setProject(new Project());
 		generator.getProject().addBuildListener(new LogBuildListener(getLog(), "Api-Java-Generator"));
 		generator.execute();

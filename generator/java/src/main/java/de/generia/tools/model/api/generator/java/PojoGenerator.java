@@ -20,6 +20,7 @@ public class PojoGenerator extends ApiGenerator {
 		PojoGenerator lGenerator = new PojoGenerator();
 		//File lRoot = new File("/Users/qxn7720/home/prj/bmw/ds2/ws-ms/api-tools-generator");
 		File lRoot = new File("/Users/alex/home/dev/ws-api/apitools/generator/java");
+		//URL lInputFile = new URL("file:///" + lRoot + "/tst/companymgmt.v2.api");
 		URL lInputFile = new URL("file:///" + lRoot + "/tst/productdata.v0.9.api");
 		
 		File lWorkspaceRoot = lRoot;
@@ -28,6 +29,7 @@ public class PojoGenerator extends ApiGenerator {
 		lGenerator.setInputUrl(lInputFile);
 
 		lGenerator.setJavaOutputDir(lOutputDir);
+		lGenerator.setModelPackageRoot("de.generia.companymgmt.v2");
 		lGenerator.setProject(new Project());
 		lGenerator.getProject().addBuildListener(new ApiBuildListener(System.out, "Pojo-Generator"));
 		lGenerator.execute();

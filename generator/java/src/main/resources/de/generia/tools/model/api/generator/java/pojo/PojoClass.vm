@@ -10,7 +10,7 @@ import $import;
  * The '$this.classSimpleName' class was generated from '${this.nodeName}' ${this.nodeType} api element.
  * ${this.umlDoc}
  */
-${this.annotations}public ${this.modifiers}class $this.classSimpleName ${this.extendsClause} {
+${this.annotations}public ${this.modifiers}${this.classKeyword} $this.classSimpleName ${this.extendsClause} {
 #foreach ($property in $this.properties)
 #render ($property [])
 #end

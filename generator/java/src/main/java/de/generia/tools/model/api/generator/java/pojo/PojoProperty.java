@@ -105,7 +105,7 @@ public class PojoProperty extends JavaProperty {
 				} else {
 					lDefaultClause += lDefault == null ? "null" : "\"" + lDefault + "\"";
 				}
-			} else if (isPrimitive(lDataType.getInstanceTypeName())) {
+			} else if (isPrimitive(getInstanceTypeName(lDataType))) {
 				lDefaultClause = lDefault == null ? "" : lDefaultClause + lDefault;
 			} else {
 				lDefaultClause += lDefault == null ? "null" : "{" + getFieldName() + " = new " + lDataType.getInstanceTypeName() + "(); " + getFieldName() + ".fromString(\"" + lDefault + "\");}"; 

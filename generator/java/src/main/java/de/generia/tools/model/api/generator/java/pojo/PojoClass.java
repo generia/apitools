@@ -44,6 +44,10 @@ public class PojoClass extends JavaClass {
 		return lModifiers + lSep;
 	}
 	
+	public String getClassKeyword() {
+		return mClass.isInterface() ? "interface" : "class";
+	}
+	
 	public String getClassSimpleName() {
 		return mClass.getName();
 	}
@@ -100,7 +104,7 @@ public class PojoClass extends JavaClass {
 			}
 		}
 		String lCollectionTypeImpl = getCollectionTypeImpl(pElement);
-		if (lCollectionTypeImpl != null) {
+		if (lCollectionTypeImpl != null && !mClass.isInterface()) {
 			if (pElement instanceof ETypedElement) {
 				ETypedElement lTypedElement = pElement;
 				if (lTypedElement.isOrdered()) {
@@ -111,8 +115,8 @@ public class PojoClass extends JavaClass {
 			}
 		}
 		if (isDataType(lType)) {
-			String lInstanceTypeName = lType.getInstanceTypeName();
-			if (lInstanceTypeName.equals("void") || isPrimitive(lInstanceTypeName)) {
+			String lInstanceTypeName = getInstanceTypeName(lType);
+			if (lInstanceTypeName == null || lInstanceTypeName.equals("void") || isPrimitive(lInstanceTypeName)) {
 				return;
 			}
 		} else {
