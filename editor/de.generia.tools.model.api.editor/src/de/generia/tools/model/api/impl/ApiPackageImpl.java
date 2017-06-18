@@ -295,8 +295,17 @@ public class ApiPackageImpl extends EPackageImpl implements ApiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getEAnnotation_InstanceTypeName() {
+		return (EAttribute)eAnnotationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getEAnnotation_Elements() {
-		return (EReference)eAnnotationEClass.getEStructuralFeatures().get(1);
+		return (EReference)eAnnotationEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -819,6 +828,7 @@ public class ApiPackageImpl extends EPackageImpl implements ApiPackage {
 
 		eAnnotationEClass = createEClass(EANNOTATION);
 		createEAttribute(eAnnotationEClass, EANNOTATION__SOURCE);
+		createEAttribute(eAnnotationEClass, EANNOTATION__INSTANCE_TYPE_NAME);
 		createEReference(eAnnotationEClass, EANNOTATION__ELEMENTS);
 
 		eAnnotationElementEClass = createEClass(EANNOTATION_ELEMENT);
@@ -942,6 +952,7 @@ public class ApiPackageImpl extends EPackageImpl implements ApiPackage {
 
 		initEClass(eAnnotationEClass, EAnnotation.class, "EAnnotation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getEAnnotation_Source(), this.getString(), "source", null, 0, 1, EAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getEAnnotation_InstanceTypeName(), this.getString(), "instanceTypeName", "", 0, 1, EAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getEAnnotation_Elements(), this.getEAnnotationElement(), null, "elements", null, 0, -1, EAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(eAnnotationElementEClass, EAnnotationElement.class, "EAnnotationElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

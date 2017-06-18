@@ -8,6 +8,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EAnnotation" eSuperTypes="#//EModelElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="source" eType="#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="instanceTypeName" eType="#//String"
+        defaultValueLiteral=""/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="elements" upperBound="-1"
         eType="#//EAnnotationElement" containment="true" resolveProxies="false"/>
   </eClassifiers>

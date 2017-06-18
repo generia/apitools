@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/de.generia.tools.model.api.plugin/src" editDirectory="/de.generia.tools.model.api.plugin/src"
-    editorDirectory="/de.generia.tools.model.api.plugin/src" modelPluginID="de.generia.tools.model.api.plugin"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/de.generia.tools.model.api.editor/src" editDirectory="/de.generia.tools.model.api.editor/src"
+    editorDirectory="/de.generia.tools.model.api.editor/src" modelPluginID="de.generia.tools.model.api.editor"
     modelName="Api" editPluginClass="de.generia.tools.model.api.util.ApiPlugin" editorPluginClass="de.generia.tools.model.api.util.ApiPlugin"
     rootExtendsInterface="de.generia.tools.model.xecore.model.ModelNode" rootExtendsClass="de.generia.tools.model.xecore.model.ModelNodeImpl"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="6.0" copyrightFields="false"
-    editPluginID="de.generia.tools.model.api.plugin" editorPluginID="de.generia.tools.model.api.plugin"
+    editPluginID="de.generia.tools.model.api.editor" editorPluginID="de.generia.tools.model.api.editor"
     language="" usedGenPackages="platform:/plugin/org.eclipse.uml2.uml/model/UML.genmodel#//uml platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore platform:/plugin/org.eclipse.uml2.types/model/Types.genmodel#//types">
   <foreignModel>api.ecore</foreignModel>
   <genPackages prefix="Api" basePackage="de.generia.tools.model" disposableProviderFactory="true"
@@ -20,6 +20,7 @@
     </genClasses>
     <genClasses ecoreClass="api.ecore#//EAnnotation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//EAnnotation/source"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute api.ecore#//EAnnotation/instanceTypeName"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference api.ecore#//EAnnotation/elements"/>
     </genClasses>
     <genClasses ecoreClass="api.ecore#//EAnnotationElement">

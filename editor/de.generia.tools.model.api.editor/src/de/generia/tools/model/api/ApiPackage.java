@@ -143,13 +143,22 @@ public interface ApiPackage extends EPackage {
 	int EANNOTATION__SOURCE = EMODEL_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Instance Type Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EANNOTATION__INSTANCE_TYPE_NAME = EMODEL_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
 	 * The feature id for the '<em><b>Elements</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EANNOTATION__ELEMENTS = EMODEL_ELEMENT_FEATURE_COUNT + 1;
+	int EANNOTATION__ELEMENTS = EMODEL_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>EAnnotation</em>' class.
@@ -158,7 +167,7 @@ public interface ApiPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EANNOTATION_FEATURE_COUNT = EMODEL_ELEMENT_FEATURE_COUNT + 2;
+	int EANNOTATION_FEATURE_COUNT = EMODEL_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link de.generia.tools.model.api.impl.EAnnotationElementImpl <em>EAnnotation Element</em>}' class.
@@ -1615,6 +1624,17 @@ public interface ApiPackage extends EPackage {
 	EAttribute getEAnnotation_Source();
 
 	/**
+	 * Returns the meta object for the attribute '{@link de.generia.tools.model.api.EAnnotation#getInstanceTypeName <em>Instance Type Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Instance Type Name</em>'.
+	 * @see de.generia.tools.model.api.EAnnotation#getInstanceTypeName()
+	 * @see #getEAnnotation()
+	 * @generated
+	 */
+	EAttribute getEAnnotation_InstanceTypeName();
+
+	/**
 	 * Returns the meta object for the containment reference list '{@link de.generia.tools.model.api.EAnnotation#getElements <em>Elements</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2271,6 +2291,14 @@ public interface ApiPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute EANNOTATION__SOURCE = eINSTANCE.getEAnnotation_Source();
+
+		/**
+		 * The meta object literal for the '<em><b>Instance Type Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EANNOTATION__INSTANCE_TYPE_NAME = eINSTANCE.getEAnnotation_InstanceTypeName();
 
 		/**
 		 * The meta object literal for the '<em><b>Elements</b></em>' containment reference list feature.

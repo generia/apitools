@@ -32,6 +32,7 @@ import java.util.Collection;
  * </p>
  * <ul>
  *   <li>{@link de.generia.tools.model.api.impl.EAnnotationImpl#getSource <em>Source</em>}</li>
+ *   <li>{@link de.generia.tools.model.api.impl.EAnnotationImpl#getInstanceTypeName <em>Instance Type Name</em>}</li>
  *   <li>{@link de.generia.tools.model.api.impl.EAnnotationImpl#getElements <em>Elements</em>}</li>
  * </ul>
  *
@@ -57,6 +58,26 @@ public class EAnnotationImpl extends EModelElementImpl implements EAnnotation {
 	 * @ordered
 	 */
 	protected String source = SOURCE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getInstanceTypeName() <em>Instance Type Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getInstanceTypeName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String INSTANCE_TYPE_NAME_EDEFAULT = "";
+
+	/**
+	 * The cached value of the '{@link #getInstanceTypeName() <em>Instance Type Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getInstanceTypeName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String instanceTypeName = INSTANCE_TYPE_NAME_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getElements() <em>Elements</em>}' containment reference list.
@@ -113,6 +134,27 @@ public class EAnnotationImpl extends EModelElementImpl implements EAnnotation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getInstanceTypeName() {
+		return instanceTypeName;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setInstanceTypeName(String newInstanceTypeName) {
+		String oldInstanceTypeName = instanceTypeName;
+		instanceTypeName = newInstanceTypeName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ApiPackage.EANNOTATION__INSTANCE_TYPE_NAME, oldInstanceTypeName, instanceTypeName));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<EAnnotationElement> getElements() {
 		if (elements == null) {
 			elements = new EObjectContainmentEList<EAnnotationElement>(EAnnotationElement.class, this, ApiPackage.EANNOTATION__ELEMENTS);
@@ -144,6 +186,8 @@ public class EAnnotationImpl extends EModelElementImpl implements EAnnotation {
 		switch (featureID) {
 			case ApiPackage.EANNOTATION__SOURCE:
 				return getSource();
+			case ApiPackage.EANNOTATION__INSTANCE_TYPE_NAME:
+				return getInstanceTypeName();
 			case ApiPackage.EANNOTATION__ELEMENTS:
 				return getElements();
 		}
@@ -161,6 +205,9 @@ public class EAnnotationImpl extends EModelElementImpl implements EAnnotation {
 		switch (featureID) {
 			case ApiPackage.EANNOTATION__SOURCE:
 				setSource((String)newValue);
+				return;
+			case ApiPackage.EANNOTATION__INSTANCE_TYPE_NAME:
+				setInstanceTypeName((String)newValue);
 				return;
 			case ApiPackage.EANNOTATION__ELEMENTS:
 				getElements().clear();
@@ -181,6 +228,9 @@ public class EAnnotationImpl extends EModelElementImpl implements EAnnotation {
 			case ApiPackage.EANNOTATION__SOURCE:
 				setSource(SOURCE_EDEFAULT);
 				return;
+			case ApiPackage.EANNOTATION__INSTANCE_TYPE_NAME:
+				setInstanceTypeName(INSTANCE_TYPE_NAME_EDEFAULT);
+				return;
 			case ApiPackage.EANNOTATION__ELEMENTS:
 				getElements().clear();
 				return;
@@ -198,6 +248,8 @@ public class EAnnotationImpl extends EModelElementImpl implements EAnnotation {
 		switch (featureID) {
 			case ApiPackage.EANNOTATION__SOURCE:
 				return SOURCE_EDEFAULT == null ? source != null : !SOURCE_EDEFAULT.equals(source);
+			case ApiPackage.EANNOTATION__INSTANCE_TYPE_NAME:
+				return INSTANCE_TYPE_NAME_EDEFAULT == null ? instanceTypeName != null : !INSTANCE_TYPE_NAME_EDEFAULT.equals(instanceTypeName);
 			case ApiPackage.EANNOTATION__ELEMENTS:
 				return elements != null && !elements.isEmpty();
 		}
@@ -216,6 +268,8 @@ public class EAnnotationImpl extends EModelElementImpl implements EAnnotation {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (source: ");
 		result.append(source);
+		result.append(", instanceTypeName: ");
+		result.append(instanceTypeName);
 		result.append(')');
 		return result.toString();
 	}
