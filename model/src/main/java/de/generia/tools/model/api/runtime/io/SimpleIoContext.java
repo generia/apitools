@@ -25,7 +25,7 @@ public class SimpleIoContext implements EObjectWriter.Context, EObjectReader.Con
 	private boolean useContainmentFlag;
 	
 	public SimpleIoContext(EPackageManager packageManager) {
-		this(packageManager, new SimpleObjectFactory(), true);
+		this(packageManager, packageManager.getObjectFactory(), true);
 	}
 	
 	public SimpleIoContext(EPackageManager packageManager, EObjectFactory objectFactory, boolean useContainmentFlag) {
@@ -100,13 +100,13 @@ public class SimpleIoContext implements EObjectWriter.Context, EObjectReader.Con
 	@Override
 	public Collection<EStructuralFeature> getFilteredFeatures(EObject object, Stack<EStructuralFeature> featureStack) {
 		if (!useContainmentFlag || featureStack.isEmpty()) {
-			return object.getStructuralFeatures();
+			return object.eGetStructuralFeatures();
 		}
 		EStructuralFeature activeFeature = featureStack.peek();
 		if (activeFeature instanceof EReference) {
 			EReference reference = (EReference) activeFeature;
 			if (reference.isContainment()) {
-				return object.getStructuralFeatures();
+				return object.eGetStructuralFeatures();
 			}
 			return Collections.emptyList();
 		}

@@ -1,4 +1,4 @@
-package de.generia.tools.model.api.runtime;
+package de.generia.tools.model.api.runtime.generic;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,14 +15,17 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 
 import de.generia.tools.model.api.EClass;
+import de.generia.tools.model.api.runtime.CompanyTestData;
+import de.generia.tools.model.api.runtime.EObject;
+import de.generia.tools.model.api.runtime.EPackageManager;
+import de.generia.tools.model.api.runtime.generic.GenericEObjectFactory;
 import de.generia.tools.model.api.runtime.io.EObjectReader;
 import de.generia.tools.model.api.runtime.io.EObjectWriter;
 import de.generia.tools.model.api.runtime.io.SimpleIoContext;
-import de.generia.tools.model.api.runtime.io.SimpleObjectFactory;
 import de.generia.tools.model.api.runtime.io.json.EObjectJsonReader;
 import de.generia.tools.model.api.runtime.io.json.EObjectJsonWriter;
 
-public class EObjectTest {
+public class GenericEObjectTest {
 
 	private EPackageManager packageManager;
 	private EClass companyType;
@@ -30,7 +33,7 @@ public class EObjectTest {
 
     @Before
 	public void setup() {
-    	CompanyTestData companyTestData = new CompanyTestData();
+    	CompanyTestData companyTestData = new CompanyTestData(new GenericEObjectFactory());
     	packageManager = companyTestData.getPackageManager();
 		companyType = packageManager.lookupElement("/companymgmt/model/Company");
 		acme = companyTestData.createAcmeCompany();
@@ -50,7 +53,7 @@ public class EObjectTest {
 	
 	@Test
 	public void testGraph() throws IOException {
-		SimpleIoContext context = new SimpleIoContext(packageManager, new SimpleObjectFactory(), false);
+		SimpleIoContext context = new SimpleIoContext(packageManager, new GenericEObjectFactory(), false);
 		JsonFactory jsonFactory = new JsonFactory();
 
 		String acmeJson = writeObject(context, jsonFactory, acme);

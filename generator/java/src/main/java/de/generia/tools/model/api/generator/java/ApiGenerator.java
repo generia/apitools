@@ -88,16 +88,17 @@ public class ApiGenerator extends Task implements TrafoGenerator {
 		File lRoot = new File("/Users/alex/home/dev/ws-api/apitools/generator/java");
 		URL lInputFile = new URL("file:///" + lRoot + "/tst/companymgmt.v2.api");
 		//URL lInputFile = new URL("file:///" + lRoot + "/tst/productdata.v0.9.api");
-		
+		//URL lInputFile = new URL("file:////Users/alex/home/dev/ws-api/apitools/model/src/test/resources/de/generia/tools/model/api/runtime/companymgmt.api");
 		File lWorkspaceRoot = lRoot;
 		File lOutputDir = new File(lWorkspaceRoot, "/tst/gen");
+		//File lOutputDir = new File("/Users/alex/home/dev/ws-api/apitools/model/src/test/java");
 		//File lOutputDir = new File(lRoot, "src-gen");
 		lGenerator.setInputUrl(lInputFile);
 
 		lGenerator.setJavaOutputDir(lOutputDir);
-		lGenerator.setModelPackageRoot("de.generia.productdata.api.v09");
+		lGenerator.setModelPackageRoot("de.generia.tools.model.api.runtime.typed.gen");
 		lGenerator.setProject(new Project());
-		lGenerator.getProject().addBuildListener(new ApiBuildListener(System.out, "Interface-Generator"));
+		lGenerator.getProject().addBuildListener(new ApiBuildListener(System.out, "Api-Interface-Generator"));
 		lGenerator.execute();
    }
 

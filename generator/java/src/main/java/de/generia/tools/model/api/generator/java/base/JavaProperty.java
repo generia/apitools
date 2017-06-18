@@ -84,10 +84,7 @@ public class JavaProperty extends AbstractJavaComponent {
 	}
 
 	public boolean getNeedSetter() {
-		if (mFeature instanceof EAttribute) {
-			return true;
-		}
-		return !mFeature.isMany();
+		return true;
 	}
 	
 	public String getModelAnnotation() {

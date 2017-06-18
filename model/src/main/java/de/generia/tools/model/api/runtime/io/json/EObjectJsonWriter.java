@@ -40,9 +40,15 @@ public class EObjectJsonWriter implements EObjectWriter {
 			writeCollection((Collection<?>)value);
 		} else if (value instanceof EEnumLiteral) {
 			writeEnum((EEnumLiteral)value);
+		} else if (value instanceof Enum<?>) {
+			writeEnum((Enum<?>)value);
 		} else {
 			writeValue(value);
 		}
+	}
+
+	private void writeEnum(Enum<?> value) throws IOException {
+		jg.writeString(value.name());
 	}
 
 	private void writeEnum(EEnumLiteral value) throws IOException {		

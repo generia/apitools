@@ -113,7 +113,7 @@ public class EObjectJsonReader implements EObjectReader {
 		}
 		for (EEnumLiteral literal : type.getLiterals()) {
 			if (literal.getName().equals(text)) {
-				return literal;
+				return context.getObjectFactory().createEnum(literal);
 			}
 		}
 		throw new IllegalArgumentException("can't parse enum type, no such enum literal '" + text + "' in enum type '" + typeName(type) + "'");
@@ -217,7 +217,7 @@ public class EObjectJsonReader implements EObjectReader {
 				   link.object = object;
 				   continue;
 			   }
-			   EStructuralFeature feature = object.getFeature(property);
+			   EStructuralFeature feature = object.eGetFeature(property);
 			   if (feature == null) {
 					throw new IllegalArgumentException("property '" + property + "' not found for type '" + typeName(type) + "'");
 			   }

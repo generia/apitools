@@ -9,19 +9,21 @@ import java.util.List;
 import java.util.Set;
 
 import de.generia.tools.model.api.EClass;
+import de.generia.tools.model.api.EEnum;
+import de.generia.tools.model.api.EEnumLiteral;
 import de.generia.tools.model.api.EPackage;
 import de.generia.tools.model.api.resource.stream.ModelInputStream;
 
 public class CompanyTestData {
 	private EPackageManager packageManager;
 
-	public CompanyTestData() {
+	public CompanyTestData(EObjectFactory objectFactory) {
 		ModelInputStream apiStream = new ModelInputStream();
 		InputStream inputStream = CompanyTestData.class.getResourceAsStream("companymgmt.api");
 		EPackage api = apiStream.read(inputStream);
 		assertNotNull(api);
 		
-		packageManager = new EPackageManager("companymgmt:v1", api);
+		packageManager = new EPackageManager("companymgmt:v1", api, objectFactory);
 
 	}
 	
@@ -77,20 +79,20 @@ public class CompanyTestData {
 		Set<EObject> larryProjects = new LinkedHashSet<>();
 		larry.set("projects", larryProjects);
 		larryProjects.add(bridge);
-		
-		EObject lorry = create("/companymgmt/model/Workstation");
-		lorry.set("name", "Red Lorry");
-		lorry.set("assessment", "poor");
-		lorry.set("company", acme);
-		lorry.set("employee", curly);
-		curly.set("workstation", lorry);
 
 		EObject dredge = create("/companymgmt/model/Workstation");
 		dredge.set("name", "Blue Dredge");
-		dredge.set("assessment", "excellent");
+		dredge.set("assessment", createEnum("/companymgmt/model/Assessment", "excellent"));
 		dredge.set("company", acme);
 		dredge.set("employee", larry);
 		larry.set("workstation", dredge);
+		
+		EObject lorry = create("/companymgmt/model/Workstation");
+		lorry.set("name", "Red Lorry");
+		lorry.set("assessment", createEnum("/companymgmt/model/Assessment", "poor"));
+		lorry.set("company", acme);
+		lorry.set("employee", curly);
+		curly.set("workstation", lorry);
 
 		List<EObject> acmeWorkstations = new ArrayList<>();
 		acmeWorkstations.add(dredge);
@@ -101,9 +103,20 @@ public class CompanyTestData {
 	}
     
     @SuppressWarnings("unchecked")
+	private <T> T createEnum(String type, String literal) {
+		EEnum e = packageManager.lookupElement(type);
+		for (EEnumLiteral l : e.getLiterals()) {
+			if (l.getName().equals(literal)) {
+				return (T) packageManager.getObjectFactory().createEnum(l);
+			}
+		}
+		throw new IllegalArgumentException("can't create enum literal '" + literal + "' for enum '" + type + "'");
+	}
+
+	@SuppressWarnings("unchecked")
 	private <T> T create(String name) {
 		EClass c = packageManager.lookupElement(name);
-		return (T) new EObject(c);
+		return (T) packageManager.getObjectFactory().createObject(c);
     }
 
 }

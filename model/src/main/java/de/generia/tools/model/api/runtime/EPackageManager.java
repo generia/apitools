@@ -8,12 +8,14 @@ import java.util.Map;
 import de.generia.tools.model.api.EAttribute;
 import de.generia.tools.model.api.EClass;
 import de.generia.tools.model.api.EClassifier;
+import de.generia.tools.model.api.EEnumLiteral;
 import de.generia.tools.model.api.EModelElement;
 import de.generia.tools.model.api.ENamedElement;
 import de.generia.tools.model.api.EOperation;
 import de.generia.tools.model.api.EPackage;
 import de.generia.tools.model.api.EParameter;
 import de.generia.tools.model.api.EStructuralFeature;
+import de.generia.tools.model.api.runtime.generic.GenericEObjectFactory;
 
 public class EPackageManager {
 	private static final EAttribute NOT_EXISTING = new EAttribute();
@@ -29,7 +31,7 @@ public class EPackageManager {
 
 
 	public EPackageManager(String schemaId, EPackage pkg) {
-		this(schemaId, pkg, null);
+		this(schemaId, pkg, new GenericEObjectFactory());
 	}
 
 	public EPackageManager(String schemaId, EPackage pkg, EObjectFactory objectFactory) {
@@ -67,10 +69,13 @@ public class EPackageManager {
 	public EObject create(String type) {
 		EModelElement element = getTypeChecked(type, EClass.class);
 		EClass clazz = (EClass) element;
-		if (objectFactory != null) {
-			return objectFactory.createObject(clazz);
-		}
-		return new EObject(clazz);
+		return objectFactory.createObject(clazz);
+	}
+	
+	public Object createEnum(String type) {
+		EModelElement element = getTypeChecked(type, EEnumLiteral.class);
+		EEnumLiteral literal = (EEnumLiteral) element;
+		return objectFactory.createEnum(literal);
 	}
 
 	@SuppressWarnings("unchecked")
