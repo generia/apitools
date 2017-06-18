@@ -52,6 +52,7 @@ public class EAnnotationItemProvider
 			super.getPropertyDescriptors(object);
 
 			addSourcePropertyDescriptor(object);
+			addInstanceTypeNamePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -70,6 +71,28 @@ public class EAnnotationItemProvider
 				 getString("_UI_EAnnotation_source_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_EAnnotation_source_feature", "_UI_EAnnotation_type"),
 				 ApiPackage.Literals.EANNOTATION__SOURCE,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Instance Type Name feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addInstanceTypeNamePropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_EAnnotation_instanceTypeName_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_EAnnotation_instanceTypeName_feature", "_UI_EAnnotation_type"),
+				 ApiPackage.Literals.EANNOTATION__INSTANCE_TYPE_NAME,
 				 true,
 				 false,
 				 false,
@@ -127,7 +150,12 @@ public class EAnnotationItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((EAnnotation)object).getSource();
+		EAnnotation lAnnotation = (EAnnotation)object;
+		String label = lAnnotation.getSource();
+		String lInstanceTypeName = lAnnotation.getInstanceTypeName();
+		if (lInstanceTypeName != null && !lInstanceTypeName.isEmpty()) {
+			label += " [" + lInstanceTypeName + "]";
+		}
 		return "@" + label;
 	}
 
@@ -144,6 +172,7 @@ public class EAnnotationItemProvider
 
 		switch (notification.getFeatureID(EAnnotation.class)) {
 			case ApiPackage.EANNOTATION__SOURCE:
+			case ApiPackage.EANNOTATION__INSTANCE_TYPE_NAME:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case ApiPackage.EANNOTATION__ELEMENTS:

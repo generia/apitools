@@ -530,10 +530,6 @@ public class ApiActionBarContributor
 				selectionChanged(new SelectionChangedEvent(selectionProvider, selectionProvider.getSelection()));
 			}
 		}
-		
-		saveAsUmlAction.setEnabled(saveAsUmlAction.isEnabled());
-		refreshViewerAction.setEnabled(refreshViewerAction.isEnabled());		
-		showPropertiesViewAction.setEnabled(showPropertiesViewAction.isEnabled());
 	}
 
 	/**

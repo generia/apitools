@@ -128,8 +128,10 @@ public class EAnnotationElementItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		EAnnotationElement element = (EAnnotationElement)object;
-		return "" + element.getKey() + " = \"" + element.getValue() + "\"";
+		String label = ((EAnnotationElement)object).getKey();
+		return label == null || label.length() == 0 ?
+			getString("_UI_EAnnotationElement_type") :
+			getString("_UI_EAnnotationElement_type") + " " + label;
 	}
 	
 

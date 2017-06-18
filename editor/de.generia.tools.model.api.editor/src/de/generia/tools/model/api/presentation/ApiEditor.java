@@ -529,7 +529,7 @@ public class ApiEditor
 			BasicDiagnostic diagnostic =
 				new BasicDiagnostic
 					(Diagnostic.OK,
-					 "de.generia.tools.model.api.plugin",
+					 "de.generia.tools.model.api.editor",
 					 0,
 					 null,
 					 new Object [] { editingDomain.getResourceSet() });
@@ -880,7 +880,7 @@ public class ApiEditor
 			BasicDiagnostic basicDiagnostic =
 				new BasicDiagnostic
 					(hasErrors ? Diagnostic.ERROR : Diagnostic.WARNING,
-					 "de.generia.tools.model.api.plugin",
+					 "de.generia.tools.model.api.editor",
 					 0,
 					 getString("_UI_CreateModelError_message", resource.getURI()),
 					 new Object [] { exception == null ? (Object)resource : exception });
@@ -891,7 +891,7 @@ public class ApiEditor
 			return
 				new BasicDiagnostic
 					(Diagnostic.ERROR,
-					 "de.generia.tools.model.api.plugin",
+					 "de.generia.tools.model.api.editor",
 					 0,
 					 getString("_UI_CreateModelError_message", resource.getURI()),
 					 new Object[] { exception });
