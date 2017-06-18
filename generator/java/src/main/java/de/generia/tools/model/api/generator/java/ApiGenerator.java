@@ -95,7 +95,7 @@ public class ApiGenerator extends Task implements TrafoGenerator {
 		lGenerator.setInputUrl(lInputFile);
 
 		lGenerator.setJavaOutputDir(lOutputDir);
-		lGenerator.setModelPackageRoot("de.generia.companymgmt.api.v2");
+		lGenerator.setModelPackageRoot("de.generia.productdata.api.v09");
 		lGenerator.setProject(new Project());
 		lGenerator.getProject().addBuildListener(new ApiBuildListener(System.out, "Interface-Generator"));
 		lGenerator.execute();

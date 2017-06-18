@@ -119,20 +119,20 @@ public abstract class AbstractJavaComponent extends AbstractApiGeneratorComponen
 			instanceType = mapDefaultInstanceType(pClassifier.getName());
 		}
 		if (instanceType == null || instanceType.isEmpty()) {
-			throw new IllegalArgumentException("can't get instance-type from classifier '" + pClassifier + "'");
+			throw new IllegalArgumentException("can't get instance-type from classifier '" + pClassifier.getName() + "'");
 		}
 		return instanceType;
 	}
 	
 	private String mapDefaultInstanceType(String name) {
-		if (isPrimitive(name)) {
-			return name;
-		}
 		if (name.toLowerCase().equals("string")) {
 			return String.class.getName();
 		}
 		if (name.toLowerCase().equals("integer")) {
 			return "int";
+		}
+		if (isPrimitive(name)) {
+			return name;
 		}
 		return null;
 	}

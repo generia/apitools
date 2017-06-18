@@ -6,7 +6,7 @@
 				<EOperation name="findAll" many="true" type="/companymgmt/model/Company"/>
 				<EOperation name="findByName" type="/companymgmt/model/Company">
 					<parameters>
-						<EParameter name="name" type="/companymgmt/basetypes/String"/>
+						<EParameter name="name" type="/companymgmt/basetypes/string"/>
 					</parameters>
 				</EOperation>
 			</operations>
@@ -20,7 +20,7 @@
 				<EDataType name="Date" instance-type-name="java.util.Date"/>
 				<EDataType name="Integer" instance-type-name="java.lang.Integer"/>
 				<EDataType name="Double" instance-type-name="java.lang.Double"/>
-				<EDataType name="String" instance-type-name="java.lang.String"/>
+				<EDataType name="string"/>
 				<EDataType name="Map" instance-type-name="java.util.Map"/>
 				<EDataType name="Email" instance-type-name="java.lang.String"/>
 				<EDataType name="Link" instance-type-name="java.lang.String"/>
@@ -48,7 +48,7 @@
 						<EAnnotation source="Entity"/>
 					</annotations>
 					<structural-features>
-						<EAttribute name="name" required="true" type="/companymgmt/basetypes/String" id="true"/>
+						<EAttribute name="name" required="true" type="/companymgmt/basetypes/string" id="true"/>
 						<EAttribute name="assessment" required="true" type="/companymgmt/model/Assessment"/>
 						<EReference name="company" required="true" type="/companymgmt/model/Company" opposite="/companymgmt/model/Company/workstations"/>
 						<EReference name="employee" type="/companymgmt/model/Employee" opposite="/companymgmt/model/Employee/workstation"/>
@@ -59,7 +59,7 @@
 						<EAnnotation source="Entity"/>
 					</annotations>
 					<structural-features>
-						<EAttribute name="name" required="true" type="/companymgmt/basetypes/String" id="true"/>
+						<EAttribute name="name" required="true" type="/companymgmt/basetypes/string" id="true"/>
 						<EAttribute name="homepage" type="/companymgmt/basetypes/Link"/>
 						<EReference name="workstations" ordered="true" many="true" type="/companymgmt/model/Workstation" containment="true" opposite="/companymgmt/model/Workstation/company"/>
 						<EReference name="employees" many="true" required="true" type="/companymgmt/model/Employee" containment="true" opposite="/companymgmt/model/Employee/company"/>
@@ -71,9 +71,9 @@
 						<EAnnotation source="Entity"/>
 					</annotations>
 					<structural-features>
-						<EAttribute name="logins" required="true" type="/companymgmt/basetypes/String"/>
-						<EAttribute name="name" required="true" type="/companymgmt/basetypes/String" id="true"/>
-						<EAttribute name="title" type="/companymgmt/basetypes/String"/>
+						<EAttribute name="logins" required="true" type="/companymgmt/basetypes/string"/>
+						<EAttribute name="name" required="true" type="/companymgmt/basetypes/string" id="true"/>
+						<EAttribute name="title" type="/companymgmt/basetypes/string"/>
 						<EReference name="contact" type="/companymgmt/model/Contact" containment="true"/>
 						<EReference name="company" required="true" type="/companymgmt/model/Company" opposite="/companymgmt/model/Company/employees"/>
 						<EReference name="workstation" type="/companymgmt/model/Workstation" opposite="/companymgmt/model/Workstation/employee"/>
@@ -85,8 +85,8 @@
 						<EAnnotation source="Entity"/>
 					</annotations>
 					<structural-features>
-						<EAttribute name="name" required="true" type="/companymgmt/basetypes/String" id="true"/>
-						<EAttribute name="description" required="true" type="/companymgmt/basetypes/String"/>
+						<EAttribute name="name" required="true" type="/companymgmt/basetypes/string" id="true"/>
+						<EAttribute name="description" required="true" type="/companymgmt/basetypes/string"/>
 						<EAttribute name="size" type="/companymgmt/model/Project/Size"/>
 						<EReference name="company" required="true" type="/companymgmt/model/Company" opposite="/companymgmt/model/Company/projects"/>
 						<EReference name="employees" many="true" type="/companymgmt/model/Employee" opposite="/companymgmt/model/Employee/projects"/>
