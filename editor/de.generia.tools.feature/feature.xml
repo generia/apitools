@@ -2,7 +2,7 @@
 <feature
       id="de.generia.tools.model.api.feature"
       label="Api Tools Feature"
-      version="1.0.2.vqualifier"
+      version="1.0.3.vqualifier"
       provider-name="www.generia.de">
 
    <description>

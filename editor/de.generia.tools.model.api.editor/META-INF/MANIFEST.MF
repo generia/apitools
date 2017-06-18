@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: de.generia.tools.model.api.editor;singleton:=true
-Bundle-Version: 1.0.7.vqualifier
+Bundle-Version: 1.0.8.vqualifier
 Bundle-ClassPath: .
 Bundle-Activator: de.generia.tools.model.api.util.ApiPlugin$Implementation
 Require-Bundle: org.eclipse.core.runtime,
