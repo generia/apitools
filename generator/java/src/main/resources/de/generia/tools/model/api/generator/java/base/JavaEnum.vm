@@ -10,29 +10,10 @@ public enum ${this.classSimpleName} {
 #foreach ($literal in $this.literals)
 
     /**
-     * The '${literal.simpleName}' literal with value '${literal.value}'. 
+     * The '${literal.simpleName}' literal. 
+	 * ${literal.umlDoc}
      */
-    ${literal.simpleName}(${literal.value}), 
+    ${literal.simpleName}, 
 #end
     ;
-    
-    /**
-     * Holds the value associated with this literal. 
-     */
-    private final int VALUE;
-
-    /**
-     * Creates a '${this.classSimpleName}' literal with the given value. 
-     * @param pValue
-     */
-    ${this.classSimpleName}(int pValue) {
-        VALUE = pValue;
-    }
-
-    /**
-     * Gets the value associated with this literal. 
-     */
-    public int getValue() {
-        return VALUE;
-    }
 }

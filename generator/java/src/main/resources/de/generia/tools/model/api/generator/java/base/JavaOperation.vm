@@ -3,4 +3,4 @@
  * The '${this.nodeSimpleName}' operation of the '${this.context.nodeSimpleName}' ${this.context.nodeType}.
  * ${this.umlDoc}
  */
-$this.type ${this.name}(${this.signature});
+${this.annotations}$this.type ${this.name}(${this.signature});

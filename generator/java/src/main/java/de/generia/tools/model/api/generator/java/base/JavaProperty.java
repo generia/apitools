@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.generia.tools.model.api.EAttribute;
+import de.generia.tools.model.api.EClass;
 import de.generia.tools.model.api.EModelElement;
 import de.generia.tools.model.api.EReference;
 import de.generia.tools.model.api.EStructuralFeature;
@@ -28,10 +29,32 @@ public class JavaProperty extends AbstractJavaComponent {
 		return Name.firstUp(mFeature.getName());
 	}
 	
+	public String getFieldType() {
+		EClass lEmbedded = getEmbeddedClass();
+		if (lEmbedded != null) {
+			String lEmbeddedClassName = getClassName(lEmbedded);
+			return lEmbeddedClassName;
+		}
+		return getType();
+	}
+	
+	protected EClass getEmbeddedClass() {
+		return null;
+	}
+
 	public String getFieldName() {
 		return getFieldName(mFeature);
 	}
-	
+
+	public String getGetterName() {
+		String name = getName();
+		String type = getType();
+		if (type.toLowerCase().equals("boolean")) {
+			return "is" + name;
+		}
+		return "get" + name;
+	}
+
 	public String getConstName() {
 		return Name.toConstName(mFeature.getName());
 	}

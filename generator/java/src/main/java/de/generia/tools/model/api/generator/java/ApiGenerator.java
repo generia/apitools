@@ -3,7 +3,6 @@ package de.generia.tools.model.api.generator.java;
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -19,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import de.generia.tools.model.api.EPackage;
 import de.generia.tools.model.api.generator.java.base.JavaPackage;
-import de.generia.tools.model.api.generator.java.pojo.PojoPackage;
 import de.generia.tools.model.api.generator.trafo.TrafoComponent.ContentFilter;
 import de.generia.tools.model.api.generator.trafo.TrafoGenerator;
 import de.generia.tools.model.api.resource.stream.ModelInputStream;
@@ -82,67 +80,27 @@ public class ApiGenerator extends Task implements TrafoGenerator {
 	}
 	
     public static void main(String[] args) throws Exception {
-    	//System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.Log4JLogger");
-    	//Properties lProps = new Properties();
-    	//File lFile = new File("c:/iap/ws/prototyp/cfg/de/mercur/iap/spdb/mylog.properties");
-    	//lProps.load(ModelGenerator.class.getResourceAsStream("/de/mercur/iap/spdb/mylog.properties"));
-    	//System.setProperty("log4j.configuration", "/de/mercur/iap/spdb/mylog.properties");
-    	//System.setProperty("log4j.configuration", "de/mercur/iap/spdb/devlog.properties");
-    	//System.setProperties(lProps);
 
     	Logger log = LoggerFactory.getLogger(ApiGenerator.class);
     	log.info("starting model generator via main.");
 		ApiGenerator lGenerator = new ApiGenerator();
-    	//File lRoot = new File("C:/home/dev/ws/modelweb");
-		//File lRoot = new File("C:/home/prj/hvb/mds/ws/api-tools");
-		File lRoot = new File("/Users/qxn7720/home/prj/bmw/ds2/ws-ms/api-tools-generator");
-		//File lRoot = new File("C:/home/prj/mds/ws/default-saved/workspace");
-    	//File lRoot = new File("C:/home/prj/mds/ws/default-saved/workspace/mds/source/plugins/api-tools");
-		//URL lInputFile = new URL("file:///" + lRoot + "/mds/source/java/de/ugis/m0/bondipv/bondipv.api");
-		URL lInputFile = new URL("file:///" + lRoot + "/tst/ext-api/mini-pd-v1.api");
-		//URL lInputFile = new URL("file:///" + lRoot + "/tst/ext-api/bondipv.api.uml.api");
-		//URL lInputFile = new URL("file:///" + lRoot + "/mds/source/java/de/ugis/m0/sandbox/companymgmt/companymgmt.api");
-		//URL lInputFile = new URL("file:///" + lRoot + "/mds/source/java/de/ugis/m0/sandbox/modeltest/modeltest.api");
-		//URL lInputFile = new URL("file:///" + lRoot + "/mds/source/java/de/ugis/m0/common/usermgmt/usermgmt.api");
+		//File lRoot = new File("/Users/qxn7720/home/prj/bmw/ds2/ws-ms/api-tools-generator");
+		File lRoot = new File("/Users/alex/home/dev/ws-api/apitools/generator/java");
+		URL lInputFile = new URL("file:///" + lRoot + "/tst/companymgmt.v2.api");
+		//URL lInputFile = new URL("file:///" + lRoot + "/tst/productdata.v0.9.api");
 		
-		//URL lInputFile = new URL("file:///" + lRoot + "/tst/companymgmt.api");
-		//File lWorkspaceRoot = new File("C:/home/prj/mds/ws/default-saved/workspace");
 		File lWorkspaceRoot = lRoot;
-		File lOutputDir = new File(lWorkspaceRoot, "/tst/ext-api/gen");
+		File lOutputDir = new File(lWorkspaceRoot, "/tst/gen");
 		//File lOutputDir = new File(lRoot, "src-gen");
 		lGenerator.setInputUrl(lInputFile);
 
 		lGenerator.setJavaOutputDir(lOutputDir);
-//		String lSystemComponent = "bondipv";
-//		lGenerator.setConfigPackageRoot("de.generia.tools." + lSystemComponent + ".backend");
-//		lGenerator.setDatatypePackageRoot("de.generia.tools." + lSystemComponent + ".appcore");
-//		lGenerator.setModelPackageRoot("de.generia.tools." + lSystemComponent + ".appcore");
-//		lGenerator.setLibDatatypePackageRoot("de.generia.tools.appcore.basetypes");
-		lGenerator.setEntityBaseClass("de.ugis.m0.common.model.persistence.jpa.AbstractEntity");
-		lGenerator.setDaoBaseInterface("de.ugis.m0.common.backend.persistence.PersistenceDao");
-		lGenerator.setOppositeSupportCollection("de.ugis.m0.common.model.impl.collections.OppositeSupportSet");
+		lGenerator.setModelPackageRoot("de.generia.companymgmt.api.v2");
 		lGenerator.setProject(new Project());
-		lGenerator.getProject().addBuildListener(new ApiBuildListener(System.out, "Api-Generator"));
+		lGenerator.getProject().addBuildListener(new ApiBuildListener(System.out, "Interface-Generator"));
 		lGenerator.execute();
    }
-    
-    public static void generateApi(File pInputFile, File pOutputDir, final String pPrefix, final PrintStream pPrintStream) {
-		ApiGenerator lGenerator = new ApiGenerator();
-		URL lInputUrl;
-		try {
-			lInputUrl = pInputFile.toURI().toURL();
-		} catch (MalformedURLException e) {
-			throw new RuntimeException("can't create url from file '" + pInputFile + "'", e);
-		}
-		lGenerator.setEntityBaseClass("de.ugis.m0.common.model.persistence.jpa.AbstractEntity");
-		lGenerator.setDaoBaseInterface("de.ugis.m0.common.backend.persistence.PersistenceDao");
-		lGenerator.setOppositeSupportCollection("de.ugis.m0.common.model.impl.collections.OppositeSupportSet");
-		lGenerator.setInputUrl(lInputUrl);
-		lGenerator.setJavaOutputDir(pOutputDir);
-		lGenerator.setProject(new Project());
-		lGenerator.getProject().addBuildListener(new ApiBuildListener(pPrintStream, pPrefix));
-		lGenerator.execute();
-    }
+
     
     public ApiGenerator() {
     	
@@ -153,15 +111,7 @@ public class ApiGenerator extends Task implements TrafoGenerator {
 	    try {
 	    	log("reading    '" + mInputUrl.toExternalForm() + "' ...");
 			URI lUri = URI.create(mInputUrl.toExternalForm());
-			EPackage lPackage = loadPackage(lUri.toURL().openStream());
-	    
-//			if (true) {
-//				ModelResourceFactory lModelResourceFactory = new ModelResourceFactory();
-//				Resource lResource = lModelResourceFactory.createResource(lUri);
-//				lResource.getContents().add(lPackage);
-//				lResource.save(System.out, null);
-//			}
-			
+			EPackage lPackage = loadPackage(lUri.toURL().openStream());			
 			render(lPackage);
 		} catch (Throwable e) {
 			throw new BuildException(e);
@@ -177,9 +127,6 @@ public class ApiGenerator extends Task implements TrafoGenerator {
 	public void render(EPackage pPackage) throws Exception {
 		JavaPackage lJavaPackage = new JavaPackage(this, pPackage);
 		lJavaPackage.render();
-
-		PojoPackage lPojoPackage = new PojoPackage(this, pPackage);
-		lPojoPackage.render();
 	}
     
 	public File getJavaOutputDir() {
@@ -230,9 +177,8 @@ public class ApiGenerator extends Task implements TrafoGenerator {
 		mConfigPackageRoot = pConfigPackageRoot;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List filterList(List<? extends Object> pList, ContentFilter pFilter) {
-		List lFilteredList = new ArrayList();
+	public List<?> filterList(List<? extends Object> pList, ContentFilter pFilter) {
+		List<Object> lFilteredList = new ArrayList<Object>();
 		for (Object lObject : pList) {
 			if (pFilter == null || pFilter.accept(lObject)) {
 				lFilteredList.add(lObject);

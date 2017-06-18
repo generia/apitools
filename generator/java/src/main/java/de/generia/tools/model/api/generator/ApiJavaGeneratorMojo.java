@@ -15,6 +15,7 @@ import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
 
+import de.generia.tools.model.api.generator.java.ApiGenerator;
 import de.generia.tools.model.api.generator.java.PojoGenerator;
 
 @Mojo(name = "generate", defaultPhase = LifecyclePhase.COMPILE, threadSafe = true)
@@ -30,6 +31,9 @@ public class ApiJavaGeneratorMojo extends AbstractMojo {
     private boolean renderAnnotations = false;
 
     @Parameter
+    private boolean renderPojos = false;
+
+    @Parameter
     private String modelPackageRoot;
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
@@ -41,7 +45,12 @@ public class ApiJavaGeneratorMojo extends AbstractMojo {
 			throw new MojoExecutionException("can't create input-url for file '" + apiInputFile + "'");
 		}
 
-		PojoGenerator generator = new PojoGenerator();
+		ApiGenerator generator;
+		if (renderPojos) {
+			generator = new PojoGenerator();
+		} else {
+			generator = new ApiGenerator();			
+		}
 		generator.setInputUrl(inputUrl);
 		generator.setJavaOutputDir(javaOutputDir);
 		generator.setRenderAnnotations(renderAnnotations);

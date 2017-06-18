@@ -2,17 +2,12 @@ package de.generia.tools.model.api.generator.java;
 
 import java.util.List;
 
-import de.generia.tools.model.api.EClassifier;
 import de.generia.tools.model.api.EModelElement;
 import de.generia.tools.model.api.ENamedElement;
 import de.generia.tools.model.api.generator.trafo.TrafoComponent;
 import de.generia.tools.model.api.generator.trafo.TrafoGenerator;
 
 public abstract class AbstractApiGeneratorComponent extends TrafoComponent {
-
-	private static final Object JAVA_LANG_PACKAGE = "java.lang";
-	private static final Object JAVA_UTIL_PACKAGE = "java.util";
-	private static final Object LIB_DATATYPE_PACKAGE = "lib.basetypes";
 
 
 	public AbstractApiGeneratorComponent(TrafoGenerator pGenerator, TrafoComponent pContext) {
@@ -80,7 +75,7 @@ public abstract class AbstractApiGeneratorComponent extends TrafoComponent {
 		return "Documentation: " + lDocumentation;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List wrapFilterList(final Class pContentClass, Class pWrapperClass, List<? extends Object> pList) {
 		List lFilteredList = generator().filterList(pList, new ContentFilter() {
 			public boolean accept(Object pContent) {

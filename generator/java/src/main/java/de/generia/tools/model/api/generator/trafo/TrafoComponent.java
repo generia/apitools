@@ -175,7 +175,7 @@ public abstract class TrafoComponent {
 		public boolean accept(Object pContent);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List wrapList(Class pContentClass, Class pWrapperClass, Collection<? extends Object> pList) {
 		List lResult = new ArrayList();
 		try {

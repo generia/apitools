@@ -37,7 +37,6 @@ public abstract class AbstractJavaComponent extends AbstractApiGeneratorComponen
 		return new File(lOutputDir, lPath + ".java");
 	}
 	
-
 	public boolean isNestedClassifier() {
 		EModelElement lModelNode = getModelNode();
 		if (lModelNode == null) {

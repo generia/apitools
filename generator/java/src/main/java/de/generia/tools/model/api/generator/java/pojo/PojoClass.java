@@ -1,16 +1,11 @@
 package de.generia.tools.model.api.generator.java.pojo;
 
-import java.io.File;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
-import de.generia.tools.model.api.EAnnotation;
 import de.generia.tools.model.api.EClass;
-import de.generia.tools.model.api.EClassifier;
 import de.generia.tools.model.api.EEnum;
 import de.generia.tools.model.api.EOperation;
-import de.generia.tools.model.api.EParameter;
 import de.generia.tools.model.api.EStructuralFeature;
 import de.generia.tools.model.api.ETypedElement;
 import de.generia.tools.model.api.generator.java.base.JavaClass;
@@ -47,62 +42,10 @@ public class PojoClass extends JavaClass {
 	public String getClassKeyword() {
 		return mClass.isInterface() ? "interface" : "class";
 	}
-	
-	public String getClassSimpleName() {
-		return mClass.getName();
-	}
-	
-	@Override
-	public String getPackage() {
-		return getPackage(mClass);
-	}
 
-	public Set<String> getImports() {
-		Set<String> lImports = new TreeSet<String>();
-		collectImports(mClass, lImports);
-		return lImports;
-	}
-
-	private void collectImports(EClassifier pClassifier, Set<String> lImports) {
-		if (pClassifier instanceof EClass) {
-			EClass lClass = (EClass)pClassifier;
-			EClass lSuperType = lClass.getSuperType();
-			if (lSuperType != null) {
-				addImport(lImports, lSuperType);
-			}
-			
-			for (EStructuralFeature lFeature : lClass.getStructuralFeatures()) {
-				addImport(lImports, lFeature);
-			}
-			for (EOperation lOperation : lClass.getOperations()) {
-				addImport(lImports, lOperation);
-				for (EParameter lParameter : lOperation.getParameters()) {
-					addImport(lImports, lParameter);
-				}
-			}
-			for (EClassifier lNestedClassifier : lClass.getNestedClassifiers()) {
-				collectImports(lNestedClassifier, lImports);
-			}
-		}
-		addImport(lImports, pClassifier);
-	}
-
-	protected void addImport(Set<String> pImports, ETypedElement pElement) {
-		EClassifier lType = pElement.getType();
-		if (lType == null || getClassName(lType).equals(getClassName(mClass))) {
-			return;
-		}
-		String lCollectionType = getCollectionType(pElement);
-		if (lCollectionType != null) {
-			if (pElement instanceof ETypedElement) {
-				ETypedElement lTypedElement = pElement;
-				if (lTypedElement.isOrdered()) {
-					pImports.add(java.util.List.class.getName());
-				} else {
-					pImports.add(java.util.Set.class.getName());
-				}
-			}
-		}
+	protected void addCollectionTypeImports(Set<String> pImports, ETypedElement pElement) {
+		super.addCollectionTypeImports(pImports, pElement);
+		
 		String lCollectionTypeImpl = getCollectionTypeImpl(pElement);
 		if (lCollectionTypeImpl != null && !mClass.isInterface()) {
 			if (pElement instanceof ETypedElement) {
@@ -114,55 +57,6 @@ public class PojoClass extends JavaClass {
 				}
 			}
 		}
-		if (isDataType(lType)) {
-			String lInstanceTypeName = getInstanceTypeName(lType);
-			if (lInstanceTypeName == null || lInstanceTypeName.equals("void") || isPrimitive(lInstanceTypeName)) {
-				return;
-			}
-		} else {
-
-			// check, if the property-type is in the class
-			if (lType.getParent() == mClass) {
-				return;
-			}
-		}
-		addImport(pImports, lType);
-	}
-	
-	protected void addImport(Set<String> pImports, EClassifier pType) {
-		EClassifier lTopLevelClassifier = getTopLevelClassifier(pType);
-		String lClassName = getClassName(lTopLevelClassifier);
-		if (lClassName.startsWith("java.lang.")) {
-			return;
-		}
-		if (!lClassName.equals(getClassName(mClass))) {
-			pImports.add(lClassName);
-		}
-	}
-	
-	public File getFile(EClassifier pClassifier) {
-		// inner classifiers wont need a file
-		if (isNestedClassifier()) {
-			return null;
-		}
-		File lOutputDir = generator().getJavaOutputDir();
-		String lPath = getClassName((EClass) pClassifier).replace('.', '/');
-		return new File(lOutputDir, lPath + ".java");
-	}
-	
-	public String getExtendsClause() {
-		if (mClass.getSuperType() == null) {
-			return "";
-		}
-		EClass lSuperType = mClass.getSuperType();
-		String lClause = "extends " + lSuperType.getName();
-		return lClause + " ";
-	}
-
-	@Override
-	protected List<EAnnotation> getDefaultAnnotations() {
-		List<EAnnotation> lAnnotations = super.getDefaultAnnotations();
-		return lAnnotations;
 	}
 	
 	@SuppressWarnings("unchecked")

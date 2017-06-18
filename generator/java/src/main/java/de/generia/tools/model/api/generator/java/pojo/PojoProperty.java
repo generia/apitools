@@ -38,15 +38,6 @@ public class PojoProperty extends JavaProperty {
 		return "";
 	}
 	
-	public String getFieldType() {
-		EClass lEmbedded = getEmbeddedClass();
-		if (lEmbedded != null) {
-			String lEmbeddedClassName = getClassName(lEmbedded);
-			return lEmbeddedClassName;
-		}
-		return getType();
-	}
-	
 	
 	public String getFieldName() {
 		String fieldName = super.getFieldName();
@@ -56,25 +47,12 @@ public class PojoProperty extends JavaProperty {
 		return fieldName;
 	}
 
-	public String getGetterName() {
-		String name = getName();
-		String type = getType();
-		if (type.toLowerCase().equals("boolean")) {
-			return "is" + name;
-		}
-		return "get" + name;
-	}
-
 	public String getCastToFieldType() {
 		EClass lEmbedded = getEmbeddedClass();
 		if (lEmbedded != null) {
 			return "(" + getFieldType() + ")";
 		}
 		return "";
-	}
-	
-	private EClass getEmbeddedClass() {
-		return null;
 	}
 	
 	public String getDefaultClause() {

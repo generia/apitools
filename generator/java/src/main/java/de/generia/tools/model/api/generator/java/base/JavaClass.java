@@ -5,14 +5,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-
 import de.generia.tools.model.api.EClass;
 import de.generia.tools.model.api.EClassifier;
 import de.generia.tools.model.api.EEnum;
 import de.generia.tools.model.api.EModelElement;
 import de.generia.tools.model.api.EOperation;
 import de.generia.tools.model.api.EParameter;
-import de.generia.tools.model.api.EReference;
 import de.generia.tools.model.api.EStructuralFeature;
 import de.generia.tools.model.api.ETypedElement;
 import de.generia.tools.model.api.generator.trafo.TrafoGenerator;
@@ -46,65 +44,78 @@ public class JavaClass extends AbstractJavaComponent {
 
 	public Set<String> getImports() {
 		Set<String> lImports = new TreeSet<String>();
-		
-		EClass lSuperType = mClass.getSuperType();
-		if (lSuperType != null) {
-			String lClassName = getClassName(lSuperType);
-			lImports.add(lClassName);
-		}
-		
-		for (EStructuralFeature lFeature : mClass.getStructuralFeatures()) {
-			addImport(lImports, lFeature);
-		}
-		for (EOperation lOperation : mClass.getOperations()) {
-			addImport(lImports, lOperation);
-			for (EParameter lParameter : lOperation.getParameters()) {
-				addImport(lImports, lParameter);
+		collectImports(mClass, lImports);
+		return lImports;
+	}
+
+	private void collectImports(EClassifier pClassifier, Set<String> lImports) {
+		if (pClassifier instanceof EClass) {
+			EClass lClass = (EClass)pClassifier;
+			EClass lSuperType = lClass.getSuperType();
+			if (lSuperType != null) {
+				addImport(lImports, lSuperType);
+			}
+			
+			for (EStructuralFeature lFeature : lClass.getStructuralFeatures()) {
+				addImport(lImports, lFeature);
+			}
+			for (EOperation lOperation : lClass.getOperations()) {
+				addImport(lImports, lOperation);
+				for (EParameter lParameter : lOperation.getParameters()) {
+					addImport(lImports, lParameter);
+				}
+			}
+			for (EClassifier lNestedClassifier : lClass.getNestedClassifiers()) {
+				collectImports(lNestedClassifier, lImports);
 			}
 		}
-		return lImports;
+		addImport(lImports, pClassifier);
 	}
 
 	protected void addImport(Set<String> pImports, ETypedElement pElement) {
 		EClassifier lType = pElement.getType();
-		if (lType == null) {
+		if (lType == null || getClassName(lType).equals(getClassName(mClass))) {
 			return;
 		}
-		String lCollectionType = getCollectionType(pElement);
-		if (lCollectionType != null) {
-			if (pElement instanceof EReference) {
-				pImports.add(java.util.Set.class.getName());
-			} else {
-				pImports.add(java.util.List.class.getName());
-			}
-		}
+		addCollectionTypeImports(pImports, pElement);
 		if (isDataType(lType)) {
 			String lInstanceTypeName = getInstanceTypeName(lType);
-			if (lInstanceTypeName.equals("void")) {
+			if (lInstanceTypeName == null || lInstanceTypeName.equals("void") || isPrimitive(lInstanceTypeName)) {
 				return;
 			}
-			isPrimitive(lInstanceTypeName);
 		} else {
-			// check, if the property-type is in the package of the class
-			if (lType.getParent() == mClass.getParent()) {
-				return;
-			}
 
 			// check, if the property-type is in the class
 			if (lType.getParent() == mClass) {
 				return;
 			}
+		}
+		addImport(pImports, lType);
+	}
 
-			// check, if the property-type is the class
-			if (lType == mClass) {
-				return;
+	protected void addCollectionTypeImports(Set<String> pImports, ETypedElement pElement) {
+		String lCollectionType = getCollectionType(pElement);
+		if (lCollectionType != null) {
+			if (pElement instanceof ETypedElement) {
+				ETypedElement lTypedElement = pElement;
+				if (lTypedElement.isOrdered()) {
+					pImports.add(java.util.List.class.getName());
+				} else {
+					pImports.add(java.util.Set.class.getName());
+				}
 			}
 		}
-		String lClassName = getClassName(lType);
+	}
+	
+	protected void addImport(Set<String> pImports, EClassifier pType) {
+		EClassifier lTopLevelClassifier = getTopLevelClassifier(pType);
+		String lClassName = getClassName(lTopLevelClassifier);
 		if (lClassName.startsWith("java.lang.")) {
 			return;
 		}
-		pImports.add(lClassName);
+		if (!lClassName.equals(getClassName(mClass))) {
+			pImports.add(lClassName);
+		}
 	}
 
 	public String getClassName() {
