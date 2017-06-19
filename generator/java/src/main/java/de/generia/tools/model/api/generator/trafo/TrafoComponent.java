@@ -142,7 +142,7 @@ public abstract class TrafoComponent {
 			return lWriter;
 		}
 		
-		log("rendering '" + lFile + "' ...");
+		log("- rendering '" + lFile + "' ...");
 		lFile.getParentFile().mkdirs();
 		Writer lWriter = new BufferedWriter(new FileWriter(lFile));
 		return lWriter;

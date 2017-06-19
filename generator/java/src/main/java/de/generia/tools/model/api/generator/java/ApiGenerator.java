@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import de.generia.tools.model.api.EPackage;
 import de.generia.tools.model.api.generator.java.base.JavaPackage;
+import de.generia.tools.model.api.generator.java.pojo.PojoPackage;
 import de.generia.tools.model.api.generator.trafo.TrafoComponent.ContentFilter;
 import de.generia.tools.model.api.generator.trafo.TrafoGenerator;
 import de.generia.tools.model.api.resource.stream.ModelInputStream;
@@ -35,6 +36,7 @@ public class ApiGenerator extends Task implements TrafoGenerator {
 	private String mDaoBaseInterface;
 	private String mOppositeSupportCollection;
 	private boolean renderAnnotations;
+	private boolean renderPojos;
 
 	public static class ApiBuildListener implements BuildListener {
 		private PrintStream mPrintStream;
@@ -98,7 +100,7 @@ public class ApiGenerator extends Task implements TrafoGenerator {
 		lGenerator.setJavaOutputDir(lOutputDir);
 		lGenerator.setModelPackageRoot("de.generia.tools.model.api.runtime.typed.gen");
 		lGenerator.setProject(new Project());
-		lGenerator.getProject().addBuildListener(new ApiBuildListener(System.out, "Api-Interface-Generator"));
+		lGenerator.getProject().addBuildListener(new ApiBuildListener(System.out, "apitools-java-generator"));
 		lGenerator.execute();
    }
 
@@ -110,10 +112,16 @@ public class ApiGenerator extends Task implements TrafoGenerator {
 	@Override
     public void execute() throws BuildException {
 	    try {
-	    	log("reading    '" + mInputUrl.toExternalForm() + "' ...");
+	    	log("This is apitools-java-generator ...'");
+	    	log("- renderPojos='" + renderPojos + "'");
+	    	log("- renderAnnotations='" + renderAnnotations + "'");
+	    	log("- modelPackageRoot='" + mModelPackageRoot + "'");
+	    	log("- javaOutputDir='" + mJavaOutputDir + "'");
+	    	log("- reading   '" + mInputUrl.toExternalForm() + "' ...");
 			URI lUri = URI.create(mInputUrl.toExternalForm());
 			EPackage lPackage = loadPackage(lUri.toURL().openStream());			
 			render(lPackage);
+	    	log("done.'");
 		} catch (Throwable e) {
 			throw new BuildException(e);
 		}
@@ -126,7 +134,12 @@ public class ApiGenerator extends Task implements TrafoGenerator {
 	}
 
 	public void render(EPackage pPackage) throws Exception {
-		JavaPackage lJavaPackage = new JavaPackage(this, pPackage);
+		JavaPackage lJavaPackage;
+		if (renderPojos) {
+			lJavaPackage = new PojoPackage(this, pPackage);
+		} else {
+			lJavaPackage = new JavaPackage(this, pPackage); 
+		}
 		lJavaPackage.render();
 	}
     
@@ -146,6 +159,14 @@ public class ApiGenerator extends Task implements TrafoGenerator {
 		this.renderAnnotations = renderAnnotations;
 	}
 	
+	public boolean isRenderPojos() {
+		return renderPojos;
+	}
+
+	public void setRenderPojos(boolean renderPojos) {
+		this.renderPojos = renderPojos;
+	}
+
 	public File getHbmOutputDir() {
 		return mHbmOutputDir;
 	}
