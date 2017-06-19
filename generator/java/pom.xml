@@ -4,9 +4,36 @@
 	<groupId>de.generia.tools.apitools.generator</groupId>
 	<artifactId>apitools-java-generator-maven-plugin</artifactId>
 	<version>1.0.0</version>
+	<packaging>maven-plugin</packaging>
+
 	<name>apitools-java-generator-maven-plugin</name>
 	<description>Java generator for api data</description>
-	<packaging>maven-plugin</packaging>
+    <url>https://github.com/generia/apitools/tree/master/generator/java</url>
+ 
+ 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+ 
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License v3.0</name>
+            <url>https://github.com/generia/apitools/blob/master/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+ 
+	<scm>
+		<connection>scm:git:git@github.com:generia/apitools.git</connection>
+		<developerConnection>scm:git:ssh://github.com:generia/apitools.git</developerConnection>
+		<url>https://github.com/generia/apitools/tree/master/generator/java</url>
+	</scm>
+    <developers>
+        <developer>
+            <id>generia</id>
+            <name>alex</name>
+            <email>alex@generia.de</email>
+        </developer>
+    </developers>
 
 	<dependencies>
 		<dependency>

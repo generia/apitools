@@ -9,7 +9,7 @@
  
     <name>apitools-model</name>
     <description>A plain java API datamodel inspired by Eclipse Ecore model.</description>
-    <url>https://github.com/generia/apitools/model</url>
+    <url>https://github.com/generia/apitools/tree/master/model</url>
  
  	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
