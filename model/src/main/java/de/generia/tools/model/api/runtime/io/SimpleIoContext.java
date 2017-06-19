@@ -112,4 +112,14 @@ public class SimpleIoContext implements EObjectWriter.Context, EObjectReader.Con
 		}
 		throw new IllegalArgumentException("can't filter features for object '" + object.eGetId() + "' of type '" + object.eGetType().getName() + "' due to inconsistent feature-stack '" + featureStack + "', expected reference feature, but got attribute '" + activeFeature.getName() + "'");
 	}
+
+	@Override
+	public boolean isEnumValue(Object value) {
+		return packageManager.getObjectFactory().isEnumValue(value);
+	}
+
+	@Override
+	public String toEnumName(Object value) {
+		return packageManager.getObjectFactory().toEnumName(value);
+	}
 }

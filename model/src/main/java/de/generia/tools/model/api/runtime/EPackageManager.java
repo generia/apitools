@@ -8,7 +8,7 @@ import java.util.Map;
 import de.generia.tools.model.api.EAttribute;
 import de.generia.tools.model.api.EClass;
 import de.generia.tools.model.api.EClassifier;
-import de.generia.tools.model.api.EEnumLiteral;
+import de.generia.tools.model.api.EEnum;
 import de.generia.tools.model.api.EModelElement;
 import de.generia.tools.model.api.ENamedElement;
 import de.generia.tools.model.api.EOperation;
@@ -72,10 +72,15 @@ public class EPackageManager {
 		return objectFactory.createObject(clazz);
 	}
 	
-	public Object createEnum(String type) {
-		EModelElement element = getTypeChecked(type, EEnumLiteral.class);
-		EEnumLiteral literal = (EEnumLiteral) element;
-		return objectFactory.createEnum(literal);
+	@SuppressWarnings("unchecked")
+	public <T> T createEnum(String enumType, String name) {
+		EModelElement element = getTypeChecked(enumType, EEnum.class);
+		EEnum type = (EEnum) element;
+		return (T) getObjectFactory().createEnum(type, name);
+	}
+	
+	public String toEnumName(Object enumValue) {
+		return getObjectFactory().toEnumName(enumValue);
 	}
 
 	@SuppressWarnings("unchecked")

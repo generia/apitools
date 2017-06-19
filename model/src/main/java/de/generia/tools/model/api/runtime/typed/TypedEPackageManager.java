@@ -2,7 +2,6 @@ package de.generia.tools.model.api.runtime.typed;
 
 import de.generia.tools.model.api.EClass;
 import de.generia.tools.model.api.EEnum;
-import de.generia.tools.model.api.EEnumLiteral;
 import de.generia.tools.model.api.EPackage;
 import de.generia.tools.model.api.runtime.EObjectFactory;
 import de.generia.tools.model.api.runtime.EPackageManager;
@@ -39,13 +38,8 @@ public class TypedEPackageManager extends EPackageManager {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T> T createEnum(Class<T> enumType, String literal) {
+	public <T> T createEnum(Class<T> enumType, String name) {
 		EEnum type = lookupElement(enumType);
-		for (EEnumLiteral l : type.getLiterals()) {
-			if (l.getName().equals(literal)) {
-				return (T) getObjectFactory().createEnum(l);
-			}
-		}
-		throw new IllegalArgumentException("can't create enum literal '" + literal + "' for enum '" + type + "'");
+		return (T) getObjectFactory().createEnum(type, name);
 	}
 }

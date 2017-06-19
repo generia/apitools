@@ -8,9 +8,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import de.generia.tools.model.api.EClass;
-import de.generia.tools.model.api.EEnum;
-import de.generia.tools.model.api.EEnumLiteral;
 import de.generia.tools.model.api.EPackage;
 import de.generia.tools.model.api.resource.stream.ModelInputStream;
 
@@ -103,20 +100,13 @@ public class CompanyTestData {
 	}
     
     @SuppressWarnings("unchecked")
-	private <T> T createEnum(String type, String literal) {
-		EEnum e = packageManager.lookupElement(type);
-		for (EEnumLiteral l : e.getLiterals()) {
-			if (l.getName().equals(literal)) {
-				return (T) packageManager.getObjectFactory().createEnum(l);
-			}
-		}
-		throw new IllegalArgumentException("can't create enum literal '" + literal + "' for enum '" + type + "'");
+	private <T> T createEnum(String type, String name) {
+		return (T) packageManager.createEnum(type, name);
 	}
 
 	@SuppressWarnings("unchecked")
 	private <T> T create(String name) {
-		EClass c = packageManager.lookupElement(name);
-		return (T) packageManager.getObjectFactory().createObject(c);
+		return (T) packageManager.create(name);
     }
 
 }

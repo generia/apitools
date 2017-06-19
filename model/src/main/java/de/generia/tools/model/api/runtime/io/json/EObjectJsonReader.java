@@ -16,7 +16,6 @@ import de.generia.tools.model.api.EClass;
 import de.generia.tools.model.api.EClassifier;
 import de.generia.tools.model.api.EDataType;
 import de.generia.tools.model.api.EEnum;
-import de.generia.tools.model.api.EEnumLiteral;
 import de.generia.tools.model.api.EModelElement;
 import de.generia.tools.model.api.ENamedElement;
 import de.generia.tools.model.api.EStructuralFeature;
@@ -111,12 +110,7 @@ public class EObjectJsonReader implements EObjectReader {
 		if (text == null) {
 			return null;
 		}
-		for (EEnumLiteral literal : type.getLiterals()) {
-			if (literal.getName().equals(text)) {
-				return context.getObjectFactory().createEnum(literal);
-			}
-		}
-		throw new IllegalArgumentException("can't parse enum type, no such enum literal '" + text + "' in enum type '" + typeName(type) + "'");
+		return context.getObjectFactory().createEnum(type, text);
 	}
 
 	private Object readDataType(JsonParser jp, EDataType type) throws IOException {

@@ -10,7 +10,6 @@ import java.util.Stack;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 
-import de.generia.tools.model.api.EEnumLiteral;
 import de.generia.tools.model.api.EStructuralFeature;
 import de.generia.tools.model.api.runtime.EObject;
 import de.generia.tools.model.api.runtime.io.EObjectWriter;
@@ -38,21 +37,15 @@ public class EObjectJsonWriter implements EObjectWriter {
 			writeObject((EObject)value);
 		} else if (value instanceof Collection) {
 			writeCollection((Collection<?>)value);
-		} else if (value instanceof EEnumLiteral) {
-			writeEnum((EEnumLiteral)value);
-		} else if (value instanceof Enum<?>) {
-			writeEnum((Enum<?>)value);
+		} else if (context.isEnumValue(value)) {
+			writeEnum(value);
 		} else {
 			writeValue(value);
 		}
 	}
 
-	private void writeEnum(Enum<?> value) throws IOException {
-		jg.writeString(value.name());
-	}
-
-	private void writeEnum(EEnumLiteral value) throws IOException {		
-		jg.writeString(value.getName());
+	private void writeEnum(Object value) throws IOException {
+		jg.writeString(context.toEnumName(value));
 	}
 
 	private void writeValue(Object value) throws IOException {

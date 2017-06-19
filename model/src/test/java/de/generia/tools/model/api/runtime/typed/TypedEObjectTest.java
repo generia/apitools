@@ -120,6 +120,24 @@ public class TypedEObjectTest {
 		testGraph(packageManager, companyType, acme);
 		testGraph(typedPackageManager, typedCompanyType, (EObject)typedAcme);
 	}
+	
+	@Test
+	public void testMixed() throws IOException {
+		testMixed(packageManager, acme, typedPackageManager, typedCompanyType);
+		testMixed(typedPackageManager, (EObject)typedAcme, packageManager, companyType);
+	}
+	
+	private void testMixed(EPackageManager packageManager1, EObject acme1, EPackageManager packageManager2, EClass companyType2) throws IOException {
+		SimpleIoContext context1 = new SimpleIoContext(packageManager1, packageManager1.getObjectFactory(), false);
+		SimpleIoContext context2 = new SimpleIoContext(packageManager2, packageManager2.getObjectFactory(), false);
+		JsonFactory jsonFactory = new JsonFactory();
+
+		String acmeJson = writeObject(context1, jsonFactory, acme1);
+		EObject acme2 = readObject(context2, jsonFactory, companyType2, acmeJson);
+		String acmeJson2 = writeObject(context2, jsonFactory, acme2);
+	
+		assertEquals(acmeJson, acmeJson2);
+	}
 
 
 	private void testContainment(EPackageManager packageManager, EClass companyType, EObject acme) throws IOException {

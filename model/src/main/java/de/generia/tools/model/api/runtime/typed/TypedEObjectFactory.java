@@ -8,7 +8,7 @@ import java.util.Map;
 
 import de.generia.tools.model.api.EClass;
 import de.generia.tools.model.api.EClassifier;
-import de.generia.tools.model.api.EEnumLiteral;
+import de.generia.tools.model.api.EEnum;
 import de.generia.tools.model.api.EModelElement;
 import de.generia.tools.model.api.EPackage;
 import de.generia.tools.model.api.EStructuralFeature;
@@ -44,17 +44,31 @@ public class TypedEObjectFactory implements EObjectFactory {
 	public Collection<Object> createCollection(EStructuralFeature feature) {
 		return feature.isOrdered() ? new ArrayList<>() : new LinkedHashSet<>();
 	}
+	
 
 	@Override
-	public Object createEnum(EEnumLiteral literal) {
-		Class<?> enumType = getTypeInterface(literal.getEnum());
+	public Object createEnum(EEnum type, String name) {
+		Class<?> enumType = getTypeInterface(type);
 		Object[] enumConstants= enumType.getEnumConstants();
 		for (Object enumConstant : enumConstants) {
-			if (enumConstant.toString().equals(literal.getName())) {
+			if (enumConstant.toString().equals(name)) {
 				return enumConstant;
 			}
 		}
-		throw new IllegalArgumentException("can't create enum value for literal '" + literal.getName() + "' of enum '" + literal.getEnum().getName() + "'");
+		throw new IllegalArgumentException("can't create enum value for literal '" + name + "' of enum '" + type.getName() + "'");
+	}
+
+	@Override
+	public String toEnumName(Object value) {
+		if (value instanceof Enum<?>) {
+			return ((Enum<?>)value).name();
+		}
+		throw new IllegalArgumentException("can't convert value '" + value + "' to string");
+	}
+
+	@Override
+	public boolean isEnumValue(Object value) {
+		return value instanceof Enum;
 	}
 
 	private Class<?> getTypeInterface(EClassifier type) {

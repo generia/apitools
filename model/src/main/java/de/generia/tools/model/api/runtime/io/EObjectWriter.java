@@ -21,5 +21,7 @@ public interface EObjectWriter {
 		String getTypeHint(EClass type);
 		EAttribute getIdAttribute(EClass type);
 		Collection<EStructuralFeature> getFilteredFeatures(EObject value, Stack<EStructuralFeature> featureStack);
+		boolean isEnumValue(Object value);
+		String toEnumName(Object value);
 	}
 }
