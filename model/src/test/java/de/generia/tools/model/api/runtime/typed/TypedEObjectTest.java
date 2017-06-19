@@ -1,6 +1,7 @@
 package de.generia.tools.model.api.runtime.typed;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -29,6 +30,9 @@ import de.generia.tools.model.api.runtime.io.json.EObjectJsonReader;
 import de.generia.tools.model.api.runtime.io.json.EObjectJsonWriter;
 import de.generia.tools.model.api.runtime.typed.gen.model.Assessment;
 import de.generia.tools.model.api.runtime.typed.gen.model.Company;
+import de.generia.tools.model.api.runtime.typed.gen.model.Contact;
+import de.generia.tools.model.api.runtime.typed.gen.model.Employee;
+import de.generia.tools.model.api.runtime.typed.gen.model.Manager;
 import de.generia.tools.model.api.runtime.typed.gen.model.Project;
 import de.generia.tools.model.api.runtime.typed.gen.model.Workstation;
 
@@ -77,7 +81,29 @@ public class TypedEObjectTest {
 		assertInstance(String.class, blueDredge.getName());
 		assertInstance(Company.class, blueDredge.getCompany());
 		assertInstance(Assessment.class, blueDredge.getAssessment());
-	}
+
+		Iterator<Employee> employees = typedAcme.getEmployees().iterator();
+		Employee curly = employees.next();
+		assertInstance(Employee.class, curly);
+		assertInstance(String.class, curly.getName());
+		assertInstance(String.class, curly.getLogins());
+		assertInstance(Company.class, curly.getCompany());
+		assertNull(curly.getContact());
+
+		Employee moe = employees.next();
+		assertInstance(Employee.class, moe);
+		assertInstance(String.class, moe.getName());
+		assertInstance(String.class, moe.getLogins());
+		assertInstance(Company.class, moe.getCompany());
+		assertNull(moe.getContact());
+		
+		Employee larry = employees.next();
+		assertInstance(Manager.class, larry);
+		assertInstance(String.class, larry.getName());
+		assertInstance(String.class, larry.getLogins());
+		assertInstance(Company.class, larry.getCompany());
+		assertInstance(Contact.class, larry.getContact());
+}
 	
 	private void assertInstance(Class<?> expectedType, Object actualValue) {
 		assertTrue(expectedType.isInstance(actualValue));

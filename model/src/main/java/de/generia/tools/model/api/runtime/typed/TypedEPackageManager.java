@@ -4,7 +4,6 @@ import de.generia.tools.model.api.EClass;
 import de.generia.tools.model.api.EEnum;
 import de.generia.tools.model.api.EEnumLiteral;
 import de.generia.tools.model.api.EPackage;
-import de.generia.tools.model.api.runtime.EObject;
 import de.generia.tools.model.api.runtime.EObjectFactory;
 import de.generia.tools.model.api.runtime.EPackageManager;
 
@@ -33,9 +32,10 @@ public class TypedEPackageManager extends EPackageManager {
 		return super.lookupElement(name);
 	}
 	
-	public EObject create(Class<?> typeInterface) {
+	@SuppressWarnings("unchecked")
+	public <T> T create(Class<?> typeInterface) {
 		EClass type = lookupElement(typeInterface);
-		return getObjectFactory().createObject(type);
+		return (T) getObjectFactory().createObject(type);
 	}
 	
 	@SuppressWarnings("unchecked")
