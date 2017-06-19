@@ -110,7 +110,7 @@ public class EObjectJsonReader implements EObjectReader {
 		if (text == null) {
 			return null;
 		}
-		return context.getObjectFactory().createEnum(type, text);
+		return context.getObjectFactory().createEnumValue(type, text);
 	}
 
 	private Object readDataType(JsonParser jp, EDataType type) throws IOException {

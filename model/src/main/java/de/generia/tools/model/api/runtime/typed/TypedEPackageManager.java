@@ -38,8 +38,8 @@ public class TypedEPackageManager extends EPackageManager {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T> T createEnum(Class<T> enumType, String name) {
+	public <T> T createEnumValue(Class<T> enumType, String name) {
 		EEnum type = lookupElement(enumType);
-		return (T) getObjectFactory().createEnum(type, name);
+		return (T) getObjectFactory().createEnumValue(type, name);
 	}
 }

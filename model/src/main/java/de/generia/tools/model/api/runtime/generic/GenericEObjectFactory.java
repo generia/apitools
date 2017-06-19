@@ -30,7 +30,7 @@ public class GenericEObjectFactory implements EObjectFactory {
 	}
 
 	@Override
-	public Object createEnum(EEnum type, String name) {
+	public Object createEnumValue(EEnum type, String name) {
 		for (EEnumLiteral l : type.getLiterals()) {
 			if (l.getName().equals(name)) {
 				return l;

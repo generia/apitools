@@ -73,10 +73,10 @@ public class EPackageManager {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T> T createEnum(String enumType, String name) {
+	public <T> T createEnumValue(String enumType, String name) {
 		EModelElement element = getTypeChecked(enumType, EEnum.class);
 		EEnum type = (EEnum) element;
-		return (T) getObjectFactory().createEnum(type, name);
+		return (T) getObjectFactory().createEnumValue(type, name);
 	}
 	
 	public String toEnumName(Object enumValue) {

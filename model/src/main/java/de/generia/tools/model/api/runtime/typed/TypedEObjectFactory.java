@@ -47,7 +47,7 @@ public class TypedEObjectFactory implements EObjectFactory {
 	
 
 	@Override
-	public Object createEnum(EEnum type, String name) {
+	public Object createEnumValue(EEnum type, String name) {
 		Class<?> enumType = getTypeInterface(type);
 		Object[] enumConstants= enumType.getEnumConstants();
 		for (Object enumConstant : enumConstants) {

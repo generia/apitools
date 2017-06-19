@@ -110,7 +110,7 @@ public class TypedCompanyTestData {
     
     @SuppressWarnings("unchecked")
 	private <T> T createEnum(Class<?> type, String literal) {
-    	return (T) packageManager.createEnum(type, literal);
+    	return (T) packageManager.createEnumValue(type, literal);
 	}
 
 	@SuppressWarnings("unchecked")

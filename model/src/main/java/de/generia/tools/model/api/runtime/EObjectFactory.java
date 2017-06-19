@@ -10,7 +10,7 @@ public interface EObjectFactory {
 	EObject createObject(EClass type);
 	EObjectProxy createObjectProxy(EClass type, String id);
 	Collection<Object> createCollection(EStructuralFeature feature);
-	Object createEnum(EEnum type, String name);
+	Object createEnumValue(EEnum type, String name);
 	String toEnumName(Object value);
 	boolean isEnumValue(Object value);
 }

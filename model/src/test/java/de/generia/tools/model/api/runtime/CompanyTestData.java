@@ -101,7 +101,7 @@ public class CompanyTestData {
     
     @SuppressWarnings("unchecked")
 	private <T> T createEnum(String type, String name) {
-		return (T) packageManager.createEnum(type, name);
+		return (T) packageManager.createEnumValue(type, name);
 	}
 
 	@SuppressWarnings("unchecked")
