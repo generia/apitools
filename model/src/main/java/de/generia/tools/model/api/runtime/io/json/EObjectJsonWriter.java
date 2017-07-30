@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
@@ -13,10 +12,11 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import de.generia.tools.model.api.EStructuralFeature;
 import de.generia.tools.model.api.runtime.EObject;
 import de.generia.tools.model.api.runtime.io.EObjectWriter;
+import de.generia.tools.model.api.runtime.util.EObjectSet;
 
 public class EObjectJsonWriter implements EObjectWriter {
 	
-	private Set<EObject> writtenObjects = new HashSet<>();
+	private Set<EObject> writtenObjects = new EObjectSet();
 	private Stack<EStructuralFeature> featureStack = new Stack<>();
 	
 	private Context context;
@@ -77,7 +77,7 @@ public class EObjectJsonWriter implements EObjectWriter {
 
 	private void writeObject(EObject value) throws IOException {
 		EStructuralFeature activeFeature = getActiveFeature();
-		boolean writeRef = activeFeature != null && !context.isAggregationFeature(activeFeature);  
+		boolean writeRef = activeFeature != null && !context.isAggregationFeature(activeFeature);
 		if (writeRef || writtenObjects.contains(value)) {
 			writeObjectRef(value);
 			return;

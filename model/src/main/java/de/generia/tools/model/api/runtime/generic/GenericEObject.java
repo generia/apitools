@@ -17,13 +17,16 @@ import de.generia.tools.model.api.EDataType;
 import de.generia.tools.model.api.EReference;
 import de.generia.tools.model.api.EStructuralFeature;
 import de.generia.tools.model.api.runtime.EObject;
+import de.generia.tools.model.api.runtime.util.EObjectSet;
 
-public class GenericEObject implements EObject {
+public class GenericEObject implements EObject, EObjectSet.Item {
 	protected EClass type;
 	protected String id;
 	private Map<String, EStructuralFeature> structuralFeatureMap;
 	
 	private Map<String, Object> valueMap = new HashMap<>();
+	
+	private int setId;
 	
 	public GenericEObject() {
 		this(null);
@@ -286,5 +289,15 @@ public class GenericEObject implements EObject {
 			this.value = value;
 			return oldValue;
 		}
+	}
+
+	@Override
+	public int eGetObjectSetId() {
+		return setId;
+	}
+
+	@Override
+	public void eSetObjectSetId(int setId) {
+		this.setId = setId;
 	}
 }

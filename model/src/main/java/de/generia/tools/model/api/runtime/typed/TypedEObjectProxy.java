@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationHandler;
 import de.generia.tools.model.api.EClass;
 import de.generia.tools.model.api.runtime.EObjectProxy;
 import de.generia.tools.model.api.runtime.generic.GenericEObjectProxy;
+import de.generia.tools.model.api.runtime.util.EObjectSet;
 
 public class TypedEObjectProxy extends TypedEObject {
 	
@@ -15,7 +16,7 @@ public class TypedEObjectProxy extends TypedEObject {
 	public static <T> T create(Class<T> typeInterface, EClass type, String id) {
 		EObjectProxy delegate = new GenericEObjectProxy(type, id);
 		InvocationHandler handler = new TypedEObjectProxy(typeInterface, delegate);
-		Class<?>[] interfaces = new Class<?>[]{typeInterface, EObjectProxy.class};
+		Class<?>[] interfaces = new Class<?>[]{typeInterface, EObjectProxy.class, EObjectSet.Item.class};
 		return create(handler, interfaces);
 	}
 

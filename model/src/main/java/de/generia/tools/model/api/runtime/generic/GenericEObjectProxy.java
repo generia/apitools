@@ -3,6 +3,7 @@ package de.generia.tools.model.api.runtime.generic;
 import de.generia.tools.model.api.EClass;
 import de.generia.tools.model.api.runtime.EObject;
 import de.generia.tools.model.api.runtime.EObjectProxy;
+import de.generia.tools.model.api.runtime.util.EObjectSet;
 
 public class GenericEObjectProxy extends GenericEObject implements EObjectProxy {
 
@@ -56,4 +57,20 @@ public class GenericEObjectProxy extends GenericEObject implements EObjectProxy 
 		}
 	}
 
+	@Override
+	public int eGetObjectSetId() {
+		if (delegate == null) {
+			return super.eGetObjectSetId();
+		}
+		return ((EObjectSet.Item)delegate).eGetObjectSetId();
+	}
+
+	@Override
+	public void eSetObjectSetId(int setId) {
+		if (delegate == null) {
+			super.eSetObjectSetId(setId);
+		} else {
+			((EObjectSet.Item)delegate).eSetObjectSetId(setId);
+		}
+	}
 }
