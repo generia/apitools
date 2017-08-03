@@ -1,6 +1,9 @@
 package de.generia.tools.model.api.generator.table;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -13,12 +16,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.eclipse.core.runtime.RegistryFactory;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
 
-import test.eclipse.standalone.StandaloneRegistryProvider;
 import de.generia.tools.dom2table.io.DatabaseDriver;
 import de.generia.tools.dom2table.io.DatabaseReader;
 import de.generia.tools.dom2table.io.DatabaseWriter;
@@ -52,9 +53,13 @@ import de.generia.tools.model.api.EParameter;
 import de.generia.tools.model.api.EReference;
 import de.generia.tools.model.api.EStructuralFeature;
 import de.generia.tools.model.api.ETypedElement;
-import de.generia.tools.model.api.resource.ApiResourceBinding;
-import de.generia.tools.model.xecore.schema.ModelRegistry;
-import de.generia.tools.model.xecore.schema.ModelSchema;
+import de.generia.tools.model.api.generator.table.model.EObjectObjectDriver;
+import de.generia.tools.model.api.generator.table.model.EObjectTreeDriver;
+import de.generia.tools.model.api.resource.stream.ModelInputStream;
+import de.generia.tools.model.api.runtime.EObject;
+import de.generia.tools.model.api.runtime.EPackageManager;
+import de.generia.tools.model.api.runtime.io.SimpleIoContext;
+import de.generia.tools.model.api.runtime.io.json.EObjectJsonReader;
 
 public class TableGenerator extends SimpleDatabaseMarshaller {
 
@@ -78,20 +83,20 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 		}
 	};
 
-	public static class ApiTreeBuilder implements ObjectBuilder<Class<?>> {
+	public static class ApiTreeBuilder implements ObjectBuilder<EClassifier> {
 		private static final String TYPE = "type";
 		private static final String LOCATION = "location";
 		private static final String PATH = "path";
 		private static final String NAME = "name";
 
-		private ObjectDriver<Class<?>> objectDriver;
+		private ObjectDriver<EClassifier> objectDriver;
 		private TreeDriver treeDriver;
 		private Object contextNode;
 		private Object currentNode;
 		private Namespace namespace;
 		private Map<String, Set<ProxyHolder>> proxyHolderMap = new HashMap<String, Set<ProxyHolder>>();
 
-		public ApiTreeBuilder(ObjectDriver<Class<?>> objectDriver, TreeDriver treeDriver) {
+		public ApiTreeBuilder(ObjectDriver<EClassifier> objectDriver, TreeDriver treeDriver) {
 			this.objectDriver = objectDriver;
 			this.treeDriver = treeDriver;
 			this.namespace = new Namespace();
@@ -123,8 +128,8 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 			}
 			return resolved;
 		}
-
-		private Object createChild(Class<?> type, String location, Object context) {
+		
+		private Object createChild(EClassifier type, String location, Object context) {
 			Object parent = getObjectByLocation(context, location);
 			if (parent == null) {
 				return context;
@@ -181,12 +186,12 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 		}
 
 		@Override
-		public Object createObject(Class<?> type, Map<String, Object> metaInfo) {
+		public Object createObject(EClassifier type, Map<String, Object> metaInfo) {
 			String typeName = (String) metaInfo.get(TYPE);
 			String path = (String) metaInfo.get(PATH);
 			String location = (String) metaInfo.get(LOCATION);
 
-			Class<?> typeClass = objectDriver.getTypeClass(typeName);
+			EClassifier typeClass = objectDriver.getTypeClass(typeName);
 			currentNode = createChild(typeClass, location, contextNode);
 			joinNamespace(path, currentNode);
 			return currentNode;
@@ -215,8 +220,8 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 		}
 
 		@Override
-		public void setProperty(Property<Class<?>> property, Object value) {
-			Class<?> currentType = objectDriver.getObjectType(currentNode);
+		public void setProperty(Property<EClassifier> property, Object value) {
+			EClassifier currentType = objectDriver.getObjectType(currentNode);
 			if (!objectDriver.hasProperty(currentType, property.getName())) {
 				return;
 			}
@@ -227,9 +232,9 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 				if (object == null) {
 					System.out.println("forward reference found '" + value + "'");
 					Object rowObject = currentNode;
-					Class<?> typeClass = objectDriver.getPropertyType(objectDriver.getObjectType(rowObject), property.getName());
+					EClassifier typeClass = objectDriver.getPropertyType(objectDriver.getObjectType(rowObject), property.getName());
 					// NOTE: proxy handling is needed to cope with abstract classes for property types
-					Object proxy = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { typeClass, ObjectRef.class }, new ProxyInvocationHandler(name));
+					Object proxy = null; // TODO: Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { typeClass, ObjectRef.class }, new ProxyInvocationHandler(name));
 					Set<ProxyHolder> proxyHolders = proxyHolderMap.get(name);
 					if (proxyHolders == null) {
 						proxyHolders = new HashSet<ProxyHolder>();
@@ -245,14 +250,14 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 		}
 
 		@Override
-		public Object getProperty(Property<Class<?>> property) {
-			Class<?> currentType = objectDriver.getObjectType(currentNode);
+		public Object getProperty(Property<EClassifier> property) {
+			EClassifier currentType = objectDriver.getObjectType(currentNode);
 			if (!objectDriver.hasProperty(currentType, property.getName())) {
 				return null;
 			}
 			Object value = objectDriver.getValue(currentNode, property.getName());
 			if (value != null) {
-				Class<?> propertyType = objectDriver.getPropertyType(property.getDefinedIn(), property.getName());
+				EClassifier propertyType = objectDriver.getPropertyType(property.getDefinedIn(), property.getName());
 				if (objectDriver.isObjectType(propertyType)) {
 					return "#" + getPath(value);
 				}
@@ -261,21 +266,21 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 		}
 
 		@Override
-		public Class<?> getPropertyType(Property<Class<?>> property) {
+		public EClassifier getPropertyType(Property<EClassifier> property) {
 			if (property.getDefinedIn() == null) {
-				return String.class;
+				return null; // TODO: String.class;
 			}
 			return objectDriver.getPropertyType(property.getDefinedIn(), property.getName());
 		}
 
 		@Override
-		public Class<?> getObjectType() {
+		public EClassifier getObjectType() {
 			return objectDriver.getObjectType(currentNode);
 		}
 
 		@Override
-		public boolean hasProperty(Property<Class<?>> property) {
-			Class<?> objectType = getObjectType();
+		public boolean hasProperty(Property<EClassifier> property) {
+			EClassifier objectType = getObjectType();
 			if (!objectDriver.isAssignableFrom(property.getDefinedIn(), objectType)) {
 				return false;
 			}
@@ -283,11 +288,11 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 		}
 	}
 
-	public static class ApiModelDriver extends SimpleModelDriver<Class<?>> {
+	public static class ApiModelDriver extends SimpleModelDriver<EClassifier> {
 		private TreeDriver treeDriver;
 		private ApiTreeBuilder treeBuilder;
 
-		public ApiModelDriver(Class<?> databaseType, Map<String, Class<?>> rowTypeMap, ObjectDriver<Class<?>> objectDriver, TreeDriver treeDriver, ApiTreeBuilder treeBuilder) {
+		public ApiModelDriver(EClassifier databaseType, Map<String, EClassifier> rowTypeMap, ObjectDriver<EClassifier> objectDriver, TreeDriver treeDriver, ApiTreeBuilder treeBuilder) {
 			super(databaseType, rowTypeMap, objectDriver);
 			this.treeDriver = treeDriver;
 			this.treeBuilder = treeBuilder;
@@ -315,9 +320,9 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 
 	public static class ApiConverter implements Converter {
 		private ApiModelDriver modelDriver;
-		private ObjectBuilder<Class<?>> objectBuilder;
+		private ObjectBuilder<EClassifier> objectBuilder;
 
-		public ApiConverter(ApiModelDriver modelDriver, ObjectBuilder<Class<?>> objectBuilder) {
+		public ApiConverter(ApiModelDriver modelDriver, ObjectBuilder<EClassifier> objectBuilder) {
 			this.modelDriver = modelDriver;
 			this.objectBuilder = objectBuilder;
 		}
@@ -416,24 +421,13 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 
 	public static void main(String[] args) throws Exception {
 
-		Map<String, Class<?>> rowTypeMap = new HashMap<String, Class<?>>();
-		final ApiObjectDriver objectDriver = new ApiObjectDriver();
-		//TreeDriver treeDriver = new ApiTreeDriver();
-		TreeDriver treeDriver = new TreeDefinitionTreeDriver<Class<?>>(createTreeDefinition(), objectDriver);
-		ApiTreeBuilder treeBuilder = new ApiTreeBuilder(objectDriver, treeDriver);
-		ApiModelDriver modelDriver = new ApiModelDriver(EPackage.class, rowTypeMap, objectDriver, treeDriver, treeBuilder);
+		Map<String, EClassifier> rowTypeMap = new HashMap<String, EClassifier>();
 
-		final SimpleDatabaseMarshaller.NamespaceContext context = new SimpleDatabaseMarshaller.NamespaceContext(modelDriver);
-
-		Binding<Class<?>> binding = createBinding();
-		Converter.Resolver<Class<?>> converterResolver = createConverterResolver(new ApiConverter(modelDriver, treeBuilder));
-		context.registerRowMarshaller("Elements", new BindingRowMarshaller<Class<?>>(binding, converterResolver, treeBuilder));
-		DatabaseDriver driver = new XlsDatabaseDriver();
-		DatabaseMarshaller marshaller = new SimpleDatabaseMarshaller();
-
-		String uri1 = "/Users/alex/home/dev/ws-dev/dom2table/tst/pdml/pdml.api";
-		String uri2 = "/Users/alex/home/dev/ws-dev/dom2table/tst/api/pdml-gen.api.xls";
-		String uri3 = "/Users/alex/home/dev/ws-dev/dom2table/tst/api/pdml-gen.api.xls.api";
+		String schemaId = "companymgmt.v1";
+		String schemaFile = "/Users/qxn7720/home/prj/bmw/ds2/ws-api/apitools/model/src/test/resources/de/generia/tools/model/api/runtime/companymgmt.api";
+		String dataFile = "/Users/qxn7720/home/prj/bmw/ds2/ws-api/apitools/model/src/test/resources/de/generia/tools/model/api/runtime/Acme Inc..v1.json";
+		String dataType = "Company";
+		String tableFile = "/Users/qxn7720/home/tmp/table-generator/Acme Inc..v1.xlsx";
 
 		String function = null;
 		String inputFile = null;
@@ -443,24 +437,31 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 			inputFile = args[1];
 			outputFile = args[2];
 		}
+
+		EPackageManager packageManager = readApiSchema(schemaId, schemaFile);
+		EClass type = packageManager.lookupElement(dataType);
+
+		final ObjectDriver<EClassifier> objectDriver = new EObjectObjectDriver(packageManager);
+		//TreeDriver treeDriver = new ApiTreeDriver();
+		TreeDriver treeDriver = new EObjectTreeDriver(packageManager.getObjectFactory());
+		ApiTreeBuilder treeBuilder = new ApiTreeBuilder(objectDriver, treeDriver);
+		ApiModelDriver modelDriver = new ApiModelDriver(type, rowTypeMap, objectDriver, treeDriver, treeBuilder);
+
+		final SimpleDatabaseMarshaller.NamespaceContext context = new SimpleDatabaseMarshaller.NamespaceContext(modelDriver);
+
+		Binding<EClassifier> binding = createBinding(packageManager, type);
+		Converter.Resolver<EClassifier> converterResolver = createConverterResolver(new ApiConverter(modelDriver, treeBuilder));
+		context.registerRowMarshaller("Elements", new BindingRowMarshaller<EClassifier>(binding, converterResolver, treeBuilder));
+		DatabaseDriver driver = new XlsDatabaseDriver();
+		DatabaseMarshaller marshaller = new SimpleDatabaseMarshaller();
 		
-		if (function == null || function.equals("api2xls")) {
-			uri1 = inputFile != null ? inputFile : uri1;
-			uri2 = outputFile != null ? outputFile : uri2;
-			String url2 = new File(uri2).toURI().toURL().toString();
-			EPackage apiModel = readApiModel(uri1);
-			DatabaseWriter writer = driver.createWriter(url2);
-			marshaller.marshal(context, writer, apiModel);
+		if (function == null || function.equals("json2xls")) {
+
+			EObject object = readObject(packageManager, type, dataFile);
+			String tableUrl = new File(tableFile).toURI().toURL().toString();
+			DatabaseWriter writer = driver.createWriter(tableUrl);
+			marshaller.marshal(context, writer, object);
 			writer.close();
-		}
-		if (function == null || function.equals("xls2api")) {
-			uri2 = inputFile != null ? inputFile : uri2;
-			uri3 = outputFile != null ? outputFile : uri3;
-			String url2 = new File(uri2).toURI().toURL().toString();
-			DatabaseReader reader = driver.createReader(url2);
-			EPackage apiModel2 = (EPackage) marshaller.unmarshal(context, reader);
-			apiModel2 = (EPackage) treeBuilder.contextNode;
-			writeApiModel(uri3, apiModel2);
 		}
 	}
 
@@ -484,88 +485,61 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 		return treeDefinition;
 	}
 
-	private static Binding<Class<?>> createBinding() {
-		Binding<Class<?>> binding = new Binding<Class<?>>();
+	private static Binding<EClassifier> createBinding(EPackageManager packageManager, EClass type) {
+		Binding<EClassifier> binding = new Binding<EClassifier>();
 		binding.register(null, ApiTreeBuilder.LOCATION, "Location", String.class);
 		binding.register(null, ApiTreeBuilder.PATH, "Path", String.class);
 		binding.register(null, ApiTreeBuilder.TYPE, "Type", String.class);
-		// binding.register(EAnnotation.class, "", "Name", String.class);
-		binding.register(EAnnotation.class, "source", "Annotation.source", String.class);
-		binding.register(EAnnotation.class, "details", "Annotation.details", String.class);
-		binding.register(ENamedElement.class, "name", "NamedElement.name", String.class);
-		// binding.register(EClassifier.class, "package", "Classifier.package",
-		// String.class);
-		binding.register(EClassifier.class, "instanceTypeName", "Classifier.instanceTypeName", String.class);
-		binding.register(EClassifier.class, "defaultValue", "Classifier.defaultValue", String.class);
-		binding.register(EClass.class, "abstract", "Class.abstract", boolean.class);
-		binding.register(EClass.class, "interface", "Class.interface", boolean.class);
-		binding.register(EClass.class, "superType", "Class.superType", String.class);
-		binding.register(EEnumLiteral.class, "literal", "EnumLiteral.literal", String.class);
-		binding.register(EEnumLiteral.class, "value", "EnumLiteral.value", String.class);
-		binding.register(ETypedElement.class, "type", "TypedElement.type", String.class);
-		binding.register(ETypedElement.class, "keyType", "TypedElement.keyType", String.class);
-		binding.register(ETypedElement.class, "many", "TypedElement.many", boolean.class);
-		binding.register(ETypedElement.class, "ordered", "TypedElement.ordered", boolean.class);
-		binding.register(ETypedElement.class, "required", "TypedElement.required", boolean.class);
-		binding.register(ETypedElement.class, "unique", "TypedElement.unique", boolean.class);
-		binding.register(EOperation.class, "exceptions", "Operation.exceptions", String.class);
-		binding.register(EStructuralFeature.class, "defaultValueLiteral", "StructuralFeature.defaultValueLiteral", String.class);
-		binding.register(EStructuralFeature.class, "transient", "StructuralFeature.transient", boolean.class);
-		binding.register(EAttribute.class, "id", "Attribute.id", boolean.class);
-		binding.register(EReference.class, "opposite", "Reference.opposite", String.class);
-		binding.register(EReference.class, "containment", "Reference.containment", boolean.class);
+		
+		List<EClass> schemaTypes = new ArrayList<>();
+		collectSchemaTypes(packageManager, type, schemaTypes);
+		
+		for (EClass schemaType : schemaTypes) {
+			for (EStructuralFeature feature : schemaType.getStructuralFeatures()) {
+				if (feature instanceof EAttribute) {
+					String propertyName = feature.getName();
+					String columnName = schemaType.getName() + "." + feature.getName();
+					Class<?> columnType = getColumnType((EAttribute)feature);
+					binding.register(schemaType, propertyName, columnName, columnType);
+				}
+			}
+		}
 		return binding;
 	}
 
-	private static Resolver<Class<?>> createConverterResolver(final ApiConverter converter) {
-		Converter.Resolver<Class<?>> converterResolver = new Converter.Resolver<Class<?>>() {
+	private static Class<?> getColumnType(EAttribute feature) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private static void collectSchemaTypes(EPackageManager packageManager, EClass type, List<EClass> schemaTypes) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static Resolver<EClassifier> createConverterResolver(final ApiConverter converter) {
+		Converter.Resolver<EClassifier> converterResolver = new Converter.Resolver<EClassifier>() {
 			@Override
-			public Converter lookup(Class<?> objType, Class<?> colType, String name) {
+			public Converter lookup(EClassifier objType, Class<?> colType, String name) {
 				return converter;
 			}
 		};
 		return converterResolver;
 	}
 
-	private static EPackage readApiModel(String file) throws Exception {
-
-		// RegistryFactory.getRegistry().
-		RegistryFactory.setDefaultRegistryProvider(new StandaloneRegistryProvider());
-		ModelSchema lModelSchema = ModelRegistry.getModelSchema("api");
-		ApiResourceBinding lSiteResourceBinding = new ApiResourceBinding(lModelSchema);
-		// add missing content-type to registry (see ModelResourceBinding.addMapping())
-		Resource.Factory.Registry.INSTANCE.getContentTypeToFactoryMap().put(ApiResourceBinding.CONTENT_TYPE.toString(), Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().get("api"));
-		// BindingInfo lBindingInfo = lSiteResourceBinding.createBindingInfo();
-		URI lUri = URI.createFileURI(file);
-
-		// ResourceSetImpl lResourceSet = new
-		// ModelResourceSetImpl(lBindingInfo);
-		ResourceSetImpl lResourceSet = new ResourceSetImpl();
-		Resource lResource = lResourceSet.createResource(lUri, ApiResourceBinding.CONTENT_TYPE.toString());
-
-		lResource.load(null);
-		Object lObject = lResource.getContents().get(0);
-		System.out.println("object: " + lObject);
-		return (EPackage) lObject;
+	private static EPackageManager readApiSchema(String schemaId, String file) throws Exception {
+		ModelInputStream apiStream = new ModelInputStream();
+		InputStream inputStream = new FileInputStream(file);
+		EPackage api = apiStream.read(inputStream);
+		EPackageManager packageManager = new EPackageManager(schemaId, api);
+		return packageManager;
 	}
 
-	private static void writeApiModel(String file, EPackage apiModel) throws Exception {
-
-		// RegistryFactory.getRegistry().
-		//RegistryFactory.setDefaultRegistryProvider(new StandaloneRegistryProvider());
-		ModelSchema lModelSchema = ModelRegistry.getModelSchema("api");
-		ApiResourceBinding lSiteResourceBinding = new ApiResourceBinding(lModelSchema);
-		Resource.Factory.Registry.INSTANCE.getContentTypeToFactoryMap().put(ApiResourceBinding.CONTENT_TYPE.toString(), Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().get("api"));
-		// BindingInfo lBindingInfo = lSiteResourceBinding.createBindingInfo();
-		URI lUri = URI.createFileURI(file);
-
-		// ResourceSetImpl lResourceSet = new
-		// ModelResourceSetImpl(lBindingInfo);
-		ResourceSetImpl lResourceSet = new ResourceSetImpl();
-		Resource lResource = lResourceSet.createResource(lUri, ApiResourceBinding.CONTENT_TYPE.toString());
-
-		//lResource.getContents().add(apiModel);
-		lResource.save(null);
+	private static EObject readObject(EPackageManager packageManager, EClass type, String file) throws IOException, JsonParseException {
+		JsonFactory jsonFactory = new JsonFactory();
+		SimpleIoContext context = new SimpleIoContext(packageManager);
+		JsonParser jp = jsonFactory.createParser(new File(file));
+		EObjectJsonReader reader = new EObjectJsonReader(context, jp);
+		return (EObject) reader.read(type);
 	}
-
 }

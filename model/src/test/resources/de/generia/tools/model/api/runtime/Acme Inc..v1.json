@@ -1,0 +1,44 @@
+{
+  "name" : "Acme Inc.",
+  "homepage" : "www.acme.com",
+  "workstations" : [ {
+    "name" : "Blue Dredge",
+    "assessment" : "excellent",
+    "company" : "Acme Inc.",
+    "employee" : "Larry Fine"
+  }, {
+    "name" : "Red Lorry",
+    "assessment" : "poor",
+    "company" : "Acme Inc.",
+    "employee" : "Curly Howard"
+  } ],
+  "employees" : [ {
+    "logins" : "choward",
+    "name" : "Curly Howard",
+    "company" : "Acme Inc.",
+    "workstation" : "Red Lorry",
+    "projects" : [ "Big Bridge" ]
+  }, {
+    "logins" : "mhoward",
+    "name" : "Moe Howard",
+    "company" : "Acme Inc."
+  }, {
+    "@type" : "/companymgmt/model/Manager",
+    "logins" : "lfine",
+    "name" : "Larry Fine",
+    "contact" : {
+      "email" : "larry.fine@acme.com",
+      "phoneNumber" : "555 1234567"
+    },
+    "company" : "Acme Inc.",
+    "workstation" : "Blue Dredge",
+    "projects" : [ "Big Bridge" ],
+    "staffCar" : true
+  } ],
+  "projects" : [ {
+    "name" : "Big Bridge",
+    "description" : "Build a big bridge.",
+    "company" : "Acme Inc.",
+    "employees" : [ "Curly Howard", "Larry Fine" ]
+  } ]
+}
