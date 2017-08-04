@@ -43,6 +43,7 @@ import de.generia.tools.model.api.EAnnotation;
 import de.generia.tools.model.api.EAttribute;
 import de.generia.tools.model.api.EClass;
 import de.generia.tools.model.api.EClassifier;
+import de.generia.tools.model.api.EDataType;
 import de.generia.tools.model.api.EEnum;
 import de.generia.tools.model.api.EEnumLiteral;
 import de.generia.tools.model.api.EModelElement;
@@ -425,7 +426,7 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 
 		String schemaId = "companymgmt.v1";
 		String schemaFile = "/Users/qxn7720/home/prj/bmw/ds2/ws-api/apitools/model/src/test/resources/de/generia/tools/model/api/runtime/companymgmt.api";
-		String dataFile = "/Users/qxn7720/home/prj/bmw/ds2/ws-api/apitools/model/src/test/resources/de/generia/tools/model/api/runtime/Acme Inc..v1.json";
+		String dataFile = "/Users/qxn7720/home/prj/bmw/ds2/ws-api/apitools/model/src/test/resources/de/generia/tools/model/api/runtime/Acme-Inc..v1.json";
 		String dataType = "Company";
 		String tableFile = "/Users/qxn7720/home/tmp/table-generator/Acme Inc..v1.xlsx";
 
@@ -465,26 +466,6 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 		}
 	}
 
-	private static TreeDefinition<Class<?>> createTreeDefinition() {
-		TreeDefinition<Class<?>> treeDefinition = new TreeDefinition<Class<?>>();
-		treeDefinition.addParentProperty(EPackage.class, "superPackage");
-		treeDefinition.addChildProperty(EPackage.class, "classifiers");
-		treeDefinition.addChildProperty(EPackage.class, "subPackages");
-		treeDefinition.addParentProperty(EClassifier.class, "package");
-		treeDefinition.addParentProperty(EClassifier.class, "containingClass");
-		treeDefinition.addParentProperty(EStructuralFeature.class, "containingClass");
-		treeDefinition.addParentProperty(EOperation.class, "containingClass");
-		treeDefinition.addChildProperty(EOperation.class, "parameters");
-		treeDefinition.addParentProperty(EParameter.class, "operation");
-		treeDefinition.addChildProperty(EModelElement.class, "annotations");
-		treeDefinition.addChildProperty(EClass.class, "structuralFeatures");
-		treeDefinition.addChildProperty(EClass.class, "operations");
-		treeDefinition.addChildProperty(EClass.class, "nestedClassifiers");
-		treeDefinition.addChildProperty(EEnum.class, "literals");
-		treeDefinition.addParentProperty(EEnumLiteral.class, "enum");
-		return treeDefinition;
-	}
-
 	private static Binding<EClassifier> createBinding(EPackageManager packageManager, EClass type) {
 		Binding<EClassifier> binding = new Binding<EClassifier>();
 		binding.register(null, ApiTreeBuilder.LOCATION, "Location", String.class);
@@ -492,7 +473,7 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 		binding.register(null, ApiTreeBuilder.TYPE, "Type", String.class);
 		
 		List<EClass> schemaTypes = new ArrayList<>();
-		collectSchemaTypes(packageManager, type, schemaTypes);
+		collectSchemaTypes(packageManager.getPackage(), schemaTypes);
 		
 		for (EClass schemaType : schemaTypes) {
 			for (EStructuralFeature feature : schemaType.getStructuralFeatures()) {
@@ -508,13 +489,66 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 	}
 
 	private static Class<?> getColumnType(EAttribute feature) {
-		// TODO Auto-generated method stub
-		return null;
+		EClassifier classifier = feature.getType();
+		if (!(classifier instanceof EDataType)) {
+			throw new IllegalArgumentException("type of attribute '" + feature.getName() + "' is not a datatype");
+		}
+		EDataType dataType = (EDataType) classifier;
+		
+		String instanceTypeName = dataType.getInstanceTypeName();
+		if (instanceTypeName == null) {
+			instanceTypeName = dataType.getName();
+		}
+		if ("int".equals(instanceTypeName)) {
+			return int.class;
+		} else if ("string".equals(instanceTypeName) || "String".equals(instanceTypeName) || dataType instanceof EEnum) {
+			return String.class;
+		} else if ("double".equals(instanceTypeName)) {
+			return double.class;
+		} else if ("boolean".equals(instanceTypeName)) {
+			return boolean.class;
+		} else {
+			try {
+				return Class.forName(instanceTypeName);
+			} catch (ClassNotFoundException e) {
+				throw new IllegalArgumentException("can't determine column-type for attribute '" + feature.getName() + "'", e);
+			}
+		}
 	}
 
-	private static void collectSchemaTypes(EPackageManager packageManager, EClass type, List<EClass> schemaTypes) {
-		// TODO Auto-generated method stub
-		
+	private static void collectSchemaTypes(EPackage pkg, List<EClass> schemaTypes) {
+		for (EClassifier classifier : pkg.getClassifiers()) {
+			if (isObjectType(classifier)) {
+				collectSchemaTypes((EClass) classifier, schemaTypes);
+			}
+		}
+		for (EPackage subPackage : pkg.getSubPackages()) {
+			collectSchemaTypes(subPackage, schemaTypes);
+		}
+	}
+
+	private static void collectSchemaTypes(EClass type, List<EClass> schemaTypes) {
+		schemaTypes.add(type);
+		for (EClassifier nestedClassifier : type.getNestedClassifiers()) {
+			if (isObjectType(nestedClassifier)) {
+				collectSchemaTypes((EClass) nestedClassifier, schemaTypes);
+			}
+		}
+	}
+
+	private static boolean isObjectType(EClassifier classifier) {
+		if (classifier instanceof EClass) {
+			EClass cls = (EClass) classifier;
+			if (cls.isInterface()) {
+				return false;
+			}
+			for (EStructuralFeature feature : cls.getStructuralFeatures()) {
+				if (feature instanceof EAttribute) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private static Resolver<EClassifier> createConverterResolver(final ApiConverter converter) {
