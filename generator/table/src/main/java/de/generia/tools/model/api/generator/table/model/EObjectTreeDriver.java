@@ -28,6 +28,10 @@ public class EObjectTreeDriver implements TreeDriver {
 		this.objectFactory = objectFactory;
 	}
 	
+	public EObjectFactory getObjectFactory() {
+		return objectFactory;
+	}
+	
 	@Override
 	public Object getParent(Object object) {
 		EObject o = (EObject) object;
@@ -38,20 +42,26 @@ public class EObjectTreeDriver implements TreeDriver {
 		return o.get(parentReference.getName());
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> getChildren(Object object) {
 		final EObject o = (EObject) object;
 		List<Object> children = new ArrayList<>();
 		for (EReference childReference : getChildReferences(o.eGetType())) {
 			Object value = o.get(childReference.getName());
-			if (childReference.isMany()) {
-				children.addAll((Collection<? extends Object>) value);
-			} else {
-				children.add(value);
+			if (value != null) {
+				getChildrenAddChild(children, object, childReference, value);
 			}
 		}
 		return children;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected void getChildrenAddChild(List<Object> children, Object parent, EReference childReference, Object child) {
+		if (childReference.isMany()) {
+			children.addAll((Collection<? extends Object>) child);
+		} else {
+			children.add(child);
+		}
 	}
 
 	@Override
@@ -77,6 +87,7 @@ public class EObjectTreeDriver implements TreeDriver {
 				if (opposite != null) {
 					setOrAddValue(c, p, opposite);
 				}
+				break;
 			}
 		}
 	}
@@ -107,7 +118,7 @@ public class EObjectTreeDriver implements TreeDriver {
 		if (parentReference != null) {
 			return parentReference;
 		}
-		parentReference = UNDEFINED_REFERENCE;
+		parentReference = null;
 		for (EStructuralFeature feature : type.getStructuralFeatures()) {
 			if (feature instanceof EReference) {
 				EReference reference = (EReference) feature;
@@ -117,6 +128,15 @@ public class EObjectTreeDriver implements TreeDriver {
 					break;
 				}
 			}
+		}
+		if (parentReference == null) {
+			EClass superType = type.getSuperType();
+			if (superType != null) {
+				parentReference = getParentReference(superType);
+			}
+		}
+		if (parentReference == null) {
+			parentReference = UNDEFINED_REFERENCE;
 		}
 		parentReferenceMap.put(type, parentReference);
 		return parentReference;
@@ -137,6 +157,11 @@ public class EObjectTreeDriver implements TreeDriver {
 				}
 			}
 		}
+		EClass superType = type.getSuperType();
+		if (superType != null) {
+			Collection<? extends EReference> superTypeChildReferences = getChildReferences(superType);
+			childReferences.addAll(superTypeChildReferences);
+		}
 		childReferencesMap.put(type, childReferences);
 		return childReferences;
 	}
@@ -156,10 +181,10 @@ public class EObjectTreeDriver implements TreeDriver {
 	private void setOrAddValue(EObject object, EObject value, EReference reference) {
 		if (reference.isMany()) {
 			@SuppressWarnings("unchecked")
-			Collection<Object> children = (Collection<Object>) value.get(reference.getName());
+			Collection<Object> children = (Collection<Object>) object.get(reference.getName());
 			if (children == null) {
 				children = objectFactory.createCollection(reference);
-				object.set(reference.getName(), value);
+				object.set(reference.getName(), children);
 			}
 			children.add(value);
 		} else {

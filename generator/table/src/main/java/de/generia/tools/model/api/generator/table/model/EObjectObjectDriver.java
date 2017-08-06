@@ -93,15 +93,8 @@ public class EObjectObjectDriver implements ObjectDriver<EClassifier> {
 
 	@Override
 	public boolean hasProperty(EClassifier type, String property) {
-		if (!(type instanceof EClass)) {
-			return false;
-		}
-		for (EStructuralFeature feature : ((EClass)type).getStructuralFeatures()) {
-			if (feature.getName().equals(property)) {
-				return true;
-			}
-		}
-		return false;
+		EStructuralFeature feature = getProperty(type, property);
+		return (feature != null);
 	}
 
 	@Override
@@ -118,13 +111,26 @@ public class EObjectObjectDriver implements ObjectDriver<EClassifier> {
 
 	@Override
 	public EClassifier getPropertyType(EClassifier type, String property) {
+		EStructuralFeature feature = getProperty(type, property);
+		if (feature == null) {
+			return null;
+		}
+		return feature.getType();
+	}
+
+	public EStructuralFeature getProperty(EClassifier type, String property) {
 		if (!(type instanceof EClass)) {
 			return null;
 		}
-		for (EStructuralFeature feature : ((EClass)type).getStructuralFeatures()) {
+		EClass eClass = (EClass)type;
+		for (EStructuralFeature feature : eClass.getStructuralFeatures()) {
 			if (feature.getName().equals(property)) {
-				return feature.getType();
+				return feature;
 			}
+		}
+		EClass superType = eClass.getSuperType();
+		if (superType != null) {
+			return getProperty(superType, property);
 		}
 		return null;
 	}

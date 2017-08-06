@@ -2,23 +2,23 @@ package de.generia.tools.model.api.generator.table;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
+import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 
 import de.generia.tools.dom2table.io.DatabaseDriver;
 import de.generia.tools.dom2table.io.DatabaseReader;
@@ -29,469 +29,146 @@ import de.generia.tools.dom2table.marshaller.binding.Binding;
 import de.generia.tools.dom2table.marshaller.binding.Binding.Converter;
 import de.generia.tools.dom2table.marshaller.binding.Binding.Converter.Resolver;
 import de.generia.tools.dom2table.marshaller.binding.BindingRowMarshaller;
-import de.generia.tools.dom2table.marshaller.binding.ObjectBuilder;
 import de.generia.tools.dom2table.marshaller.simple.SimpleDatabaseMarshaller;
-import de.generia.tools.dom2table.marshaller.simple.SimpleModelDriver;
-import de.generia.tools.dom2table.model.ObjectDriver;
-import de.generia.tools.dom2table.model.Property;
-import de.generia.tools.dom2table.model.ecore.EcoreObjectDriver;
-import de.generia.tools.dom2table.model.tree.TreeDefinition;
-import de.generia.tools.dom2table.model.tree.TreeDefinitionTreeDriver;
-import de.generia.tools.dom2table.model.tree.TreeDriver;
-import de.generia.tools.model.api.ApiPackage;
-import de.generia.tools.model.api.EAnnotation;
 import de.generia.tools.model.api.EAttribute;
 import de.generia.tools.model.api.EClass;
 import de.generia.tools.model.api.EClassifier;
 import de.generia.tools.model.api.EDataType;
 import de.generia.tools.model.api.EEnum;
-import de.generia.tools.model.api.EEnumLiteral;
-import de.generia.tools.model.api.EModelElement;
-import de.generia.tools.model.api.ENamedElement;
-import de.generia.tools.model.api.EOperation;
 import de.generia.tools.model.api.EPackage;
-import de.generia.tools.model.api.EParameter;
 import de.generia.tools.model.api.EReference;
 import de.generia.tools.model.api.EStructuralFeature;
-import de.generia.tools.model.api.ETypedElement;
 import de.generia.tools.model.api.generator.table.model.EObjectObjectDriver;
-import de.generia.tools.model.api.generator.table.model.EObjectTreeDriver;
 import de.generia.tools.model.api.resource.stream.ModelInputStream;
 import de.generia.tools.model.api.runtime.EObject;
+import de.generia.tools.model.api.runtime.EObjectFactory;
 import de.generia.tools.model.api.runtime.EPackageManager;
 import de.generia.tools.model.api.runtime.io.SimpleIoContext;
 import de.generia.tools.model.api.runtime.io.json.EObjectJsonReader;
+import de.generia.tools.model.api.runtime.io.json.EObjectJsonWriter;
 
 public class TableGenerator extends SimpleDatabaseMarshaller {
-
-	private static class ApiObjectDriver extends EcoreObjectDriver {
-
-		public ApiObjectDriver() {
-			register(ApiPackage.eINSTANCE);
-		}
-		
-		@Override
-		public Class<?> getTypeClass(String typeName) {
-			String fullName = ApiPackage.class.getPackage().getName() + ".E" + typeName;
-			return super.getTypeClass(fullName);
-		}
-
-		@Override
-		public String getTypeName(Class<?> typeClass) {
-			String fullName = super.getTypeName(typeClass);
-			int i = fullName.lastIndexOf(".E");
-			return fullName.substring(i + ".E".length());
-		}
-	};
-
-	public static class ApiTreeBuilder implements ObjectBuilder<EClassifier> {
-		private static final String TYPE = "type";
-		private static final String LOCATION = "location";
-		private static final String PATH = "path";
-		private static final String NAME = "name";
-
-		private ObjectDriver<EClassifier> objectDriver;
-		private TreeDriver treeDriver;
-		private Object contextNode;
-		private Object currentNode;
-		private Namespace namespace;
-		private Map<String, Set<ProxyHolder>> proxyHolderMap = new HashMap<String, Set<ProxyHolder>>();
-
-		public ApiTreeBuilder(ObjectDriver<EClassifier> objectDriver, TreeDriver treeDriver) {
-			this.objectDriver = objectDriver;
-			this.treeDriver = treeDriver;
-			this.namespace = new Namespace();
-		}
-
-		private void resolve(ProxyHolder ph, Namespace namespace) {
-			Object value = objectDriver.getValue(ph.object, ph.property);
-			if (value instanceof Collection) {
-				Collection values = (Collection) value;
-				Collection resolved = new ArrayList();
-				for (Object o : values) {
-					resolved.add(resolve(o, namespace));
-				}
-				values.clear();
-				values.addAll(resolved);
-			} else {
-				objectDriver.setValue(ph.object, ph.property, resolve(value, namespace));
-			}
-		}
-
-		private Object resolve(Object o, Namespace namespace) {
-			if (!(o instanceof ObjectRef)) {
-				return o;
-			}
-			String reference = ((ObjectRef) o).getReference();
-			Object resolved = namespace.lookup(reference);
-			if (resolved == null) {
-				System.err.println("can't resolve '" + reference + "'");
-			}
-			return resolved;
-		}
-		
-		private Object createChild(EClassifier type, String location, Object context) {
-			Object parent = getObjectByLocation(context, location);
-			if (parent == null) {
-				return context;
-			}
-			Object child = objectDriver.create(type);
-			treeDriver.addChild(parent, child);
-			return child;
-		}
-
-		private Object getObjectByLocation(Object context, String location) {
-			if (location == null) {
-				return null;
-			}
-			String[] steps = location.split("\\.");
-			Object o = context;
-			for (String step : steps) {
-				int index = Integer.parseInt(step);
-				List<Object> children = treeDriver.getChildren(o);
-				if (index < children.size()) {
-					Object child = children.get(index);
-					o = child;
-				} else {
-					return o;
-				}
-			}
-			return o;
-		}
-
-		private String getLocation(Object object) {
-			String location = null;
-			Object o = object;
-			while (o != null) {
-				int index = treeDriver.getChildrenIndex(o);
-				if (index != -1) {
-					String format = String.format("%02d", index);
-					location = location == null ? format : format + "." + location;
-				}
-				o = treeDriver.getParent(o);
-			}
-			return location;
-		}
-
-		private String getPath(Object object) {
-			String path = null;
-			Object o = object;
-			while (o != null) {
-				String name = (String) objectDriver.getValue(o, NAME);
-				if (name != null) {
-					path = path == null ? name : name + "." + path;
-				}
-				o = treeDriver.getParent(o);
-			}
-			return path;
-		}
-
-		@Override
-		public Object createObject(EClassifier type, Map<String, Object> metaInfo) {
-			String typeName = (String) metaInfo.get(TYPE);
-			String path = (String) metaInfo.get(PATH);
-			String location = (String) metaInfo.get(LOCATION);
-
-			EClassifier typeClass = objectDriver.getTypeClass(typeName);
-			currentNode = createChild(typeClass, location, contextNode);
-			joinNamespace(path, currentNode);
-			return currentNode;
-		}
-
-		private void joinNamespace(String name, Object object) {
-			if (name == null) {
-				return;
-			}
-			namespace.add(name, currentNode);
-			Set<ProxyHolder> proxyHolders = proxyHolderMap.remove(name);
-			if (proxyHolders != null) {
-				for (ProxyHolder ph : proxyHolders) {
-					resolve(ph, namespace);
-				}
-			}
-		}
-
-		@Override
-		public void initMetaInfo(Object rowObject, Map<String, Object> metaInfo) {
-			currentNode = rowObject;
-			String typeName = objectDriver.getTypeName(objectDriver.getObjectType(rowObject));
-			metaInfo.put(TYPE, typeName);
-			metaInfo.put(PATH, getPath(rowObject));
-			metaInfo.put(LOCATION, getLocation(rowObject));
-		}
-
-		@Override
-		public void setProperty(Property<EClassifier> property, Object value) {
-			EClassifier currentType = objectDriver.getObjectType(currentNode);
-			if (!objectDriver.hasProperty(currentType, property.getName())) {
-				return;
-			}
-			Object object = value;
-			if (value instanceof String && value.toString().startsWith("#")) {
-				String name = value.toString().substring(1);
-				object = namespace.lookup(name);
-				if (object == null) {
-					System.out.println("forward reference found '" + value + "'");
-					Object rowObject = currentNode;
-					EClassifier typeClass = objectDriver.getPropertyType(objectDriver.getObjectType(rowObject), property.getName());
-					// NOTE: proxy handling is needed to cope with abstract classes for property types
-					Object proxy = null; // TODO: Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { typeClass, ObjectRef.class }, new ProxyInvocationHandler(name));
-					Set<ProxyHolder> proxyHolders = proxyHolderMap.get(name);
-					if (proxyHolders == null) {
-						proxyHolders = new HashSet<ProxyHolder>();
-						proxyHolderMap.put(name, proxyHolders);
-					}
-					// Object proxy = objectDriver.create(typeClass);
-					proxyHolders.add(new ProxyHolder(rowObject, property.getName()));
-					// proxyMap.put(proxy, columnValue.toString());
-					object = proxy;
-				}
-			}
-			objectDriver.setValue(currentNode, property.getName(), object);
-		}
-
-		@Override
-		public Object getProperty(Property<EClassifier> property) {
-			EClassifier currentType = objectDriver.getObjectType(currentNode);
-			if (!objectDriver.hasProperty(currentType, property.getName())) {
-				return null;
-			}
-			Object value = objectDriver.getValue(currentNode, property.getName());
-			if (value != null) {
-				EClassifier propertyType = objectDriver.getPropertyType(property.getDefinedIn(), property.getName());
-				if (objectDriver.isObjectType(propertyType)) {
-					return "#" + getPath(value);
-				}
-			}
-			return value;
-		}
-
-		@Override
-		public EClassifier getPropertyType(Property<EClassifier> property) {
-			if (property.getDefinedIn() == null) {
-				return null; // TODO: String.class;
-			}
-			return objectDriver.getPropertyType(property.getDefinedIn(), property.getName());
-		}
-
-		@Override
-		public EClassifier getObjectType() {
-			return objectDriver.getObjectType(currentNode);
-		}
-
-		@Override
-		public boolean hasProperty(Property<EClassifier> property) {
-			EClassifier objectType = getObjectType();
-			if (!objectDriver.isAssignableFrom(property.getDefinedIn(), objectType)) {
-				return false;
-			}
-			return objectDriver.hasProperty(objectType, property.getName());
-		}
-	}
-
-	public static class ApiModelDriver extends SimpleModelDriver<EClassifier> {
-		private TreeDriver treeDriver;
-		private ApiTreeBuilder treeBuilder;
-
-		public ApiModelDriver(EClassifier databaseType, Map<String, EClassifier> rowTypeMap, ObjectDriver<EClassifier> objectDriver, TreeDriver treeDriver, ApiTreeBuilder treeBuilder) {
-			super(databaseType, rowTypeMap, objectDriver);
-			this.treeDriver = treeDriver;
-			this.treeBuilder = treeBuilder;
-		}
-
-		@Override
-		protected Object createTableObject(Object databaseObject, String tableProperty) {
-			treeBuilder.contextNode = databaseObject;
-			return databaseObject;
-		}
-
-		public Iterable<Object> getRowObjects(Object databaseObject, String tableProperty) {
-			List<Object> objects = new ArrayList<Object>();
-			collectObjects(databaseObject, objects);
-			return objects;
-		}
-
-		private void collectObjects(Object object, List<Object> objects) {
-			objects.add(object);
-			for (Object child : treeDriver.getChildren(object)) {
-				collectObjects(child, objects);
-			}
-		};
-	};
-
-	public static class ApiConverter implements Converter {
-		private ApiModelDriver modelDriver;
-		private ObjectBuilder<EClassifier> objectBuilder;
-
-		public ApiConverter(ApiModelDriver modelDriver, ObjectBuilder<EClassifier> objectBuilder) {
-			this.modelDriver = modelDriver;
-			this.objectBuilder = objectBuilder;
-		}
-
-		@Override
-		public Object toRowValue(Object objValue) {
-			return objValue;
-		}
-
-		@Override
-		public Object toObjValue(Object rowValue) {
-			Object object = rowValue;
-			return object;
-		}
-	}
-
-	public static class Namespace {
-		private Map<String, Object> namespace = new TreeMap<String, Object>();
-
-		public Map<String, Object> getNamespace() {
-			return namespace;
-		}
-
-		public void add(String name, Object object) {
-			namespace.put(name, object);
-		}
-
-		public Object lookup(String name) {
-			if (name == null) {
-				return null;
-			}
-			return namespace.get(name);
-		}
-	}
-
-	private static interface ObjectRef {
-		public String getReference();
-	}
-
-	private static class ProxyInvocationHandler implements InvocationHandler {
-		private String reference;
-
-		public ProxyInvocationHandler(String reference) {
-			this.reference = reference;
-		}
-
-		@Override
-		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-			String name = method.getName();
-			if (name.equals("equals")) {
-				return proxy.equals(args[0]);
-			} else if (name.equals("hashCode")) {
-				return proxy.hashCode();
-			} else if (name.equals("eIsProxy")) {
-				return false;
-			} else if (name.equals("getReference")) {
-				return reference;
-			}
-			return null;
-		}
-	}
-
-	private static class ProxyHolder {
-
-		private Object object;
-		private String property;
-
-		public ProxyHolder(Object object, String property) {
-			this.object = object;
-			this.property = property;
-		}
-
-		@Override
-		public int hashCode() {
-			return object.hashCode() * property.hashCode();
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (obj == null) {
-				return false;
-			}
-			if (obj == this) {
-				return true;
-			}
-			if (!(obj instanceof ProxyHolder)) {
-				return false;
-			}
-			ProxyHolder p = (ProxyHolder) obj;
-			if (object.equals(p.object)) {
-				return property.equals(p.property);
-			}
-			return false;
-		}
-	}
+	private static final Logger LOG = LoggerFactory.getLogger(TableGenerator.class);
 
 	public static void main(String[] args) throws Exception {
-
-		Map<String, EClassifier> rowTypeMap = new HashMap<String, EClassifier>();
-
-		String schemaId = "companymgmt.v1";
-		String schemaFile = "/Users/qxn7720/home/prj/bmw/ds2/ws-api/apitools/model/src/test/resources/de/generia/tools/model/api/runtime/companymgmt.api";
-		String dataFile = "/Users/qxn7720/home/prj/bmw/ds2/ws-api/apitools/model/src/test/resources/de/generia/tools/model/api/runtime/Acme-Inc..v1.json";
-		String dataType = "Company";
-		String tableFile = "/Users/qxn7720/home/tmp/table-generator/Acme Inc..v1.xlsx";
-
 		String function = null;
+		String schemaFile = null;
+		String dataType = null;
 		String inputFile = null;
 		String outputFile = null;
-		if (args.length == 3) {
+		if (args.length >= 5) {
 			function = args[0];
-			inputFile = args[1];
-			outputFile = args[2];
+			schemaFile = args[1];
+			dataType = args[2];
+			inputFile = args[3];
+			outputFile = args[4];
 		}
 
-		EPackageManager packageManager = readApiSchema(schemaId, schemaFile);
-		EClass type = packageManager.lookupElement(dataType);
-
-		final ObjectDriver<EClassifier> objectDriver = new EObjectObjectDriver(packageManager);
-		//TreeDriver treeDriver = new ApiTreeDriver();
-		TreeDriver treeDriver = new EObjectTreeDriver(packageManager.getObjectFactory());
-		ApiTreeBuilder treeBuilder = new ApiTreeBuilder(objectDriver, treeDriver);
-		ApiModelDriver modelDriver = new ApiModelDriver(type, rowTypeMap, objectDriver, treeDriver, treeBuilder);
-
-		final SimpleDatabaseMarshaller.NamespaceContext context = new SimpleDatabaseMarshaller.NamespaceContext(modelDriver);
-
-		Binding<EClassifier> binding = createBinding(packageManager, type);
-		Converter.Resolver<EClassifier> converterResolver = createConverterResolver(new ApiConverter(modelDriver, treeBuilder));
-		context.registerRowMarshaller("Elements", new BindingRowMarshaller<EClassifier>(binding, converterResolver, treeBuilder));
-		DatabaseDriver driver = new XlsDatabaseDriver();
-		DatabaseMarshaller marshaller = new SimpleDatabaseMarshaller();
+		String tableName = "Objects";
+		if (args.length >= 6) {
+			tableName = args[5];
+		}
 		
-		if (function == null || function.equals("json2xls")) {
-
-			EObject object = readObject(packageManager, type, dataFile);
-			String tableUrl = new File(tableFile).toURI().toURL().toString();
-			DatabaseWriter writer = driver.createWriter(tableUrl);
-			marshaller.marshal(context, writer, object);
-			writer.close();
+		EPackageManager packageManager = readSchema(schemaFile);
+		EClass type = packageManager.lookupElement(dataType);
+		TableGenerator tableGenerator = new TableGenerator();
+		if (function.equals("json2xls")) {
+			EObject object = readObject(packageManager, type, inputFile);
+			DatabaseDriver driver = new XlsDatabaseDriver();
+			String tableUrl = new File(outputFile).toURI().toURL().toString();
+			tableGenerator.writeTable(packageManager, object, driver, tableUrl, tableName);
+		} else if (function.equals("xls2json")) {
+			DatabaseDriver driver = new XlsDatabaseDriver();
+			String tableUrl = new File(inputFile).toURI().toURL().toString();
+			EObject object = tableGenerator.readTable(packageManager, type, driver, tableUrl, tableName);
+			writeObject(packageManager, object, outputFile);
+		} else {
+			System.out.println("usage: tableGenerator <function> <schemaFile> <dataType> <inputFile> <outputFile> [<tableName>]");
+			System.out.println("- <function> := \"json2xls\" | \"xls2json\"");
+			System.out.println("- <schemaFile> := file providing the api-schema definition");
+			System.out.println("- <dataType> := type of the root object");
+			System.out.println("- <inputFile> := file to be read as input");
+			System.out.println("- <outputFile> := file to be written as output");
+			System.out.println("- <tableName> := name of the output table, default: 'Objects'");
 		}
 	}
+	
+	public EObject readTable(EPackageManager packageManager, EClass type, DatabaseDriver driver, String tableUrl, String tableName) {
+		DatabaseMarshaller.Context context = createContext(packageManager, type, tableName);
+		DatabaseReader reader = driver.createReader(tableUrl);
+		DatabaseMarshaller marshaller = new SimpleDatabaseMarshaller();
+		EObject object = (EObject) marshaller.unmarshal(context, reader);
+		return object;
+	}
 
-	private static Binding<EClassifier> createBinding(EPackageManager packageManager, EClass type) {
+	public void writeTable(EPackageManager packageManager, EObject object, DatabaseDriver databaseDriver, String tableUrl, String tableName) {
+		DatabaseMarshaller.Context context = createContext(packageManager, object.eGetType(), tableName);
+		DatabaseMarshaller marshaller = new SimpleDatabaseMarshaller();		
+		DatabaseWriter writer = databaseDriver.createWriter(tableUrl);
+		marshaller.marshal(context, writer, object);
+		writer.close();
+	}
+
+	private DatabaseMarshaller.Context createContext(EPackageManager packageManager, EClass type, String tableName) {
+		Map<String, EClassifier> rowTypeMap = new HashMap<String, EClassifier>();
+
+		EObjectFactory objectFactory = packageManager.getObjectFactory();
+		EObjectObjectDriver objectDriver = new EObjectObjectDriver(packageManager);
+		TableTreeDriver treeDriver = new TableTreeDriver(objectFactory);
+		TableTreeBuilder treeBuilder = new TableTreeBuilder(objectDriver, treeDriver);
+		TableModelDriver modelDriver = new TableModelDriver(type, rowTypeMap, objectDriver, treeDriver, treeBuilder);
+
+		SimpleDatabaseMarshaller.NamespaceContext context = new SimpleDatabaseMarshaller.NamespaceContext(modelDriver);
+
+		Binding<EClassifier> binding = createBinding(packageManager);
+		Converter.Resolver<EClassifier> converterResolver = createConverterResolver(new TableConverter(objectFactory));
+		context.registerRowMarshaller(tableName, new BindingRowMarshaller<EClassifier>(binding, converterResolver, treeBuilder));
+		return context;
+	}
+
+	private static Binding<EClassifier> createBinding(EPackageManager packageManager) {
 		Binding<EClassifier> binding = new Binding<EClassifier>();
-		binding.register(null, ApiTreeBuilder.LOCATION, "Location", String.class);
-		binding.register(null, ApiTreeBuilder.PATH, "Path", String.class);
-		binding.register(null, ApiTreeBuilder.TYPE, "Type", String.class);
+		binding.register(null, TableTreeBuilder.LOCATION, "Location", String.class);
+		binding.register(null, TableTreeBuilder.ID, "Entity-Id", String.class);
+		binding.register(null, TableTreeBuilder.TYPE, "Type", String.class);
+		binding.register(null, TableTreeBuilder.PARENT_TYPE, "Parent-Type", String.class);
+		binding.register(null, TableTreeBuilder.CHILD_PROPERTY, "Child-Property", String.class);
 		
 		List<EClass> schemaTypes = new ArrayList<>();
 		collectSchemaTypes(packageManager.getPackage(), schemaTypes);
 		
 		for (EClass schemaType : schemaTypes) {
 			for (EStructuralFeature feature : schemaType.getStructuralFeatures()) {
+				String propertyName = feature.getName();
+				String columnName = schemaType.getName() + "." + feature.getName();
+				Class<?> columnType;
 				if (feature instanceof EAttribute) {
-					String propertyName = feature.getName();
-					String columnName = schemaType.getName() + "." + feature.getName();
-					Class<?> columnType = getColumnType((EAttribute)feature);
-					binding.register(schemaType, propertyName, columnName, columnType);
+					columnType = getColumnType((EAttribute)feature);
+					registerBinding(binding, schemaType, propertyName, columnName, columnType);
+				} else {
+					EReference reference = (EReference) feature;
+					if (!reference.isContainment()) {
+						columnType = reference.isMany() ? List.class : String.class;
+						registerBinding(binding, schemaType, propertyName, columnName, columnType);
+					}
 				}
 			}
 		}
 		return binding;
 	}
 
+	private static void registerBinding(Binding<EClassifier> binding, EClass schemaType, String propertyName, String columnName, Class<?> columnType) {
+		LOG.info("registering binding: schema-type='{}' property-name='{}' column-name='{}' column-typed='{}' ...", new Object[]{schemaType.getName(), propertyName, columnName, columnType.getName()});
+		binding.register(schemaType, propertyName, columnName, columnType);
+	}
+
 	private static Class<?> getColumnType(EAttribute feature) {
 		EClassifier classifier = feature.getType();
 		if (!(classifier instanceof EDataType)) {
 			throw new IllegalArgumentException("type of attribute '" + feature.getName() + "' is not a datatype");
+		}
+		if (feature.isMany()) {
+			return List.class;
 		}
 		EDataType dataType = (EDataType) classifier;
 		
@@ -528,6 +205,7 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 	}
 
 	private static void collectSchemaTypes(EClass type, List<EClass> schemaTypes) {
+		LOG.info("adding schema-type '{}' ...", type.getName());
 		schemaTypes.add(type);
 		for (EClassifier nestedClassifier : type.getNestedClassifiers()) {
 			if (isObjectType(nestedClassifier)) {
@@ -542,16 +220,12 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 			if (cls.isInterface()) {
 				return false;
 			}
-			for (EStructuralFeature feature : cls.getStructuralFeatures()) {
-				if (feature instanceof EAttribute) {
-					return true;
-				}
-			}
+			return true;
 		}
 		return false;
 	}
 
-	private static Resolver<EClassifier> createConverterResolver(final ApiConverter converter) {
+	private static Resolver<EClassifier> createConverterResolver(final TableConverter converter) {
 		Converter.Resolver<EClassifier> converterResolver = new Converter.Resolver<EClassifier>() {
 			@Override
 			public Converter lookup(EClassifier objType, Class<?> colType, String name) {
@@ -561,11 +235,11 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 		return converterResolver;
 	}
 
-	private static EPackageManager readApiSchema(String schemaId, String file) throws Exception {
-		ModelInputStream apiStream = new ModelInputStream();
+	private static EPackageManager readSchema(String file) throws Exception {
+		ModelInputStream schemaStream = new ModelInputStream();
 		InputStream inputStream = new FileInputStream(file);
-		EPackage api = apiStream.read(inputStream);
-		EPackageManager packageManager = new EPackageManager(schemaId, api);
+		EPackage schema = schemaStream.read(inputStream);
+		EPackageManager packageManager = new EPackageManager(null, schema);
 		return packageManager;
 	}
 
@@ -575,5 +249,40 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 		JsonParser jp = jsonFactory.createParser(new File(file));
 		EObjectJsonReader reader = new EObjectJsonReader(context, jp);
 		return (EObject) reader.read(type);
+	}
+	
+	private static void writeObject(EPackageManager packageManager, EObject object, String file) throws IOException {
+		JsonFactory jsonFactory = new JsonFactory();
+		Writer fileWriter = new FileWriter(file);
+		JsonGenerator jg = jsonFactory.createGenerator(fileWriter);
+		jg.setPrettyPrinter(new DefaultPrettyPrinter());
+		SimpleIoContext context = new SimpleIoContext(packageManager);
+		EObjectJsonWriter writer = new EObjectJsonWriter(context, jg);
+		writer.write(object);
+		jg.flush();
+		fileWriter.flush();
+		fileWriter.close();
+	}
+
+	private static class TableConverter implements Converter {
+
+		private EObjectFactory objectFactory;
+
+		public TableConverter(EObjectFactory objectFactory) {
+			this.objectFactory = objectFactory;
+		}
+
+		@Override
+		public Object toRowValue(Object objValue) {
+			if (objectFactory.isEnumValue(objValue)) {
+				return objectFactory.toEnumName(objValue);
+			}
+			return objValue;
+		}
+
+		@Override
+		public Object toObjValue(Object rowValue) {
+			return rowValue;
+		}
 	}
 }

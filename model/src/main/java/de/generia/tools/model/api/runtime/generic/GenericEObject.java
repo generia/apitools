@@ -152,7 +152,7 @@ public class GenericEObject implements EObject, EObjectSet.Item {
 	@Override
 	public int hashCode() {
 		if (id == null) {
-			return -1;
+			return super.hashCode();
 		}
 		return id.hashCode();
 	}
