@@ -102,7 +102,6 @@ public class TableTreeBuilder implements ObjectBuilder<EClassifier> {
 		String id = value.toString().substring(1);
 		EObject object = namespace.get(id);
 		if (object == null) {
-			System.out.println("forward reference found '" + value + "'");
 			List<EObjectProxy> proxyHolders = proxyHolderMap.get(id);
 			if (proxyHolders == null) {
 				proxyHolders = new ArrayList<EObjectProxy>();

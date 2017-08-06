@@ -225,5 +225,10 @@ public class EObjectTreeDriver implements TreeDriver {
 		public Object next() {
 			return currentIterable.next();
 		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
 	}
 }

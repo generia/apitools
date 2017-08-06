@@ -4,16 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.generia.tools.dom2table.marshaller.simple.SimpleModelDriver;
 import de.generia.tools.dom2table.model.ObjectDriver;
 import de.generia.tools.dom2table.model.tree.TreeDriver;
 import de.generia.tools.model.api.EClassifier;
 
 public class TableModelDriver extends SimpleModelDriver<EClassifier> {
-	private static final Logger LOG = LoggerFactory.getLogger(TableModelDriver.class);
+	//private static final Logger LOG = LoggerFactory.getLogger(TableModelDriver.class);
 
 	private TreeDriver treeDriver;
 	private TableTreeBuilder treeBuilder;
@@ -37,7 +34,7 @@ public class TableModelDriver extends SimpleModelDriver<EClassifier> {
 	}
 
 	private void collectObjects(Object object, List<Object> objects) {
-		LOG.info("collectObjects: object='{}'", object);
+		//LOG.info("collectObjects: object='{}'", object);
 		objects.add(object);
 		for (Object child : treeDriver.getChildren(object)) {
 			collectObjects(child, objects);
