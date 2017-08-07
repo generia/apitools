@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<EPackage name="productdata">
+	<classifiers>
+		<EClass name="ProductData">
+			<annotations>
+				<EAnnotation source="Entity"/>
+			</annotations>
+			<structural-features>
+				<EAttribute name="name" type="/productdata/string" id="true"/>
+				<EReference name="features" ordered="true" many="true" type="/productdata/Feature" containment="true"/>
+				<EReference name="series" ordered="true" many="true" type="/productdata/Serie" containment="true"/>
+			</structural-features>
+		</EClass>
+		<EClass name="Feature">
+			<annotations>
+				<EAnnotation source="Entity"/>
+			</annotations>
+			<structural-features>
+				<EAttribute name="key" type="/productdata/string" id="true"/>
+				<EAttribute name="type" type="/productdata/Feature/FeatureType"/>
+				<EAttribute name="name" type="/productdata/string"/>
+				<EAttribute name="description" type="/productdata/string"/>
+				<EAttribute name="imageUrl" type="/productdata/string"/>
+				<EAttribute name="thumbUrl" type="/productdata/string"/>
+			</structural-features>
+			<nested-classifiers>
+				<EEnum name="FeatureType">
+					<literals>
+						<EEnumLiteral name="PAINT"/>
+						<EEnumLiteral name="TRIM"/>
+						<EEnumLiteral name="RIM"/>
+						<EEnumLiteral name="OPTION"/>
+						<EEnumLiteral name="PACKAGE"/>
+						<EEnumLiteral name="FABRIC"/>
+					</literals>
+				</EEnum>
+			</nested-classifiers>
+		</EClass>
+		<EClass name="Package" super-type="/productdata/Feature">
+			<annotations>
+				<EAnnotation source="Entity"/>
+			</annotations>
+			<structural-features>
+				<EReference name="features" ordered="true" many="true" type="/productdata/Feature"/>
+			</structural-features>
+		</EClass>
+		<EClass name="Serie">
+			<annotations>
+				<EAnnotation source="Entity"/>
+			</annotations>
+			<structural-features>
+				<EAttribute name="code" type="/productdata/string" id="true"/>
+				<EAttribute name="description" type="/productdata/string"/>
+				<EReference name="ranges" ordered="true" many="true" type="/productdata/Range" containment="true" opposite="/productdata/Range/serie"/>
+			</structural-features>
+		</EClass>
+		<EClass name="Range">
+			<annotations>
+				<EAnnotation source="Entity"/>
+			</annotations>
+			<structural-features>
+				<EAttribute name="code" type="/productdata/string" id="true"/>
+				<EAttribute name="description" type="/productdata/string"/>
+				<EAttribute name="descriptionLong" type="/productdata/string"/>
+				<EAttribute name="descriptionShort" type="/productdata/string"/>
+				<EAttribute name="modelYear" type="/productdata/string"/>
+				<EAttribute name="bodyTypeCode" type="/productdata/Range/BodyTypeCode"/>
+				<EAttribute name="bodyTypeName" type="/productdata/string"/>
+				<EAttribute name="defaultModelCode" type="/productdata/string"/>
+				<EAttribute name="imageUrl" type="/productdata/string"/>
+				<EReference name="serie" type="/productdata/Serie" opposite="/productdata/Serie/ranges"/>
+				<EReference name="models" ordered="true" many="true" type="/productdata/Model" containment="true" opposite="/productdata/Model/range"/>
+			</structural-features>
+			<nested-classifiers>
+				<EEnum name="BodyTypeCode">
+					<literals>
+						<EEnumLiteral documentation="Cabrio" name="CA"/>
+						<EEnumLiteral documentation="Gran Coupé" name="CO"/>
+						<EEnumLiteral documentation="Coupé" name="CP"/>
+						<EEnumLiteral documentation="Sport Activity Vehicle" name="GF"/>
+						<EEnumLiteral documentation="Limousine" name="LI"/>
+						<EEnumLiteral documentation="Roadster" name="RO"/>
+						<EEnumLiteral documentation="Sports Activity Coupé" name="SC"/>
+						<EEnumLiteral documentation="Gran Tourismo" name="ST"/>
+						<EEnumLiteral documentation="Touring" name="TO"/>
+						<EEnumLiteral documentation="Hatchback" name="SH"/>
+						<EEnumLiteral documentation="Hatch Back" name="HC"/>
+						<EEnumLiteral documentation="Cabrio" name="CL"/>
+						<EEnumLiteral name="MP"/>
+						<EEnumLiteral name="HB"/>
+					</literals>
+				</EEnum>
+			</nested-classifiers>
+		</EClass>
+		<EClass name="Model">
+			<annotations>
+				<EAnnotation source="Entity"/>
+			</annotations>
+			<structural-features>
+				<EAttribute name="code" type="/productdata/string" id="true"/>
+				<EAttribute name="name" type="/productdata/string"/>
+				<EAttribute name="originalCode" type="/productdata/string"/>
+				<EReference name="range" type="/productdata/Range" opposite="/productdata/Range/models"/>
+				<EReference name="vehicles" ordered="true" many="true" type="/productdata/Vehicle" containment="true" opposite="/productdata/Vehicle/model"/>
+				<EReference name="steering" type="/productdata/Model/Steering"/>
+			</structural-features>
+			<nested-classifiers>
+				<EEnum name="Steering">
+					<literals>
+						<EEnumLiteral documentation="Linkslenker" name="LL"/>
+						<EEnumLiteral documentation="Rechtslenker" name="RL"/>
+					</literals>
+				</EEnum>
+			</nested-classifiers>
+		</EClass>
+		<EClass name="Vehicle">
+			<annotations>
+				<EAnnotation source="Entity"/>
+			</annotations>
+			<structural-features>
+				<EAttribute name="configName" type="/productdata/string" id="true"/>
+				<EAttribute name="configUrl" type="/productdata/string"/>
+				<EReference name="model" type="/productdata/Model" opposite="/productdata/Model/vehicles"/>
+				<EAttribute name="modelCode" type="/productdata/string"/>
+				<EAttribute name="modelRange" type="/productdata/string"/>
+				<EAttribute name="modelName" type="/productdata/string"/>
+				<EReference name="totalPrice" type="/productdata/Vehicle/Price" containment="true"/>
+				<EReference name="featuresTotal" type="/productdata/Vehicle/Price" containment="true"/>
+				<EReference name="modelPrice" type="/productdata/Vehicle/Price" containment="true"/>
+				<EReference name="cosyImages" many="true" type="/productdata/Vehicle/CosyImage" containment="true"/>
+				<EReference name="transmission" type="/productdata/Vehicle/Transmission" containment="true"/>
+				<EReference name="technicalData" type="/productdata/Vehicle/TechnicalData" containment="true"/>
+				<EReference name="emissionData" type="/productdata/Vehicle/EmissionData" containment="true"/>
+				<EReference name="interiorGroup" type="/productdata/Vehicle/Salesgroup" containment="true"/>
+				<EReference name="exteriorGroup" type="/productdata/Vehicle/Salesgroup" containment="true"/>
+				<EReference name="optionsSalesgroups" ordered="true" many="true" type="/productdata/Vehicle/Salesgroup" containment="true"/>
+				<EReference name="packages" ordered="true" many="true" type="/productdata/Package"/>
+				<EReference name="features" ordered="true" many="true" type="/productdata/Vehicle/FeatureRef" containment="true"/>
+			</structural-features>
+			<nested-classifiers>
+				<EClass name="CosyImage">
+					<structural-features>
+						<EAttribute name="type" type="/productdata/string"/>
+						<EAttribute name="url" type="/productdata/string"/>
+					</structural-features>
+				</EClass>
+				<EClass name="Transmission">
+					<structural-features>
+						<EAttribute name="type" type="/productdata/Vehicle/Transmission/TransmissionType"/>
+						<EReference name="feature" type="/productdata/Feature"/>
+					</structural-features>
+					<nested-classifiers>
+						<EEnum name="TransmissionType">
+							<literals>
+								<EEnumLiteral documentation="Manual" name="M"/>
+								<EEnumLiteral documentation="Automatic" name="A"/>
+							</literals>
+						</EEnum>
+					</nested-classifiers>
+				</EClass>
+				<EClass name="TechnicalData">
+					<structural-features>
+						<EAttribute name="driveType" type="/productdata/Vehicle/TechnicalData/DriveType"/>
+						<EAttribute name="fuelType" type="/productdata/Vehicle/TechnicalData/FuelType"/>
+						<EAttribute name="hybridCode" type="/productdata/Vehicle/TechnicalData/HybridCode"/>
+						<EAttribute name="xDrive" type="/productdata/boolean"/>
+						<EAttribute name="numSeats" type="/productdata/int"/>
+						<EAttribute name="numDoors" type="/productdata/int"/>
+						<EAttribute name="tankCapacity" type="/productdata/int"/>
+						<EAttribute name="tankCapacityUnit" type="/productdata/string"/>
+						<EReference name="electric" type="/productdata/Vehicle/TechnicalData/Electric" containment="true"/>
+						<EReference name="engine" type="/productdata/Vehicle/TechnicalData/Engine" containment="true"/>
+						<EReference name="performance" type="/productdata/Vehicle/TechnicalData/Performance" containment="true"/>
+						<EReference name="measures" type="/productdata/Vehicle/TechnicalData/Measures" containment="true"/>
+						<EReference name="weight" type="/productdata/Vehicle/TechnicalData/Weight" containment="true"/>
+						<EReference name="wheels" type="/productdata/Vehicle/TechnicalData/Wheels" containment="true"/>
+					</structural-features>
+					<nested-classifiers>
+						<EEnum name="FuelType">
+							<literals>
+								<EEnumLiteral documentation="Otto" name="O"/>
+								<EEnumLiteral documentation="Diesel" name="D"/>
+								<EEnumLiteral documentation="Electric" name="E"/>
+								<EEnumLiteral name="X"/>
+							</literals>
+						</EEnum>
+						<EEnum name="DriveType">
+							<literals>
+								<EEnumLiteral documentation="Hinterrad" name="HR"/>
+								<EEnumLiteral documentation="Vorderrad" name="VR"/>
+								<EEnumLiteral documentation="Allrad" name="AR"/>
+								<EEnumLiteral documentation="Electric" name="ER"/>
+							</literals>
+						</EEnum>
+						<EEnum name="HybridCode">
+							<literals>
+								<EEnumLiteral documentation="Plugin Hybric Electric Vehicle" name="PHEV"/>
+								<EEnumLiteral name="BEVE"/>
+							</literals>
+						</EEnum>
+						<EClass name="Engine">
+							<structural-features>
+								<EAttribute name="numCylinders" type="/productdata/int"/>
+								<EAttribute name="numValvesPerCylinder" type="/productdata/int"/>
+								<EAttribute name="technicalCapacity" type="/productdata/int"/>
+								<EAttribute name="technicalCapacityUnit" type="/productdata/string"/>
+								<EAttribute name="engineStroke" type="/productdata/double"/>
+								<EAttribute name="engineStrokeUnit" type="/productdata/string"/>
+								<EAttribute name="engineBore" type="/productdata/int"/>
+								<EAttribute name="engineBoreUnit" type="/productdata/string"/>
+								<EAttribute name="enginePower" type="/productdata/int"/>
+								<EAttribute name="enginePowerUnit" type="/productdata/string"/>
+								<EAttribute name="engineHorsePower" type="/productdata/int"/>
+								<EAttribute name="engineHorsePowerUnit" type="/productdata/string"/>
+								<EAttribute name="torque" type="/productdata/int"/>
+								<EAttribute name="torqueUnit" type="/productdata/string"/>
+								<EAttribute name="compression" type="/productdata/double"/>
+								<EAttribute name="compressionUnit" type="/productdata/string"/>
+							</structural-features>
+						</EClass>
+						<EClass name="Measures">
+							<structural-features>
+								<EAttribute name="measuresUnit" type="/productdata/string"/>
+								<EAttribute name="length" type="/productdata/int"/>
+								<EAttribute name="width" type="/productdata/int"/>
+								<EAttribute name="height" type="/productdata/int"/>
+								<EAttribute documentation="Radstand (OTD: A_RADST)" name="wheelBase" type="/productdata/int"/>
+								<EAttribute documentation="Spurweite vorne (OTD: A_SPUR_V)" name="wheelTrackFront" type="/productdata/int"/>
+								<EAttribute documentation="Spurweite hinten (OTD: A_SPUR_H)" name="wheelTrackRear" type="/productdata/int"/>
+							</structural-features>
+						</EClass>
+						<EClass name="Performance">
+							<structural-features>
+								<EAttribute name="topSpeed" type="/productdata/int"/>
+								<EAttribute name="topSpeedUnit" type="/productdata/string"/>
+								<EAttribute documentation="accelleration 0-100" name="acceleration" type="/productdata/double"/>
+								<EAttribute name="accelerationUnit" type="/productdata/string"/>
+							</structural-features>
+						</EClass>
+						<EClass name="Weight">
+							<structural-features>
+								<EAttribute name="weightUnit" type="/productdata/string"/>
+								<EAttribute documentation="aka 'Leergeweicht' or ' curbWeight'" name="weightUnladen" type="/productdata/int"/>
+								<EAttribute name="weightMax" type="/productdata/int"/>
+								<EAttribute name="permittedLoad" type="/productdata/int"/>
+								<EAttribute name="permittedAxleLoadFront" type="/productdata/int"/>
+								<EAttribute name="permittedAxleLoadRear" type="/productdata/int"/>
+							</structural-features>
+						</EClass>
+						<EClass name="Wheels">
+							<structural-features>
+								<EAttribute name="rimFront" type="/productdata/string"/>
+								<EAttribute name="rimRear" type="/productdata/string"/>
+								<EAttribute name="tireFront" type="/productdata/string"/>
+								<EAttribute name="tireRear" type="/productdata/string"/>
+							</structural-features>
+						</EClass>
+						<EClass name="Electric">
+							<structural-features>
+								<EAttribute name="electricPowerPeak" type="/productdata/int"/>
+								<EAttribute name="electricPowerPeakUnit" type="/productdata/string"/>
+								<EAttribute name="batteryCapacity" type="/productdata/double"/>
+								<EAttribute name="batteryCapacityUnit" type="/productdata/string"/>
+								<EAttribute name="grossBatteryCapacity" type="/productdata/double"/>
+								<EAttribute name="grossBatteryCapacityUnit" type="/productdata/string"/>
+								<EAttribute documentation="from OTD otdCLeistGes" name="systemPower" type="/productdata/int"/>
+								<EAttribute name="systemPowerUnit" type="/productdata/string"/>
+								<EAttribute documentation="from OTD otdCLeistGesPs" name="systemHorsePower" type="/productdata/int"/>
+								<EAttribute name="systemHorsePowerUnit" type="/productdata/string"/>
+								<EAttribute name="cruisingRangeElectricOnly" type="/productdata/int"/>
+								<EAttribute name="cruisingRangeElectricOnlyUnit" type="/productdata/string"/>
+								<EAttribute name="cruisingRangeCustomerOriented" type="/productdata/int"/>
+								<EAttribute name="cruisingRangeCustomerOrientedUnit" type="/productdata/string"/>
+								<EAttribute name="topSpeedElectric" type="/productdata/int"/>
+								<EAttribute name="topSpeedElectricUnit" type="/productdata/string"/>
+								<EAttribute documentation="from 'ChargingModule_Standard_duration' in OTD" name="chargingDuration" type="/productdata/double"/>
+								<EAttribute name="chargingDurationUnit" type="/productdata/string"/>
+								<EAttribute documentation="from 'ChargingModule_Standard_description' in OTD" name="chargingModule" type="/productdata/string"/>
+								<EAttribute documentation="from 'E_SV_KOM' in OTD" name="electricConsumption" type="/productdata/double"/>
+								<EAttribute name="maxDrivePowerEDrive" type="/productdata/int"/>
+								<EAttribute name="maxDrivePowerEDriveUnit" type="/productdata/string"/>
+								<EAttribute name="maxDrivePowerCombustion" type="/productdata/int"/>
+								<EAttribute name="maxDrivePowerCombustionUnit" type="/productdata/string"/>
+								<EAttribute name="maxDrivePowerCombined" type="/productdata/int"/>
+								<EAttribute name="maxDrivePowerCombinedUnit" type="/productdata/string"/>
+							</structural-features>
+						</EClass>
+					</nested-classifiers>
+				</EClass>
+				<EClass name="EmissionData">
+					<structural-features>
+						<EAttribute name="co2NonUrban" type="/productdata/double"/>
+						<EAttribute name="co2Overall" type="/productdata/double"/>
+						<EAttribute name="co2Unit" type="/productdata/string"/>
+						<EAttribute name="co2Urban" type="/productdata/double"/>
+						<EAttribute name="consumptionNonUrban" type="/productdata/double"/>
+						<EAttribute name="consumptionOverall" type="/productdata/double"/>
+						<EAttribute name="consumptionUnit" type="/productdata/string"/>
+						<EAttribute name="consumptionUrban" type="/productdata/double"/>
+						<EAttribute name="energyConsumptionDependentValue" type="/productdata/string"/>
+						<EAttribute name="efficiencyCategory" type="/productdata/string"/>
+					</structural-features>
+				</EClass>
+				<EClass name="Salesgroup">
+					<structural-features>
+						<EAttribute name="code" type="/productdata/string"/>
+						<EAttribute name="description" type="/productdata/string"/>
+						<EReference name="features" ordered="true" many="true" type="/productdata/Feature"/>
+					</structural-features>
+				</EClass>
+				<EClass name="Price">
+					<structural-features>
+						<EAttribute name="grossPrice" type="/productdata/double"/>
+						<EAttribute name="netPrice" type="/productdata/double"/>
+						<EAttribute name="grossPriceFormatted" type="/productdata/string"/>
+						<EAttribute name="netPriceFormatted" type="/productdata/string"/>
+						<EReference name="taxes" ordered="true" many="true" type="/productdata/Vehicle/Price/Tax" containment="true"/>
+					</structural-features>
+					<nested-classifiers>
+						<EClass name="Tax">
+							<structural-features>
+								<EAttribute name="taxCode" type="/productdata/string"/>
+								<EAttribute name="appliedTo" type="/productdata/string"/>
+								<EAttribute name="name" type="/productdata/string"/>
+								<EAttribute name="taxValue" type="/productdata/double"/>
+								<EAttribute name="taxPercentage" type="/productdata/double"/>
+								<EAttribute name="taxValueFormatted" type="/productdata/string"/>
+								<EAttribute name="taxType" type="/productdata/string"/>
+								<EAttribute name="taxCategory" type="/productdata/string"/>
+							</structural-features>
+						</EClass>
+					</nested-classifiers>
+				</EClass>
+				<EClass name="FeatureRef">
+					<structural-features>
+						<EAttribute name="name" type="/productdata/string"/>
+						<EReference name="feature" required="true" type="/productdata/Feature"/>
+						<EReference name="price" type="/productdata/Vehicle/Price" containment="true"/>
+						<EAttribute name="selected" type="/productdata/boolean"/>
+					</structural-features>
+				</EClass>
+			</nested-classifiers>
+		</EClass>
+		<EDataType name="double"/>
+		<EDataType name="boolean"/>
+		<EDataType name="int"/>
+		<EDataType name="string"/>
+	</classifiers>
+</EPackage>

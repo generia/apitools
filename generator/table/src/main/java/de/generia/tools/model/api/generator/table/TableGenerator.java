@@ -23,6 +23,7 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import de.generia.tools.dom2table.io.DatabaseDriver;
 import de.generia.tools.dom2table.io.DatabaseReader;
 import de.generia.tools.dom2table.io.DatabaseWriter;
+import de.generia.tools.dom2table.io.csv.CsvDatabaseDriver;
 import de.generia.tools.dom2table.io.xls.XlsDatabaseDriver;
 import de.generia.tools.dom2table.marshaller.DatabaseMarshaller;
 import de.generia.tools.dom2table.marshaller.binding.Binding;
@@ -74,12 +75,12 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 		TableGenerator tableGenerator = new TableGenerator();
 		if (function.equals("json2xls")) {
 			EObject object = readObject(packageManager, type, inputFile);
-			DatabaseDriver driver = new XlsDatabaseDriver();
+			DatabaseDriver driver = createDatabaseDriver(outputFile);
 			String tableUrl = new File(outputFile).toURI().toURL().toString();
 			tableGenerator.writeTable(packageManager, object, driver, tableUrl, tableName);
 		} else if (function.equals("xls2json")) {
-			DatabaseDriver driver = new XlsDatabaseDriver();
 			String tableUrl = new File(inputFile).toURI().toURL().toString();
+			DatabaseDriver driver = createDatabaseDriver(inputFile);
 			EObject object = tableGenerator.readTable(packageManager, type, driver, tableUrl, tableName);
 			writeObject(packageManager, object, outputFile);
 		} else {
@@ -93,6 +94,13 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 		}
 	}
 	
+	private static DatabaseDriver createDatabaseDriver(String file) {
+		if (file.endsWith(".csv")) {
+			return new CsvDatabaseDriver();
+		}
+		return new XlsDatabaseDriver();
+	}
+
 	public EObject readTable(EPackageManager packageManager, EClass type, DatabaseDriver driver, String tableUrl, String tableName) {
 		DatabaseMarshaller.Context context = createContext(packageManager, type, tableName);
 		DatabaseReader reader = driver.createReader(tableUrl);

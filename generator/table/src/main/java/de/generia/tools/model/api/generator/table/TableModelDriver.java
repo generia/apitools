@@ -30,6 +30,7 @@ public class TableModelDriver extends SimpleModelDriver<EClassifier> {
 	public Iterable<Object> getRowObjects(Object databaseObject, String tableProperty) {
 		List<Object> objects = new ArrayList<Object>();
 		collectObjects(databaseObject, objects);
+		System.out.println("TableModelDriver.getRowObjects: collected row-objects #" + objects.size() + " ...");
 		return objects;
 	}
 

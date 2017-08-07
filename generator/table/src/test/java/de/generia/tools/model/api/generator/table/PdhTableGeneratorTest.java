@@ -12,28 +12,31 @@ import java.net.URL;
 
 import org.junit.Test;
 
-public class TableGeneratorTest {
+public class PdhTableGeneratorTest {
 
 	@Test
 	public void test() throws Exception {
-		String schemaFile = getFile("companymgmt.api");
-		String jsonInputFile = getFile("Acme-Inc..v1.json");
-		String xlsOutputFile = File.createTempFile("tableGenerator", "Test.xlsx").getAbsolutePath();
+		String schemaFile = getFile("productdata.v0.9.3.api");
+		String jsonInputFile = getFile("bmw-feed-de.json");
+		File tmpDir = File.createTempFile("pdhTableGenerator", "Test.csv").getParentFile();
+		File csvDir = new File(tmpDir, "pdhTableGenerator.csv");
+		csvDir.mkdirs();
+		String xlsOutputFile = csvDir.getAbsolutePath();
 		String[] json2XlsArgs = {
 			"json2xls",
 			schemaFile,
-			"Company",
+			"ProductData",
 			jsonInputFile,
 			xlsOutputFile
 		};
 		TableGenerator.main(json2XlsArgs);
 
 		String xlsInputFile = xlsOutputFile;
-		String jsonOutputFile = File.createTempFile("tableGenerator", "Test.json").getAbsolutePath();
+		String jsonOutputFile = File.createTempFile("pdhTableGenerator", "Test.json").getAbsolutePath();
 		String[] xls2JsonArgs = {
 			"xls2json",
 			schemaFile,
-			"Company",
+			"ProductData",
 			xlsInputFile,
 			jsonOutputFile
 		};
@@ -59,7 +62,7 @@ public class TableGeneratorTest {
 	}
 
 	private String getFile(String fileName) {
-		URL resource = TableGeneratorTest.class.getResource(fileName);
+		URL resource = PdhTableGeneratorTest.class.getResource(fileName);
 		File file;
 		try {
 			file = new File(resource.toURI());

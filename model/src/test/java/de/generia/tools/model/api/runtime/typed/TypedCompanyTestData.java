@@ -88,14 +88,14 @@ public class TypedCompanyTestData {
 
 		Workstation dredge = create(Workstation.class);
 		dredge.setName("Blue Dredge");
-		dredge.setAssessment(createEnum(Assessment.class, "excellent"));
+		dredge.setAssessment((Assessment) createEnum(Assessment.class, "excellent"));
 		dredge.setCompany(acme);
 		dredge.setEmployee(larry);
 		larry.setWorkstation(dredge);
 		
 		Workstation lorry = create(Workstation.class);
 		lorry.setName("Red Lorry");
-		lorry.setAssessment(createEnum(Assessment.class, "poor"));
+		lorry.setAssessment((Assessment) createEnum(Assessment.class, "poor"));
 		lorry.setCompany(acme);
 		lorry.setEmployee(curly);
 		curly.setWorkstation(lorry);
