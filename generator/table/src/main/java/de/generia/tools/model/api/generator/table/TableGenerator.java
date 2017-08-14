@@ -137,6 +137,7 @@ public class TableGenerator extends SimpleDatabaseMarshaller {
 	private static Binding<EClassifier> createBinding(EPackageManager packageManager) {
 		Binding<EClassifier> binding = new Binding<EClassifier>();
 		binding.register(null, TableTreeBuilder.LOCATION, "Location", String.class);
+		binding.register(null, TableTreeBuilder.PROPERTY_PATH, "Property-Path", String.class);
 		binding.register(null, TableTreeBuilder.ID, "Entity-Id", String.class);
 		binding.register(null, TableTreeBuilder.TYPE, "Type", String.class);
 		binding.register(null, TableTreeBuilder.PARENT_TYPE, "Parent-Type", String.class);

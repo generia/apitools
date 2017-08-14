@@ -82,13 +82,17 @@ public class EObjectTreeDriver implements TreeDriver {
 		EObject c = (EObject) child;
 		for (EReference childReference : getChildReferences(p.eGetType())) {
 			if (isAssignable(childReference.getType(), c.eGetType())) {
-				setOrAddValue(p, c, childReference);
-				EReference opposite = childReference.getOpposite();
-				if (opposite != null) {
-					setOrAddValue(c, p, opposite);
-				}
+				addChild(p, c, childReference);
 				break;
 			}
+		}
+	}
+
+	public void addChild(EObject parent, EObject child, EReference childReference) {
+		setOrAddValue(parent, child, childReference);
+		EReference opposite = childReference.getOpposite();
+		if (opposite != null) {
+			setOrAddValue(child, parent, opposite);
 		}
 	}
 

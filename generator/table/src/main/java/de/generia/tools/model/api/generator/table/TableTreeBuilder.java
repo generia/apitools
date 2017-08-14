@@ -25,6 +25,7 @@ public class TableTreeBuilder implements ObjectBuilder<EClassifier> {
 	static final String ID = "id";
 	static final String PARENT_TYPE = "parent-type";
 	static final String CHILD_PROPERTY = "child-property";
+	static final String PROPERTY_PATH = "property-path";
 
 	private EObjectObjectDriver objectDriver;
 	private TableTreeDriver treeDriver;
@@ -43,9 +44,12 @@ public class TableTreeBuilder implements ObjectBuilder<EClassifier> {
 		String typeName = (String) metaInfo.get(TYPE);
 		String path = (String) metaInfo.get(ID);
 		String location = (String) metaInfo.get(LOCATION);
+		String parentTypeName = (String) metaInfo.get(PARENT_TYPE);
+		String childProperty = (String) metaInfo.get(CHILD_PROPERTY);
 
 		EClassifier typeClass = objectDriver.getTypeClass(typeName);
-		currentNode = createChild(typeClass, location, contextNode);
+		EClassifier parentTypeClass = parentTypeName != null ? objectDriver.getTypeClass(parentTypeName) : null;
+		currentNode = createChild(parentTypeClass, childProperty, typeClass, location, contextNode);
 		joinNamespace(path, (EObject) currentNode);
 		return currentNode;
 	}
@@ -70,6 +74,7 @@ public class TableTreeBuilder implements ObjectBuilder<EClassifier> {
 		metaInfo.put(TYPE, typeName);
 		metaInfo.put(ID, getId(rowObject));
 		metaInfo.put(LOCATION, getLocation(rowObject));
+		metaInfo.put(PROPERTY_PATH, getPropertyPath(rowObject));
 		metaInfo.put(PARENT_TYPE, getParentType(rowObject));
 		metaInfo.put(CHILD_PROPERTY, getChildProperty(rowObject));
 	}
@@ -164,13 +169,14 @@ public class TableTreeBuilder implements ObjectBuilder<EClassifier> {
 		return objectDriver.hasProperty(objectType, property.getName());
 	}
 	
-	private Object createChild(EClassifier type, String location, Object context) {
+	private Object createChild(EClassifier parentType, String childProperty, EClassifier type, String location, Object context) {
 		Object parent = getObjectByLocation(context, location);
 		if (parent == null) {
 			return context;
 		}
 		Object child = objectDriver.create(type);
-		treeDriver.addChild(parent, child);
+		EReference chidlReference = (EReference) objectDriver.getProperty(parentType, childProperty);
+		treeDriver.addChild((EObject)parent, (EObject)child, chidlReference);
 		return child;
 	}
 
@@ -230,5 +236,19 @@ public class TableTreeBuilder implements ObjectBuilder<EClassifier> {
 			return null;
 		}
 		return childReference.getName();
+	}
+
+	private String getPropertyPath(Object rowObject) {
+		String path = null;
+		Object o = rowObject;
+		while (o != null) {
+			String childProperty = getChildProperty(o);
+			if (childProperty == null) {
+				childProperty = objectDriver.getTypeName(((EObject)o).eGetType());
+			}
+			path = path == null ? childProperty : childProperty + "." + path;
+			o = treeDriver.getParent(o);
+		}
+		return path;
 	}
 }
