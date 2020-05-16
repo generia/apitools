@@ -83,6 +83,10 @@ public class JavaProperty extends AbstractJavaComponent {
 		return getCollectionTypeImpl(mFeature);
 	}
 
+	public String getMapTypeImpl() {
+		return getMapTypeImpl(mFeature);
+	}
+
 	public boolean getNeedSetter() {
 		return true;
 	}

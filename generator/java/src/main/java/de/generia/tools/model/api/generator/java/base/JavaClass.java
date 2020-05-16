@@ -78,6 +78,7 @@ public class JavaClass extends AbstractJavaComponent {
 			return;
 		}
 		addCollectionTypeImports(pImports, pElement);
+		addMapTypeImports(pImports, pElement);
 		if (isDataType(lType)) {
 			String lInstanceTypeName = getInstanceTypeName(lType);
 			if (lInstanceTypeName == null || lInstanceTypeName.equals("void") || isPrimitive(lInstanceTypeName)) {
@@ -102,6 +103,19 @@ public class JavaClass extends AbstractJavaComponent {
 					pImports.add(java.util.List.class.getName());
 				} else {
 					pImports.add(java.util.Set.class.getName());
+				}
+			}
+		}
+	}
+	
+	protected void addMapTypeImports(Set<String> pImports, ETypedElement pElement) {
+		String lCollectionType = getMapType(pElement);
+		if (lCollectionType != null) {
+			if (pElement instanceof ETypedElement) {
+				ETypedElement lTypedElement = pElement;
+				if (lTypedElement.getKeyType() != null) {
+					pImports.add(java.util.Map.class.getName());
+					collectImports(lTypedElement.getKeyType(), pImports);
 				}
 			}
 		}

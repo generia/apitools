@@ -195,6 +195,10 @@ public abstract class AbstractJavaComponent extends AbstractApiGeneratorComponen
 		}
 		return null;
 	}
+
+	public String getMapType(ETypedElement pElement) {
+		return "Map";
+	}
 	
 	public String getCollectionTypeImpl(ETypedElement pElement) {
 		if (pElement.isMany()) {
@@ -204,6 +208,10 @@ public abstract class AbstractJavaComponent extends AbstractApiGeneratorComponen
 			return "HashSet";
 		}
 		return null;
+	}
+	
+	public String getMapTypeImpl(ETypedElement pElement) {
+		return "LinkedHashMap";
 	}
 	
 	protected EClassifier getFeatureType(EStructuralFeature pFeature) {
@@ -232,7 +240,10 @@ public abstract class AbstractJavaComponent extends AbstractApiGeneratorComponen
 		EClassifier lClassifier = pElement.getType();
 		if (lClassifier != null) {
 			lType = getType(lClassifier);
-			if (pElement.isMany()) {
+			if (pElement.getKeyType() != null) {
+				String lKeyType = getType(pElement.getKeyType());
+				lType = getMapType(pElement) + "<" + lKeyType + ", " + lType + ">";
+			} else if (pElement.isMany()) {
 				lType = getCollectionType(pElement) + "<" + lType + ">";
 			}
 		}

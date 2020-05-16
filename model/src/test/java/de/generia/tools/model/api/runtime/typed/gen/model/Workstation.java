@@ -3,6 +3,7 @@ package de.generia.tools.model.api.runtime.typed.gen.model;
 import de.generia.tools.model.api.runtime.typed.gen.model.Assessment;
 import de.generia.tools.model.api.runtime.typed.gen.model.Company;
 import de.generia.tools.model.api.runtime.typed.gen.model.Employee;
+import java.util.Map;
 
 /**
  * The 'Workstation' class was generated from 'Workstation' EClass api element.
@@ -37,6 +38,20 @@ public interface Workstation {
      * @param assessment new value for the 'assessment' property
      */
     void setAssessment(Assessment assessment);
+    
+    /**
+     * Gets the 'tagMap' property of the 'Workstation' EClass.
+     * 
+     * @return 'tagMap' property of 'Workstation' EClass
+     */
+    Map<String, String> getTagMap();
+    
+    /**
+     * Sets the 'tagMap' property of the 'Workstation' EClass.
+     * 
+     * @param tagMap new value for the 'tagMap' property
+     */
+    void setTagMap(Map<String, String> tagMap);
     
     /**
      * Gets the 'company' property of the 'Workstation' EClass.

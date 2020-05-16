@@ -87,8 +87,8 @@ public class ApiGenerator extends Task implements TrafoGenerator {
     	log.info("starting model generator via main.");
 		ApiGenerator lGenerator = new ApiGenerator();
 		//File lRoot = new File("/Users/qxn7720/home/prj/bmw/ds2/ws-ms/api-tools-generator");
-		File lRoot = new File("/Users/alex/home/dev/ws-api/apitools/generator/java");
-		URL lInputFile = new URL("file:///" + lRoot + "/tst/companymgmt.v2.api");
+		File lRoot = new File("/Users/alex/home/prj/bmw/ds2/ws-ms/apitools/generator/java");
+		URL lInputFile = new URL("file:///" + lRoot + "/tst/companymgmt.api");
 		//URL lInputFile = new URL("file:///" + lRoot + "/tst/productdata.v0.9.api");
 		//URL lInputFile = new URL("file:////Users/alex/home/dev/ws-api/apitools/model/src/test/resources/de/generia/tools/model/api/runtime/companymgmt.api");
 		File lWorkspaceRoot = lRoot;
@@ -96,7 +96,7 @@ public class ApiGenerator extends Task implements TrafoGenerator {
 		//File lOutputDir = new File("/Users/alex/home/dev/ws-api/apitools/model/src/test/java");
 		//File lOutputDir = new File(lRoot, "src-gen");
 		lGenerator.setInputUrl(lInputFile);
-
+		lGenerator.setRenderPojos(false);
 		lGenerator.setJavaOutputDir(lOutputDir);
 		lGenerator.setModelPackageRoot("de.generia.tools.model.api.runtime.typed.gen");
 		lGenerator.setProject(new Project());

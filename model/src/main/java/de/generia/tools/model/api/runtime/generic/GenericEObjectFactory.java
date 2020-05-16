@@ -2,7 +2,9 @@ package de.generia.tools.model.api.runtime.generic;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 
 import de.generia.tools.model.api.EClass;
 import de.generia.tools.model.api.EEnum;
@@ -27,6 +29,11 @@ public class GenericEObjectFactory implements EObjectFactory {
 	@Override
 	public Collection<Object> createCollection(EStructuralFeature feature) {
 		return feature.isOrdered() ? new ArrayList<>() : new LinkedHashSet<>();
+	}
+
+	@Override
+	public Map<Object, Object> createMap(EStructuralFeature feature) {
+		return new LinkedHashMap<>();
 	}
 
 	@Override

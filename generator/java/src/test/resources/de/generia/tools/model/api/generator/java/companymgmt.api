@@ -50,6 +50,7 @@
 					<structural-features>
 						<EAttribute name="name" required="true" type="/companymgmt/basetypes/String" id="true"/>
 						<EAttribute name="assessment" required="true" type="/companymgmt/model/Assessment"/>
+						<EAttribute name="tagMap" type="/companymgmt/basetypes/String" key-type="/companymgmt/basetypes/String"/>
 						<EReference name="company" required="true" type="/companymgmt/model/Company" opposite="/companymgmt/model/Company/workstations"/>
 						<EReference name="employee" type="/companymgmt/model/Employee" opposite="/companymgmt/model/Employee/workstation"/>
 					</structural-features>
@@ -64,6 +65,7 @@
 						<EReference name="workstations" ordered="true" many="true" type="/companymgmt/model/Workstation" containment="true" opposite="/companymgmt/model/Workstation/company"/>
 						<EReference name="employees" many="true" required="true" type="/companymgmt/model/Employee" containment="true" opposite="/companymgmt/model/Employee/company"/>
 						<EReference name="projects" many="true" type="/companymgmt/model/Project" containment="true" opposite="/companymgmt/model/Project/company"/>
+						<EReference name="workstationAssessmentMap" type="/companymgmt/model/Workstation" key-type="/companymgmt/model/Assessment"/>
 					</structural-features>
 				</EClass>
 				<EClass name="Employee">
@@ -90,6 +92,7 @@
 						<EAttribute name="size" type="/companymgmt/model/Project/Size"/>
 						<EReference name="company" required="true" type="/companymgmt/model/Company" opposite="/companymgmt/model/Company/projects"/>
 						<EReference name="employees" many="true" type="/companymgmt/model/Employee" opposite="/companymgmt/model/Employee/projects"/>
+						<EReference name="contactMap" type="/companymgmt/model/Contact" key-type="/companymgmt/basetypes/String" containment="true"/>
 					</structural-features>
 					<nested-classifiers>
 						<EEnum name="Size">

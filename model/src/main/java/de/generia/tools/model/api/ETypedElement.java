@@ -104,4 +104,28 @@ public abstract class ETypedElement extends ENamedElement  {
     public void setType(EClassifier type) {
     	this.type = type;
     }
+    
+    /**
+     * Holds the 'keyType' property-value.
+     * 
+     */
+    private EClassifier keyType = null;
+    
+    /**
+     * Gets the 'keyType' property of the 'ETypedElement' EClass.
+     * 
+     * @return 'keyType' property of 'ETypedElement' EClass
+     */
+    public EClassifier getKeyType() {
+    	return keyType;
+    }
+    
+    /**
+     * Sets the 'keyType' property of the 'ETypedElement' EClass.
+     * 
+     * @param keyType new value for the 'keyType' property
+     */
+    public void setKeyType(EClassifier keyType) {
+    	this.keyType = keyType;
+    }
 }

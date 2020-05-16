@@ -61,6 +61,7 @@
 				<EAttribute name="many" type="/api/datatypes/boolean"/>
 				<EAttribute name="required" type="/api/datatypes/boolean"/>
 				<EReference name="type" type="/api/EClassifier"/>
+				<EReference name="keyType" type="/api/EClassifier"/>
 			</structural-features>
 		</EClass>
 		<EClass name="EStructuralFeature" abstract="true" super-type="/api/ETypedElement">

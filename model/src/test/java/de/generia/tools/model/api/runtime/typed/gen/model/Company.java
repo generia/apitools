@@ -1,9 +1,11 @@
 package de.generia.tools.model.api.runtime.typed.gen.model;
 
+import de.generia.tools.model.api.runtime.typed.gen.model.Assessment;
 import de.generia.tools.model.api.runtime.typed.gen.model.Employee;
 import de.generia.tools.model.api.runtime.typed.gen.model.Project;
 import de.generia.tools.model.api.runtime.typed.gen.model.Workstation;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -81,4 +83,18 @@ public interface Company {
      * @param projects new value for the 'projects' property
      */
     void setProjects(Set<Project> projects);
+    
+    /**
+     * Gets the 'workstationAssessmentMap' property of the 'Company' EClass.
+     * 
+     * @return 'workstationAssessmentMap' property of 'Company' EClass
+     */
+    Map<Assessment, Workstation> getWorkstationAssessmentMap();
+    
+    /**
+     * Sets the 'workstationAssessmentMap' property of the 'Company' EClass.
+     * 
+     * @param workstationAssessmentMap new value for the 'workstationAssessmentMap' property
+     */
+    void setWorkstationAssessmentMap(Map<Assessment, Workstation> workstationAssessmentMap);
 }

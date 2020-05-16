@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
@@ -35,6 +36,8 @@ public class EObjectJsonWriter implements EObjectWriter {
 		
 		if (value instanceof EObject) {
 			writeObject((EObject)value);
+		} else if (value instanceof Map) {
+			writeMap((Map<?,?>)value);
 		} else if (value instanceof Collection) {
 			writeCollection((Collection<?>)value);
 		} else if (context.isEnumValue(value)) {
@@ -136,5 +139,22 @@ public class EObjectJsonWriter implements EObjectWriter {
 			writeElement(item);
 		}
 		jg.writeEndArray();
+	}
+
+	private void writeMap(Map<?,?> value) throws IOException {
+		jg.writeStartObject();
+		for (Map.Entry<?, ?> entry : value.entrySet()) {
+			String key = getFieldName(entry.getKey());
+			jg.writeFieldName(key);
+			writeElement(entry.getValue());
+		}
+		jg.writeEndObject();
+	}
+
+	private String getFieldName(Object value) {
+		if (context.isEnumValue(value)) {
+			return context.toEnumName(value);
+		}
+		return value.toString();
 	}
 }

@@ -122,11 +122,13 @@ public class GenericEObject implements EObject, EObjectSet.Item {
 		if (type == null) {
 			return;
 		}
-		if (feature.isMany()) {
+		if (feature.getKeyType() != null) {
+			checkType(property, value, Map.class);
+		} else if (feature.isMany()) {
 			if (feature.isOrdered()) {
 				checkType(property, value, List.class);
 			} else {
-				checkType(property, value, Set.class);				
+				checkType(property, value, Set.class);
 			}
 		} else {
 			EClassifier featureType = feature.getType();

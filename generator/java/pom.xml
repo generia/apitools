@@ -51,7 +51,7 @@
 		<dependency>
 			<groupId>de.generia.tools.model.api</groupId>
 			<artifactId>apitools-model</artifactId>
-			<version>1.0.4</version>
+			<version>1.0.6</version>
 		</dependency>
 		<dependency>
 			<groupId>velocity</groupId>

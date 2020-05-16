@@ -59,7 +59,13 @@ public class PojoProperty extends JavaProperty {
 		String lDefaultClause = " = ";
 		EClassifier lType = mFeature.getType();
 		
-		if (mFeature.isMany()) {
+		if (mFeature.getKeyType() != null) {
+			String lMapTypeImpl = getMapTypeImpl();
+			String lKeyTypeName = getType(mFeature.getKeyType());
+			String lTypeName = getType(lType);
+			String lMap = "new " + lMapTypeImpl + "<" + lKeyTypeName + ", " + lTypeName + ">()";
+			return " = " + lMap;
+		} else if (mFeature.isMany()) {
 			String lCollectionTypeImpl = getCollectionTypeImpl();
 			String lTypeName = getType(lType);
 			String lSimpleSet = "new " + lCollectionTypeImpl + "<" + lTypeName + ">()";

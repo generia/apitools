@@ -1,7 +1,9 @@
 package de.generia.tools.model.api.runtime.typed.gen.model;
 
 import de.generia.tools.model.api.runtime.typed.gen.model.Company;
+import de.generia.tools.model.api.runtime.typed.gen.model.Contact;
 import de.generia.tools.model.api.runtime.typed.gen.model.Employee;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -79,6 +81,20 @@ public interface Project {
      * @param employees new value for the 'employees' property
      */
     void setEmployees(Set<Employee> employees);
+    
+    /**
+     * Gets the 'contactMap' property of the 'Project' EClass.
+     * 
+     * @return 'contactMap' property of 'Project' EClass
+     */
+    Map<String, Contact> getContactMap();
+    
+    /**
+     * Sets the 'contactMap' property of the 'Project' EClass.
+     * 
+     * @param contactMap new value for the 'contactMap' property
+     */
+    void setContactMap(Map<String, Contact> contactMap);
     
     /**
      * The 'Size' enum was generated from 'Size' EEnum api element.

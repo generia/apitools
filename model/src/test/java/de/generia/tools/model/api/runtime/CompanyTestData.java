@@ -4,9 +4,12 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import de.generia.tools.model.api.EPackage;
 import de.generia.tools.model.api.resource.stream.ModelInputStream;
@@ -56,9 +59,7 @@ public class CompanyTestData {
 		larry.set("company", acme);
 		companyEmployees.add(larry);
 
-		EObject larryContact = create("/companymgmt/model/Contact");
-		larryContact.set("email", "larry.fine@acme.com");
-		larryContact.set("phoneNumber", "555 1234567");
+		EObject larryContact = createContact("larry.fine@acme.com", "555 1234567");
 		larry.set("contact", larryContact);
 
 		EObject bridge = create("/companymgmt/model/Project");
@@ -76,12 +77,20 @@ public class CompanyTestData {
 		Set<EObject> larryProjects = new LinkedHashSet<>();
 		larry.set("projects", larryProjects);
 		larryProjects.add(bridge);
+		Map<String, EObject> bridgeContactMap = new LinkedHashMap<String, EObject>();
+		bridgeContactMap.put("owner", createContact("owner@bridge.com", "555 9876"));
+		bridgeContactMap.put("sponsor", createContact("sponsor@bridge.com", "555 443322"));
+		bridge.set("contactMap", bridgeContactMap);
 
 		EObject dredge = create("/companymgmt/model/Workstation");
 		dredge.set("name", "Blue Dredge");
 		dredge.set("assessment", createEnum("/companymgmt/model/Assessment", "excellent"));
 		dredge.set("company", acme);
 		dredge.set("employee", larry);
+		Map<String, String> dredgeTagMap = new TreeMap<>();
+		dredgeTagMap.put("size", "medium");
+		dredgeTagMap.put("color", "blue");
+		dredge.set("tagMap", dredgeTagMap);
 		larry.set("workstation", dredge);
 		
 		EObject lorry = create("/companymgmt/model/Workstation");
@@ -89,6 +98,10 @@ public class CompanyTestData {
 		lorry.set("assessment", createEnum("/companymgmt/model/Assessment", "poor"));
 		lorry.set("company", acme);
 		lorry.set("employee", curly);
+		Map<String, String> lorryTagMap = new TreeMap<>();
+		lorryTagMap.put("size", "big");
+		lorryTagMap.put("color", "red");
+		lorry.set("tagMap", lorryTagMap);
 		curly.set("workstation", lorry);
 
 		List<EObject> acmeWorkstations = new ArrayList<>();
@@ -96,7 +109,19 @@ public class CompanyTestData {
  		acmeWorkstations.add(lorry);
  		acme.set("workstations", acmeWorkstations);
  		
+ 		Map<Object, EObject> workstationAssessmentMap = new LinkedHashMap<Object, EObject>();
+ 		workstationAssessmentMap.put(lorry.get("assessment"), lorry);
+ 		workstationAssessmentMap.put(dredge.get("assessment"), dredge);
+ 		acme.set("workstationAssessmentMap", workstationAssessmentMap);
+ 		
 		return acme;
+	}
+
+	private EObject createContact(String email, String phoneNumber) {
+		EObject contact = create("/companymgmt/model/Contact");
+		contact.set("email", email);
+		contact.set("phoneNumber", phoneNumber);
+		return contact;
 	}
     
     @SuppressWarnings("unchecked")

@@ -86,6 +86,10 @@ public class EObjectJsonReader implements EObjectReader {
 		return context.getObjectFactory().createCollection(feature);
 	}
 
+	private Map<Object, Object> createMap(EStructuralFeature feature) {
+		return context.getObjectFactory().createMap(feature);
+	}
+
 	private Object readElement(JsonParser jp, EModelElement type) throws IOException {
 
 		Object value;
@@ -244,7 +248,9 @@ public class EObjectJsonReader implements EObjectReader {
 		Object value;
 		Link link = getActiveLink();
 		link.feature = type;
-		if (type.isMany()) {
+		if (type.getKeyType() != null) {
+			value = readMap(jp, type);
+		} else if (type.isMany()) {
 			value = readArray(jp, type);
 		} else {
 			value = readElement(jp, type.getType());
@@ -269,6 +275,39 @@ public class EObjectJsonReader implements EObjectReader {
 			token = nextToken();
 		}
 		return collection;
+	}
+
+	private Object readMap(JsonParser jp, EStructuralFeature type) throws IOException {
+		JsonToken token = nextToken();
+		if (token == JsonToken.VALUE_NULL) {
+			return null;
+		}
+		if (token != JsonToken.START_OBJECT) {
+			throw new IllegalArgumentException("illegal token '" + token + "', expected '" + JsonToken.START_OBJECT + "' while parsing type '" + typeName(type) + "'");
+		}
+		Map<Object, Object> map = createMap(type);  
+		token = nextToken();
+		while (token != JsonToken.END_OBJECT) {
+			currentToken = token;
+			Object key = readFieldName(jp, type.getKeyType());
+			Object value = readElement(jp, type.getType());
+			map.put(key, value);
+			token = nextToken();
+		}
+		return map;
+	}
+
+	private Object readFieldName(JsonParser jp, EClassifier type) throws IOException {
+		String fieldName = jp.getCurrentName();
+		nextToken();
+		Object value;
+		if (type instanceof EEnum) {
+			value = context.getObjectFactory().createEnumValue((EEnum) type, fieldName);
+		} else {
+			value = fieldName;
+			
+		}
+		return value;
 	}
 
 	private JsonToken nextToken() throws IOException {

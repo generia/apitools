@@ -4,9 +4,12 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import de.generia.tools.model.api.EPackage;
 import de.generia.tools.model.api.resource.stream.ModelInputStream;
@@ -65,9 +68,7 @@ public class TypedCompanyTestData {
 		larry.setCompany(acme);
 		companyEmployees.add(larry);
 
-		Contact larryContact = create(Contact.class);
-		larryContact.setEmail("larry.fine@acme.com");
-		larryContact.setPhoneNumber("555 1234567");
+		Contact larryContact = createContact("larry.fine@acme.com", "555 1234567");
 		larry.setContact(larryContact);
 
 		Project bridge = create(Project.class);
@@ -85,12 +86,20 @@ public class TypedCompanyTestData {
 		Set<Project> larryProjects = new LinkedHashSet<>();
 		larry.setProjects(larryProjects);
 		larryProjects.add(bridge);
+		Map<String, Contact> bridgeContactMap = new LinkedHashMap<String, Contact>();
+		bridgeContactMap.put("owner", createContact("owner@bridge.com", "555 9876"));
+		bridgeContactMap.put("sponsor", createContact("sponsor@bridge.com", "555 443322"));
+		bridge.setContactMap(bridgeContactMap);
 
 		Workstation dredge = create(Workstation.class);
 		dredge.setName("Blue Dredge");
 		dredge.setAssessment((Assessment) createEnum(Assessment.class, "excellent"));
 		dredge.setCompany(acme);
 		dredge.setEmployee(larry);
+		Map<String, String> dredgeTagMap = new TreeMap<>();
+		dredgeTagMap.put("size", "medium");
+		dredgeTagMap.put("color", "blue");
+		dredge.setTagMap(dredgeTagMap);
 		larry.setWorkstation(dredge);
 		
 		Workstation lorry = create(Workstation.class);
@@ -98,14 +107,30 @@ public class TypedCompanyTestData {
 		lorry.setAssessment((Assessment) createEnum(Assessment.class, "poor"));
 		lorry.setCompany(acme);
 		lorry.setEmployee(curly);
+		Map<String, String> lorryTagMap = new TreeMap<>();
+		lorryTagMap.put("size", "big");
+		lorryTagMap.put("color", "red");
+		lorry.setTagMap(lorryTagMap);
 		curly.setWorkstation(lorry);
 
 		List<Workstation> acmeWorkstations = new ArrayList<>();
 		acmeWorkstations.add(dredge);
  		acmeWorkstations.add(lorry);
  		acme.setWorkstations(acmeWorkstations);
- 		
+
+ 		Map<Assessment, Workstation> workstationAssessmentMap = new LinkedHashMap<>();
+ 		workstationAssessmentMap.put(lorry.getAssessment(), lorry);
+ 		workstationAssessmentMap.put(dredge.getAssessment(), dredge);
+ 		acme.setWorkstationAssessmentMap( workstationAssessmentMap);
+
 		return acme;
+	}
+
+	private Contact createContact(String email, String phoneNumber) {
+		Contact contact = create(Contact.class);
+		contact.setEmail(email);
+		contact.setPhoneNumber(phoneNumber);
+		return contact;
 	}
     
     @SuppressWarnings("unchecked")

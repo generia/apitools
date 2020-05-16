@@ -3,6 +3,7 @@ package de.generia.tools.model.api.runtime.typed;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
@@ -45,6 +46,11 @@ public class TypedEObjectFactory implements EObjectFactory {
 		return feature.isOrdered() ? new ArrayList<>() : new LinkedHashSet<>();
 	}
 	
+
+	@Override
+	public Map<Object, Object> createMap(EStructuralFeature feature) {
+		return new LinkedHashMap<>();
+	}
 
 	@Override
 	public Object createEnumValue(EEnum type, String name) {

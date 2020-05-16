@@ -58,6 +58,20 @@ public class PojoClass extends JavaClass {
 			}
 		}
 	}
+
+	protected void addMapTypeImports(Set<String> pImports, ETypedElement pElement) {
+		super.addMapTypeImports(pImports, pElement);
+		
+		String lMapTypeImpl = getMapTypeImpl(pElement);
+		if (lMapTypeImpl != null && !mClass.isInterface()) {
+			if (pElement instanceof ETypedElement) {
+				ETypedElement lTypedElement = pElement;
+				if (lTypedElement.getKeyType() != null) {
+					pImports.add(java.util.LinkedHashMap.class.getName());
+				}
+			}
+		}
+	}
 	
 	@SuppressWarnings("unchecked")
 	public List<JavaProperty> getProperties() {
